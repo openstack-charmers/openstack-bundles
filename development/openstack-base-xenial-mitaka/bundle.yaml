@@ -101,12 +101,11 @@ services:
       gui-x: '1000'
       gui-y: '500'
     charm: cs:~openstack-charmers-next/xenial/ceph-osd
-    num_units: 4
+    num_units: 3
     options:
       osd-devices: /dev/sdb
       osd-reformat: 'yes'
     to:
-    - '0'
     - '1'
     - '2'
     - '3'
