@@ -15,10 +15,6 @@ Servers should have:
 
 Servers should have two physical network ports cabled; the first is used for general communication between services in the Cloud, the second is used for 'public' network traffic to and from instances (North/South traffic) running within the Cloud.
 
-## Deployment
-
-    juju-deployer -c https://api.jujucharms.com/charmstore/v4/~openstack-charmers-next/bundle/openstack-lxd-50/archive/bundle.yaml -S -d
-
 ## Components
 
  - 1 Node for Neutron Gateway and Ceph with RabbitMQ and MySQL under LXC containers.
