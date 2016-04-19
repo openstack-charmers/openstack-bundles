@@ -222,6 +222,7 @@ services:
       gui-x: '1000'
       gui-y: '0'
     charm: cs:~openstack-charmers-next/ntp
+    series: xenial
     num_units: 0
   openstack-dashboard:
     annotations:
