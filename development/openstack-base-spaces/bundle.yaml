@@ -250,8 +250,7 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '0'
-    charm: cs:~openstack-charmers-next/ntp
-    series: xenial
+    charm: cs:~openstack-charmers-next/xenial/ntp
     num_units: 0
   openstack-dashboard:
     annotations:
