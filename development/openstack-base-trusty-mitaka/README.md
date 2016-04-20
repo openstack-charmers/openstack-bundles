@@ -74,7 +74,7 @@ In order to run instances on your cloud, you'll need to upload an image to boot 
     mkdir -p ~/images
     wget -O ~/images/trusty-server-cloudimg-amd64-disk1.img \
         http://cloud-images.ubuntu.com/trusty/current/trusty-server-cloudimg-amd64-disk1.img
-    glance image-create --name="trusty" --is-public=true --progress \
+    glance image-create --name="trusty" --visibility public --progress \
         --container-format=bare --disk-format=qcow2 \
         < ~/images/trusty-server-cloudimg-amd64-disk1.img
 

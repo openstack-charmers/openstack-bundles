@@ -74,7 +74,7 @@ In order to run instances on your cloud, you'll need to upload a root disk archi
     mkdir -p ~/images
     wget -O ~/images/trusty-server-cloudimg-amd64-root.tar.gz \
         http://cloud-images.ubuntu.com/trusty/current/trusty-server-cloudimg-amd64-root.tar.gz
-    glance image-create --name="trusty" --public --progress \
+    glance image-create --name="trusty" --visibility public --progress \
         --container-format=bare --disk-format=root-tar --property architecture="x86_64" \
         < ~/images/trusty-server-cloudimg-amd64-root.tar.gz
 
