@@ -111,7 +111,7 @@ services:
     options:
       use-embedded-webserver: true
     to:
-    - lxd:0
+    - lxc:0
   cinder:
     annotations:
       gui-x: '750'
@@ -122,7 +122,7 @@ services:
       block-device: None
       glance-api-version: 2
     to:
-    - lxd:1
+    - lxc:1
   cinder-ceph:
     annotations:
       gui-x: '750'
@@ -136,7 +136,7 @@ services:
     charm: cs:~openstack-charmers-next/xenial/glance
     num_units: 1
     to:
-    - lxd:2
+    - lxc:2
   keystone:
     annotations:
       gui-x: '500'
@@ -146,7 +146,7 @@ services:
     options:
       admin-password: openstack
     to:
-    - lxd:0
+    - lxc:0
   mysql:
     annotations:
       gui-x: '0'
@@ -156,7 +156,7 @@ services:
     options:
       max-connections: 20000
     to:
-    - lxd:1
+    - lxc:1
   neutron-api:
     annotations:
       gui-x: '500'
@@ -167,7 +167,7 @@ services:
       neutron-security-groups: true
       flat-network-providers: physnet1
     to:
-    - lxd:2
+    - lxc:2
   neutron-gateway:
     annotations:
       gui-x: '0'
@@ -196,9 +196,8 @@ services:
     num_units: 1
     options:
       network-manager: Neutron
-      quantum-security-groups: 'yes'
     to:
-    - lxd:2
+    - lxc:2
   nova-compute:
     annotations:
       gui-x: '250'
@@ -220,7 +219,7 @@ services:
     charm: cs:~openstack-charmers-next/xenial/openstack-dashboard
     num_units: 1
     to:
-    - lxd:1
+    - lxc:1
   rabbitmq-server:
     annotations:
       gui-x: '500'
@@ -228,5 +227,5 @@ services:
     charm: cs:~openstack-charmers-next/xenial/rabbitmq-server
     num_units: 1
     to:
-    - lxd:0
+    - lxc:0
 
