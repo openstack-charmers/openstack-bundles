@@ -182,7 +182,7 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '500'
-    charm: local:xenial/neutron-openvswitch
+    charm: cs:~openstack-charmers-next/xenial/neutron-openvswitch
     options:
       enable-dpdk: True
       data-port: "br-physnet1:8c:dc:d4:b3:93:30"
