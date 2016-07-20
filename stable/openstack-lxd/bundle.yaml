@@ -132,7 +132,7 @@ services:
     charm: cs:xenial/lxd-0
     num_units: 0
     options:
-      block-device: /dev/sdb
+      block-devices: /dev/sdb
       overwrite: true
       storage-type: lvm
   mysql:

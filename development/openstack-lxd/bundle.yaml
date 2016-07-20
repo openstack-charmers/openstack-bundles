@@ -216,6 +216,6 @@ services:
     charm: cs:~openstack-charmers-next/xenial/lxd
     num_units: 0
     options:
-      block-device: /dev/sdb
+      block-devices: /dev/sdb
       storage-type: lvm
       overwrite: true
