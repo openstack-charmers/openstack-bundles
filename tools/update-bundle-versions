@@ -1,0 +1,54 @@
+#!/usr/bin/env python
+
+import optparse
+import yaml
+import urllib3
+import re
+import os
+import sys
+
+
+API_URL = "https://api.jujucharms.com/v4/xenial/{}/meta/id-revision"
+CHARM_REGEX = "cs:(.*)\/(.*)-\d"
+
+if __name__ == "__main__":
+    usage = 'usage: %prog [options] bundle.yaml'
+    parser = optparse.OptionParser(usage=usage)
+    parser.add_option('-i', '--in-place',
+                      help='Update charm revisions in place',
+                      dest='in_place', action='store_true', default=False)
+    (opts, args) = parser.parse_args()
+
+    if len(args) != 1:
+        print('Please provide a single bundle.yaml as the only argument')
+        sys.exit(1)
+
+    bundle = args[0]
+    if not os.path.exists(bundle):
+        print('Supplied bundle ({}) not found'.format(bundle))
+        sys.exit(1)
+
+    with open(bundle) as data_file:
+        data = yaml.load(data_file)
+
+    http = urllib3.PoolManager()
+
+    for service in data['services']:
+        charm = data['services'][service]['charm']
+        # NOTE: stable bundles don't use owners and have versions
+        charm_match = re.match(CHARM_REGEX, charm)
+        if charm_match:
+            charm_series = charm_match.group(1)
+            charm_name = charm_match.group(2)
+            url = API_URL.format(charm_name)
+            revision = http.request('GET', url)
+            if revision.status == 200:
+                revision = yaml.load(revision.data)['Revision']
+                data['services'][service]['charm'] = "cs:{}/{}-{}".format(charm_series,
+                                                                          charm_name,
+                                                                          revision)
+    if opts.in_place:
+        with open(bundle, 'w') as bundle_file:
+            bundle_file.write(yaml.dump(data, default_flow_style=False))
+    else:
+        print(yaml.dump(data, default_flow_style=False))
