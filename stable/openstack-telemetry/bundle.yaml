@@ -138,7 +138,7 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '250'
-    charm: cs:xenial/ceph-radosgw-3
+    charm: cs:xenial/ceph-radosgw-4
     num_units: 1
     options:
       use-embedded-webserver: true
@@ -201,7 +201,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '500'
-    charm: cs:xenial/neutron-api-1
+    charm: cs:xenial/neutron-api-2
     num_units: 1
     options:
       neutron-security-groups: true
@@ -227,7 +227,7 @@ services:
     annotations:
       gui-x: '0'
       gui-y: '500'
-    charm: cs:xenial/nova-cloud-controller-1
+    charm: cs:xenial/nova-cloud-controller-2
     num_units: 1
     options:
       network-manager: Neutron
@@ -265,8 +265,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '250'
-    charm: cs:xenial/rabbitmq-server-3
+    charm: cs:xenial/rabbitmq-server-4
     num_units: 1
     to:
     - lxc:0
-
