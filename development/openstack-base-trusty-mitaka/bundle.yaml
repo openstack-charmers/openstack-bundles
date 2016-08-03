@@ -94,6 +94,7 @@ services:
     num_units: 3
     options:
       source: cloud:trusty-mitaka/proposed
+      expected-osd-count: 3
     to:
     - 'lxc:1'
     - 'lxc:2'

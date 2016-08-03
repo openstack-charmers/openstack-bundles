@@ -92,6 +92,8 @@ services:
       gui-y: '500'
     charm: cs:xenial/ceph-mon-3
     num_units: 3
+    options:
+      expected-osd-count: 3
     to:
     - lxc:1
     - lxc:2
@@ -172,6 +174,7 @@ services:
     num_units: 1
     options:
       neutron-security-groups: true
+      flat-network-providers: physnet1
     to:
     - lxc:1
   neutron-gateway:
@@ -181,7 +184,8 @@ services:
     charm: cs:xenial/neutron-gateway-2
     num_units: 1
     options:
-      ext-port: eth1
+      bridge-mappings: physnet1:br-ex
+      data-port: br-ex:eth1
     to:
     - '0'
   neutron-openvswitch:
