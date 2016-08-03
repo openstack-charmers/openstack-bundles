@@ -14,9 +14,13 @@ if [ ! -d $bundle ]; then
     exit 1
 fi
 
+echo "Add foo"
+cp shared/* $bundle/
 
 echo "Pushing bundle to charm store"
 bundle_id=$(charm push $bundle cs:~openstack-charmers/$bundle | grep url | awk '{ print $2 }')
+
+rm -f $bundle/neutron-* $bundle/novarc
 
 if [ -z "$bundle_id" ]; then
     echo "Publishing failed"
