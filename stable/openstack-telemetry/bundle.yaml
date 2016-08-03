@@ -96,20 +96,32 @@ relations:
   - nova-compute:nova-ceilometer
 - - ceilometer:shared-db
   - mongodb:database
+- - aodh:shared-db
+  - mysql:shared-db
+- - aodh:identity-service
+  - keystone:identity-service
+- - aodh:amqp
+  - rabbitmq-server:amqp
 series: xenial
 services:
+  aodh:
+    annotations:
+      gui-x: '1500'
+      gui-y: '0'
+    charm: cs:xenial/aodh-0
+    num_units: 1
   ceilometer:
     annotations:
-      gui-x: '1288.8744298356794'
-      gui-y: '0.7040786325134718'
+      gui-x: '1250'
+      gui-y: '0'
     charm: cs:xenial/ceilometer-2
     num_units: 1
     to:
     - lxc:2
   ceilometer-agent:
     annotations:
-      gui-x: '1288.9999389648438'
-      gui-y: '503'
+      gui-x: '1250'
+      gui-y: '500'
     charm: cs:xenial/ceilometer-agent-2
   ceph-mon:
     annotations:
