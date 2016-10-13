@@ -108,13 +108,15 @@ services:
     annotations:
       gui-x: '1500'
       gui-y: '0'
-    charm: cs:xenial/aodh-0
+    charm: cs:xenial/aodh-4
     num_units: 1
+    to:
+    - lxc:0
   ceilometer:
     annotations:
       gui-x: '1250'
       gui-y: '0'
-    charm: cs:xenial/ceilometer-2
+    charm: cs:xenial/ceilometer-240
     num_units: 1
     to:
     - lxc:2
@@ -122,12 +124,12 @@ services:
     annotations:
       gui-x: '1250'
       gui-y: '500'
-    charm: cs:xenial/ceilometer-agent-2
+    charm: cs:xenial/ceilometer-agent-235
   ceph-mon:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: cs:xenial/ceph-mon-3
+    charm: cs:xenial/ceph-mon-6
     num_units: 3
     options:
       expected-osd-count: 3
@@ -139,7 +141,7 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '500'
-    charm: cs:xenial/ceph-osd-3
+    charm: cs:xenial/ceph-osd-238
     num_units: 3
     options:
       osd-devices: /dev/sdb
@@ -152,7 +154,7 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '250'
-    charm: cs:xenial/ceph-radosgw-5
+    charm: cs:xenial/ceph-radosgw-245
     num_units: 1
     options:
       use-embedded-webserver: true
@@ -162,7 +164,7 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '0'
-    charm: cs:xenial/cinder-2
+    charm: cs:xenial/cinder-257
     num_units: 1
     options:
       block-device: None
@@ -173,13 +175,13 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '250'
-    charm: cs:xenial/cinder-ceph-2
+    charm: cs:xenial/cinder-ceph-221
     num_units: 0
   glance:
     annotations:
       gui-x: '250'
       gui-y: '0'
-    charm: cs:xenial/glance-2
+    charm: cs:xenial/glance-253
     num_units: 1
     to:
     - lxc:2
@@ -187,7 +189,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '0'
-    charm: cs:xenial/keystone-2
+    charm: cs:xenial/keystone-258
     num_units: 1
     options:
       admin-password: openstack
@@ -205,7 +207,7 @@ services:
     annotations:
       gui-x: '0'
       gui-y: '250'
-    charm: cs:xenial/percona-cluster-2
+    charm: cs:xenial/percona-cluster-246
     num_units: 1
     options:
       max-connections: 20000
@@ -215,18 +217,18 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '500'
-    charm: cs:xenial/neutron-api-3
+    charm: cs:xenial/neutron-api-246
     num_units: 1
     options:
-      neutron-security-groups: true
       flat-network-providers: physnet1
+      neutron-security-groups: true
     to:
     - lxc:1
   neutron-gateway:
     annotations:
       gui-x: '0'
       gui-y: '0'
-    charm: cs:xenial/neutron-gateway-2
+    charm: cs:xenial/neutron-gateway-232
     num_units: 1
     options:
       bridge-mappings: physnet1:br-ex
@@ -237,13 +239,13 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '500'
-    charm: cs:xenial/neutron-openvswitch-3
+    charm: cs:xenial/neutron-openvswitch-238
     num_units: 0
   nova-cloud-controller:
     annotations:
       gui-x: '0'
       gui-y: '500'
-    charm: cs:xenial/nova-cloud-controller-3
+    charm: cs:xenial/nova-cloud-controller-292
     num_units: 1
     options:
       network-manager: Neutron
@@ -253,7 +255,7 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '250'
-    charm: cs:xenial/nova-compute-2
+    charm: cs:xenial/nova-compute-259
     num_units: 3
     options:
       enable-live-migration: true
@@ -273,7 +275,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '-250'
-    charm: cs:xenial/openstack-dashboard-2
+    charm: cs:xenial/openstack-dashboard-243
     num_units: 1
     to:
     - lxc:3
@@ -281,7 +283,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '250'
-    charm: cs:xenial/rabbitmq-server-5
+    charm: cs:xenial/rabbitmq-server-54
     num_units: 1
     to:
     - lxc:0
