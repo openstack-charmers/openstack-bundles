@@ -110,6 +110,8 @@ services:
       gui-y: '0'
     charm: cs:xenial/aodh-4
     num_units: 1
+    options:
+      openstack-origin: cloud:xenial-newton
     to:
     - lxc:0
   ceilometer:
@@ -118,6 +120,8 @@ services:
       gui-y: '0'
     charm: cs:xenial/ceilometer-240
     num_units: 1
+    options:
+      openstack-origin: cloud:xenial-newton
     to:
     - lxc:2
   ceilometer-agent:
@@ -167,6 +171,7 @@ services:
     charm: cs:xenial/cinder-257
     num_units: 1
     options:
+      openstack-origin: cloud:xenial-newton
       block-device: None
       glance-api-version: 2
     to:
@@ -183,6 +188,8 @@ services:
       gui-y: '0'
     charm: cs:xenial/glance-253
     num_units: 1
+    options:
+      openstack-origin: cloud:xenial-newton
     to:
     - lxc:2
   keystone:
@@ -192,6 +199,7 @@ services:
     charm: cs:xenial/keystone-258
     num_units: 1
     options:
+      openstack-origin: cloud:xenial-newton
       admin-password: openstack
     to:
     - lxc:3
@@ -220,6 +228,7 @@ services:
     charm: cs:xenial/neutron-api-246
     num_units: 1
     options:
+      openstack-origin: cloud:xenial-newton
       flat-network-providers: physnet1
       neutron-security-groups: true
     to:
@@ -231,6 +240,7 @@ services:
     charm: cs:xenial/neutron-gateway-232
     num_units: 1
     options:
+      openstack-origin: cloud:xenial-newton
       bridge-mappings: physnet1:br-ex
       data-port: br-ex:eth1
     to:
@@ -248,6 +258,7 @@ services:
     charm: cs:xenial/nova-cloud-controller-292
     num_units: 1
     options:
+      openstack-origin: cloud:xenial-newton
       network-manager: Neutron
     to:
     - lxc:2
@@ -258,6 +269,7 @@ services:
     charm: cs:xenial/nova-compute-259
     num_units: 3
     options:
+      openstack-origin: cloud:xenial-newton
       enable-live-migration: true
       enable-resize: true
       migration-auth-type: ssh
@@ -277,6 +289,8 @@ services:
       gui-y: '-250'
     charm: cs:xenial/openstack-dashboard-243
     num_units: 1
+    options:
+      openstack-origin: cloud:xenial-newton
     to:
     - lxc:3
   rabbitmq-server:
