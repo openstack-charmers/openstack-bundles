@@ -1,6 +1,6 @@
 # Basic OpenStack Cloud
 
-This bundle deploys a basic OpenStack Cloud (Mitaka release) on Ubuntu 16.04 LTS, providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.
+This bundle deploys a basic OpenStack Cloud (Newton release) on Ubuntu 16.04 LTS, providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.
 
 ## Requirements
 
