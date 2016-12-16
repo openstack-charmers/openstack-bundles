@@ -1,15 +1,11 @@
 machines:
   '0':
-    constraints: arch=amd64
     series: trusty
   '1':
-    constraints: arch=amd64
     series: trusty
   '2':
-    constraints: arch=amd64
     series: trusty
   '3':
-    constraints: arch=amd64
     series: trusty
 relations:
 - - nova-compute:amqp
