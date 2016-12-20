@@ -190,7 +190,7 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '250'
-    charm: cs:xenial/nova-compute-259
+    charm: cs:xenial/nova-compute-262
     num_units: 3
     options:
       openstack-origin: cloud:xenial-newton
