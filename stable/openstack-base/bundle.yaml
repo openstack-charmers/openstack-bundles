@@ -1,15 +1,11 @@
 machines:
   '0':
-    constraints: arch=amd64
     series: xenial
   '1':
-    constraints: arch=amd64
     series: xenial
   '2':
-    constraints: arch=amd64
     series: xenial
   '3':
-    constraints: arch=amd64
     series: xenial
 relations:
 - - nova-compute:amqp

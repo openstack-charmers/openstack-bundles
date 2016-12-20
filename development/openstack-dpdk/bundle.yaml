@@ -1,12 +1,12 @@
 machines:
   '0':
-    constraints: arch=amd64 tags=netspaces
+    tags=netspaces
     series: xenial
   '1':
-    constraints: arch=amd64 tags=dpdk
+    tags=dpdk
     series: xenial
   '2':
-    constraints: arch=amd64 tags=netspaces
+    tags=netspaces
     series: xenial
 relations:
 - - nova-compute:amqp
