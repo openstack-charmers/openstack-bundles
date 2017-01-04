@@ -99,6 +99,12 @@ We'll also need an 'internal' network for the admin user which instances are act
 
 Neutron provides a wide range of configuration options; see the [OpenStack Neutron][] documentation for more details.
 
+### Configuring a flavor
+
+Starting with the OpenStack Newton release, default flavors are no longer created at install time. You therefore need to create at least one machine type before you can boot an instance:
+
+    nova flavor-create m1.small auto 2048 10 1 --ephemeral 20
+
 ### Booting an instance
 
 First generate a SSH keypair so that you can access your instances once you've booted them:
