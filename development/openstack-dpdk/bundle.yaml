@@ -1,12 +1,12 @@
 machines:
   '0':
-    tags=netspaces
+    constraints: "tags=netspaces"
     series: xenial
   '1':
-    tags=dpdk
+    constraints: "tags=dpdk"
     series: xenial
   '2':
-    tags=netspaces
+    constraints: "tags=netspaces"
     series: xenial
 relations:
 - - nova-compute:amqp
