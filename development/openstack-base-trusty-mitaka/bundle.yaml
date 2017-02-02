@@ -117,7 +117,6 @@ services:
     num_units: 1
     options:
       source: cloud:trusty-mitaka/proposed
-      use-embedded-webserver: true
     to:
     - lxc:0
   cinder:
