@@ -113,7 +113,7 @@ First generate a SSH keypair so that you can access your instances once you've b
 
 You can now boot an instance on your cloud:
 
-    nova boot --image trusty --flavor m1.small --key-name mykey \
+    nova boot --image xenial --flavor m1.small --key-name mykey \
         --nic net-id=$(neutron net-list | grep internal | awk '{ print $2 }') \
         trusty-test
 
