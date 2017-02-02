@@ -6,6 +6,8 @@ This bundle deploys a basic OpenStack Cloud (Mitaka release) on Ubuntu 14.04 LTS
 
 This bundle is designed to run on bare metal using Juju with [MAAS][] (Metal-as-a-Service); you will need to have setup a [MAAS][] deployment with a minimum of 4 physical servers prior to using this bundle.
 
+Certain configuration options within the bundle may need to be adjusted prior to deployment to fit your particular set of hardware. For example, network device names and block device names can vary, and passwords should be yours.
+
 Servers should have:
 
  - A minimum of 8GB of physical RAM.
@@ -90,7 +92,7 @@ for example (for a private cloud):
     ./neutron-ext-net -g 10.230.168.1 -c 10.230.168.0/21 \
         -f 10.230.168.10:10.230.175.254 ext_net
 
-You'll need to adapt the parameters for the network configuration that eth1 on all the servers is connected to; in a public cloud deployment these ports would be connected to a publicable addressable part of the Internet.
+You'll need to adapt the parameters for the network configuration which eth1 on all the servers is connected to; in a public cloud deployment these ports would be connected to a publicly-addressable part of the Internet.
 
 We'll also need an 'internal' network for the admin user which instances are actually connected to:
 
