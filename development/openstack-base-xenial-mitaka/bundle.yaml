@@ -231,7 +231,6 @@ services:
       gui-x: '500'
       gui-y: '-250'
     charm: cs:~openstack-charmers-next/xenial/openstack-dashboard
-    options:
     num_units: 1
     to:
     - lxc:3
