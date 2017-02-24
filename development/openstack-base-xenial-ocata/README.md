@@ -1,18 +1,18 @@
-# LXD OpenStack Cloud
+# Basic OpenStack Cloud
 
-This example bundle deploys an OpenStack Cloud (Mitaka release), configured to use [LXD][] (the lightweight container hypervisor), on Ubuntu 16.04, providing Dashboard, Compute, Network, Object Storage, Identity and Image services.
+This example bundle deploys a basic OpenStack Cloud (Ocata release) on Ubuntu 16.04 LTS, providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.
 
 ## Requirements
 
 This example bundle is designed to run on bare metal using Juju with [MAAS][] (Metal-as-a-Service); you will need to have setup a [MAAS][] deployment with a minimum of 4 physical servers prior to using this bundle.
 
-Certain configuration options within the bundle may need to be adjusted prior to deployment to fit your particular set of hardware. For example, network device names and block device names can vary.
+Certain configuration options within the bundle may need to be adjusted prior to deployment to fit your particular set of hardware. For example, network device names and block device names can vary, and passwords should be yours.
 
 Servers should have:
 
  - A minimum of 8GB of physical RAM.
  - Enough CPU cores to support your capacity requirements.
- - Two disks (identified by /dev/sda and /dev/sdb); the first is used by MAAS for the OS install, the second for LXD LVM storage.
+ - Two disks (identified by /dev/sda and /dev/sdb); the first is used by MAAS for the OS install, the second for Ceph storage.
  - Two cabled network ports on eth0 and eth1 (see below).
 
 Servers should have two physical network ports cabled; the first is used for general communication between services in the Cloud, the second is used for 'public' network traffic to and from instances (North/South traffic) running within the Cloud.
@@ -20,7 +20,7 @@ Servers should have two physical network ports cabled; the first is used for gen
 ## Components
 
  - 1 Node for Neutron Gateway and Ceph with RabbitMQ and MySQL under LXC containers.
- - 3 Nodes for Nova Compute and Ceph, with Keystone, Glance, Neutron, Nova Cloud Controller, Ceph RADOS Gateway, and Horizon under LXC containers.
+ - 3 Nodes for Nova Compute and Ceph, with Keystone, Glance, Neutron, Nova Cloud Controller, Ceph RADOS Gateway, Cinder and Horizon under LXC containers.
 
 All physical servers (not LXC containers) will also have NTP installed and configured to keep time in sync.
 
@@ -71,14 +71,14 @@ You should get a full listing of all services registered in the cloud which shou
 
 ### Configuring an image
 
-In order to run instances on your cloud, you'll need to upload a root disk archive to boot instances from:
+In order to run instances on your cloud, you'll need to upload an image to boot instances from:
 
     mkdir -p ~/images
-    wget -O ~/images/trusty-server-cloudimg-amd64-root.tar.gz \
-        http://cloud-images.ubuntu.com/trusty/current/trusty-server-cloudimg-amd64-root.tar.gz
+    wget -O ~/images/trusty-server-cloudimg-amd64-disk1.img \
+        http://cloud-images.ubuntu.com/trusty/current/trusty-server-cloudimg-amd64-disk1.img
     glance image-create --name="trusty" --visibility public --progress \
-        --container-format=bare --disk-format=root-tar --property architecture="x86_64" \
-        < ~/images/trusty-server-cloudimg-amd64-root.tar.gz
+        --container-format=bare --disk-format=qcow2 \
+        < ~/images/trusty-server-cloudimg-amd64-disk1.img
 
 ### Configure networking
 
@@ -92,7 +92,7 @@ for example (for a private cloud):
     ./neutron-ext-net -g 10.230.168.1 -c 10.230.168.0/21 \
         -f 10.230.168.10:10.230.175.254 ext_net
 
-You'll need to adapt the parameters for the network configuration that eth1 on all the servers is connected to; in a public cloud deployment these ports would be connected to a publicable addressable part of the Internet.
+You'll need to adapt the parameters for the network configuration which eth1 on all the servers is connected to; in a public cloud deployment these ports would be connected to a publicly-addressable part of the Internet.
 
 We'll also need an 'internal' network for the admin user which instances are actually connected to:
 
@@ -116,6 +116,18 @@ You can now boot an instance on your cloud:
     nova boot --image xenial --flavor m1.small --key-name mykey \
         --nic net-id=$(neutron net-list | grep internal | awk '{ print $2 }') \
         trusty-test
+
+### Attaching a volume
+
+First, create a volume in cinder:
+
+    cinder create 10 # Create a 10G volume
+
+then attach it to the instance we just booted in nova:
+
+    nova volume-attach trusty-test <uuid-of-volume> /dev/vdc
+
+The attached volume will be accessible once you login to the instance (see below).  It will need to be formatted and mounted!
 
 ### Accessing your instance
 
@@ -148,4 +160,3 @@ Configuring and managing services on an OpenStack cloud is complex; take a look 
 [Simplestreams]: https://launchpad.net/simplestreams
 [OpenStack Neutron]: http://docs.openstack.org/admin-guide-cloud/content/ch_networking.html
 [OpenStack Admin Guide]: http://docs.openstack.org/user-guide-admin/content
-[LXD]: https://linuxcontainers.org/lxd/

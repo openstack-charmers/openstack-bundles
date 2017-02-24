@@ -1,14 +1,16 @@
 # OpenStack Cloud with Network Segregation
 
-***NOTE***: This bundle requires the use of Juju 2.0
+***NOTE***: This example bundle requires the use of Juju 2.0
 
-This bundle deploys a OpenStack Cloud (Mitaka release) on Ubuntu 16.04 LTS, providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.
+This example bundle deploys a OpenStack Cloud (Mitaka release) on Ubuntu 16.04 LTS, providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.
 
 API service endpoints and the various network traffic flows are bound onto different network spaces.
 
 ## Requirements
 
-This bundle is designed to run on bare metal using Juju with [MAAS][] (Metal-as-a-Service); you will need to have setup a [MAAS][] deployment with a minimum of 4 physical servers prior to using this bundle.
+This example bundle is designed to run on bare metal using Juju with [MAAS][] (Metal-as-a-Service); you will need to have setup a [MAAS][] deployment with a minimum of 4 physical servers prior to using this bundle.
+
+Certain configuration options within the bundle may need to be adjusted prior to deployment to fit your particular set of hardware. For example, network device names and block device names can vary, and passwords should be yours.
 
 Servers should have:
 
@@ -119,7 +121,7 @@ First generate a SSH keypair so that you can access your instances once you've b
 
 You can now boot an instance on your cloud:
 
-    nova boot --image trusty --flavor m1.small --key-name mykey \
+    nova boot --image xenial --flavor m1.small --key-name mykey \
         --nic net-id=$(neutron net-list | grep internal | awk '{ print $2 }') \
         trusty-test
 

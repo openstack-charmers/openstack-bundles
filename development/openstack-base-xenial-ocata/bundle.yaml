@@ -122,6 +122,7 @@ services:
     charm: cs:~openstack-charmers-next/xenial/cinder
     num_units: 1
     options:
+      openstack-origin: cloud:xenial-ocata
       block-device: None
       glance-api-version: 2
     to:
@@ -137,6 +138,8 @@ services:
       gui-x: '250'
       gui-y: '0'
     charm: cs:~openstack-charmers-next/xenial/glance
+    options:
+      openstack-origin: cloud:xenial-ocata
     num_units: 1
     to:
     - lxc:2
@@ -147,6 +150,7 @@ services:
     charm: cs:~openstack-charmers-next/xenial/keystone
     num_units: 1
     options:
+      openstack-origin: cloud:xenial-ocata
       admin-password: openstack
     to:
     - lxc:3
@@ -167,6 +171,7 @@ services:
     charm: cs:~openstack-charmers-next/xenial/neutron-api
     num_units: 1
     options:
+      openstack-origin: cloud:xenial-ocata
       neutron-security-groups: true
       flat-network-providers: physnet1
     to:
@@ -178,6 +183,7 @@ services:
     charm: cs:~openstack-charmers-next/xenial/neutron-gateway
     num_units: 1
     options:
+      openstack-origin: cloud:xenial-ocata
       bridge-mappings: physnet1:br-ex
       data-port: br-ex:eth1
     to:
@@ -195,6 +201,7 @@ services:
     charm: cs:~openstack-charmers-next/xenial/nova-cloud-controller
     num_units: 1
     options:
+      openstack-origin: cloud:xenial-ocata
       network-manager: Neutron
     to:
     - lxc:2
@@ -205,6 +212,7 @@ services:
     charm: cs:~openstack-charmers-next/xenial/nova-compute
     num_units: 3
     options:
+      openstack-origin: cloud:xenial-ocata
       enable-live-migration: true
       enable-resize: true
       migration-auth-type: ssh
@@ -223,6 +231,8 @@ services:
       gui-x: '500'
       gui-y: '-250'
     charm: cs:~openstack-charmers-next/xenial/openstack-dashboard
+    options:
+      openstack-origin: cloud:xenial-ocata
     num_units: 1
     to:
     - lxc:3
