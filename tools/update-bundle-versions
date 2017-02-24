@@ -3,13 +3,11 @@
 import optparse
 import yaml
 import urllib3
-import re
 import os
 import sys
 
 
 API_URL = "https://api.jujucharms.com/v4/xenial/{}/meta/id-revision"
-CHARM_REGEX = "cs:(.*)\/(.*)-\d"
 
 if __name__ == "__main__":
     usage = 'usage: %prog [options] bundle.yaml'
@@ -35,18 +33,16 @@ if __name__ == "__main__":
 
     for service in data['services']:
         charm = data['services'][service]['charm']
-        # NOTE: stable bundles don't use owners and have versions
-        charm_match = re.match(CHARM_REGEX, charm)
-        if charm_match:
-            charm_series = charm_match.group(1)
-            charm_name = charm_match.group(2)
-            url = API_URL.format(charm_name)
-            revision = http.request('GET', url)
-            if revision.status == 200:
-                revision = yaml.load(revision.data)['Revision']
-                data['services'][service]['charm'] = "cs:{}/{}-{}".format(charm_series,
-                                                                          charm_name,
-                                                                          revision)
+        # Remove any version
+        charm = charm.rstrip('-0123456789')
+        charm = charm.split('/')[-1]
+        charm = charm.split(':')[-1]
+
+        url = API_URL.format(charm)
+        revision = http.request('GET', url)
+        if revision.status == 200:
+           revision = yaml.load(revision.data)['Revision']
+           data['services'][service]['charm'] = "cs:{}-{}".format(charm, revision)
     if opts.in_place:
         with open(bundle, 'w') as bundle_file:
             bundle_file.write(yaml.dump(data, default_flow_style=False))
