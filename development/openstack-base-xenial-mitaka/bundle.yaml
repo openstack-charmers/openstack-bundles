@@ -124,6 +124,7 @@ services:
     options:
       block-device: None
       glance-api-version: 2
+      worker-multiplier: 0.25
     to:
     - lxc:1
   cinder-ceph:
@@ -137,6 +138,8 @@ services:
       gui-x: '250'
       gui-y: '0'
     charm: cs:~openstack-charmers-next/xenial/glance
+    options:
+      worker-multiplier: 0.25
     num_units: 1
     to:
     - lxc:2
@@ -148,6 +151,7 @@ services:
     num_units: 1
     options:
       admin-password: openstack
+      worker-multiplier: 0.25
     to:
     - lxc:3
   mysql:
@@ -157,7 +161,8 @@ services:
     charm: cs:~openstack-charmers-next/xenial/percona-cluster
     num_units: 1
     options:
-      max-connections: 20000
+      max-connections: 1000
+      innodb-buffer-pool-size: 512M
     to:
     - lxc:0
   neutron-api:
@@ -169,6 +174,7 @@ services:
     options:
       neutron-security-groups: true
       flat-network-providers: physnet1
+      worker-multiplier: 0.25
     to:
     - lxc:1
   neutron-gateway:
@@ -180,6 +186,7 @@ services:
     options:
       bridge-mappings: physnet1:br-ex
       data-port: br-ex:eth1
+      worker-multiplier: 0.25
     to:
     - '0'
   neutron-openvswitch:
@@ -196,6 +203,7 @@ services:
     num_units: 1
     options:
       network-manager: Neutron
+      worker-multiplier: 0.25
     to:
     - lxc:2
   nova-compute:
