@@ -108,7 +108,6 @@ services:
     num_units: 1
     options:
       openstack-origin: cloud:xenial-newton
-      worker-multiplier: 0.25
     to:
     - lxc:0
   ceilometer:
