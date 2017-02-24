@@ -86,7 +86,7 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: cs:xenial/ceph-mon-6
+    charm: cs:ceph-mon-9
     num_units: 3
     options:
       expected-osd-count: 3
@@ -98,7 +98,7 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '500'
-    charm: cs:xenial/ceph-osd-238
+    charm: cs:ceph-osd-241
     num_units: 3
     options:
       osd-devices: /dev/sdb
@@ -111,113 +111,118 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '250'
-    charm: cs:xenial/ceph-radosgw-245
+    charm: cs:ceph-radosgw-247
     num_units: 1
-    options:
-      use-embedded-webserver: true
     to:
     - lxc:0
   cinder:
     annotations:
       gui-x: '750'
       gui-y: '0'
-    charm: cs:xenial/cinder-257
+    charm: cs:cinder-260
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-newton
       block-device: None
       glance-api-version: 2
+      openstack-origin: cloud:xenial-newton
+      worker-multiplier: 0.25
     to:
     - lxc:1
   cinder-ceph:
     annotations:
       gui-x: '750'
       gui-y: '250'
-    charm: cs:xenial/cinder-ceph-221
+    charm: cs:cinder-ceph-223
     num_units: 0
   glance:
     annotations:
       gui-x: '250'
       gui-y: '0'
-    charm: cs:xenial/glance-253
+    charm: cs:glance-256
+    num_units: 1
     options:
       openstack-origin: cloud:xenial-newton
-    num_units: 1
+      worker-multiplier: 0.25
     to:
     - lxc:2
   keystone:
     annotations:
       gui-x: '500'
       gui-y: '0'
-    charm: cs:xenial/keystone-258
+    charm: cs:keystone-264
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-newton
       admin-password: openstack
+      openstack-origin: cloud:xenial-newton
+      worker-multiplier: 0.25
     to:
     - lxc:3
   mysql:
     annotations:
       gui-x: '0'
       gui-y: '250'
-    charm: cs:xenial/percona-cluster-246
+    charm: cs:percona-cluster-249
     num_units: 1
     options:
-      max-connections: 20000
+      innodb-buffer-pool-size: 512M
+      max-connections: 1000
     to:
     - lxc:0
   neutron-api:
     annotations:
       gui-x: '500'
       gui-y: '500'
-    charm: cs:xenial/neutron-api-246
+    charm: cs:neutron-api-249
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-newton
       flat-network-providers: physnet1
       neutron-security-groups: true
+      openstack-origin: cloud:xenial-newton
+      worker-multiplier: 0.25
     to:
     - lxc:1
   neutron-gateway:
     annotations:
       gui-x: '0'
       gui-y: '0'
-    charm: cs:xenial/neutron-gateway-232
+    charm: cs:neutron-gateway-234
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-newton
       bridge-mappings: physnet1:br-ex
       data-port: br-ex:eth1
+      openstack-origin: cloud:xenial-newton
+      worker-multiplier: 0.25
     to:
     - '0'
   neutron-openvswitch:
     annotations:
       gui-x: '250'
       gui-y: '500'
-    charm: cs:xenial/neutron-openvswitch-238
+    charm: cs:neutron-openvswitch-240
     num_units: 0
   nova-cloud-controller:
     annotations:
       gui-x: '0'
       gui-y: '500'
-    charm: cs:xenial/nova-cloud-controller-292
+    charm: cs:nova-cloud-controller-294
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-newton
       network-manager: Neutron
+      openstack-origin: cloud:xenial-newton
+      worker-multiplier: 0.25
     to:
     - lxc:2
   nova-compute:
     annotations:
       gui-x: '250'
       gui-y: '250'
-    charm: cs:xenial/nova-compute-262
+    charm: cs:nova-compute-264
     num_units: 3
     options:
-      openstack-origin: cloud:xenial-newton
       enable-live-migration: true
       enable-resize: true
       migration-auth-type: ssh
+      openstack-origin: cloud:xenial-newton
     to:
     - '1'
     - '2'
@@ -226,13 +231,13 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '0'
-    charm: cs:xenial/ntp-0
+    charm: cs:ntp-17
     num_units: 0
   openstack-dashboard:
     annotations:
       gui-x: '500'
       gui-y: '-250'
-    charm: cs:xenial/openstack-dashboard-243
+    charm: cs:openstack-dashboard-245
     num_units: 1
     options:
       openstack-origin: cloud:xenial-newton
@@ -242,7 +247,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '250'
-    charm: cs:xenial/rabbitmq-server-54
+    charm: cs:rabbitmq-server-61
     num_units: 1
     to:
     - lxc:0

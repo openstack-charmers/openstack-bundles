@@ -92,7 +92,7 @@ for example (for a private cloud):
     ./neutron-ext-net -g 10.230.168.1 -c 10.230.168.0/21 \
         -f 10.230.168.10:10.230.175.254 ext_net
 
-You'll need to adapt the parameters for the network configuration that eth1 on all the servers is connected to; in a public cloud deployment these ports would be connected to a publicable addressable part of the Internet.
+You'll need to adapt the parameters for the network configuration that eth1 on all the servers is connected to; in a public cloud deployment these ports would be connected to a publicly addressable part of the Internet.
 
 We'll also need an 'internal' network for the admin user which instances are actually connected to:
 
