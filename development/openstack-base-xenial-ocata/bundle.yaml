@@ -113,7 +113,6 @@ services:
       gui-y: '250'
     charm: cs:~openstack-charmers-next/xenial/ceph-radosgw
     num_units: 1
-    options:
     to:
     - lxc:0
   cinder:
