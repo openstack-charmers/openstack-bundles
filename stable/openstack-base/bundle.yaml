@@ -86,7 +86,7 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: cs:xenial/ceph-mon-7
+    charm: cs:xenial/ceph-mon-6
     num_units: 3
     options:
       expected-osd-count: 3
@@ -98,7 +98,7 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '500'
-    charm: cs:xenial/ceph-osd-239
+    charm: cs:xenial/ceph-osd-238
     num_units: 3
     options:
       osd-devices: /dev/sdb
@@ -121,12 +121,12 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '0'
-    charm: cs:xenial/cinder-258
+    charm: cs:xenial/cinder-257
     num_units: 1
     options:
+      openstack-origin: cloud:xenial-newton
       block-device: None
       glance-api-version: 2
-      openstack-origin: cloud:xenial-newton
     to:
     - lxc:1
   cinder-ceph:
@@ -140,27 +140,27 @@ services:
       gui-x: '250'
       gui-y: '0'
     charm: cs:xenial/glance-253
-    num_units: 1
     options:
       openstack-origin: cloud:xenial-newton
+    num_units: 1
     to:
     - lxc:2
   keystone:
     annotations:
       gui-x: '500'
       gui-y: '0'
-    charm: cs:xenial/keystone-262
+    charm: cs:xenial/keystone-258
     num_units: 1
     options:
-      admin-password: openstack
       openstack-origin: cloud:xenial-newton
+      admin-password: openstack
     to:
     - lxc:3
   mysql:
     annotations:
       gui-x: '0'
       gui-y: '250'
-    charm: cs:xenial/percona-cluster-247
+    charm: cs:xenial/percona-cluster-246
     num_units: 1
     options:
       max-connections: 20000
@@ -170,12 +170,12 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '500'
-    charm: cs:xenial/neutron-api-247
+    charm: cs:xenial/neutron-api-246
     num_units: 1
     options:
+      openstack-origin: cloud:xenial-newton
       flat-network-providers: physnet1
       neutron-security-groups: true
-      openstack-origin: cloud:xenial-newton
     to:
     - lxc:1
   neutron-gateway:
@@ -185,9 +185,9 @@ services:
     charm: cs:xenial/neutron-gateway-232
     num_units: 1
     options:
+      openstack-origin: cloud:xenial-newton
       bridge-mappings: physnet1:br-ex
       data-port: br-ex:eth1
-      openstack-origin: cloud:xenial-newton
     to:
     - '0'
   neutron-openvswitch:
@@ -203,8 +203,8 @@ services:
     charm: cs:xenial/nova-cloud-controller-292
     num_units: 1
     options:
-      network-manager: Neutron
       openstack-origin: cloud:xenial-newton
+      network-manager: Neutron
     to:
     - lxc:2
   nova-compute:
@@ -214,10 +214,10 @@ services:
     charm: cs:xenial/nova-compute-262
     num_units: 3
     options:
+      openstack-origin: cloud:xenial-newton
       enable-live-migration: true
       enable-resize: true
       migration-auth-type: ssh
-      openstack-origin: cloud:xenial-newton
     to:
     - '1'
     - '2'
@@ -226,7 +226,7 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '0'
-    charm: cs:xenial/ntp-16
+    charm: cs:xenial/ntp-0
     num_units: 0
   openstack-dashboard:
     annotations:
@@ -242,7 +242,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '250'
-    charm: cs:xenial/rabbitmq-server-58
+    charm: cs:xenial/rabbitmq-server-54
     num_units: 1
     to:
     - lxc:0
