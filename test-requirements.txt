@@ -1,1 +1,2 @@
 juju-deployer
+flake8
