@@ -90,6 +90,8 @@ services:
     num_units: 3
     options:
       expected-osd-count: 3
+    bindings:
+      "": space-0
     to:
     - lxd:1
     - lxd:2
@@ -113,6 +115,8 @@ services:
       gui-y: '250'
     charm: cs:ceph-radosgw-247
     num_units: 1
+    bindings:
+      "": space-0
     to:
     - lxd:0
   cinder:
@@ -126,6 +130,8 @@ services:
       glance-api-version: 2
       openstack-origin: cloud:xenial-ocata
       worker-multiplier: 0.25
+    bindings:
+      "": space-0
     to:
     - lxd:1
   cinder-ceph:
@@ -143,6 +149,8 @@ services:
     options:
       openstack-origin: cloud:xenial-ocata
       worker-multiplier: 0.25
+    bindings:
+      "": space-0
     to:
     - lxd:2
   keystone:
@@ -157,6 +165,8 @@ services:
       openstack-origin: cloud:xenial-ocata
       preferred-api-version: 3
       worker-multiplier: 0.25
+    bindings:
+      "": space-0
     to:
     - lxd:3
   mysql:
@@ -168,7 +178,8 @@ services:
     options:
       innodb-buffer-pool-size: 256M
       max-connections: 1000
-      tuning-level: fast
+    bindings:
+      "": space-0
     to:
     - lxd:0
   neutron-api:
@@ -182,6 +193,8 @@ services:
       neutron-security-groups: true
       openstack-origin: cloud:xenial-ocata
       worker-multiplier: 0.25
+    bindings:
+      "": space-0
     to:
     - lxd:1
   neutron-gateway:
@@ -213,6 +226,8 @@ services:
       network-manager: Neutron
       openstack-origin: cloud:xenial-ocata
       worker-multiplier: 0.25
+    bindings:
+      "": space-0
     to:
     - lxd:2
   nova-compute:
@@ -245,6 +260,8 @@ services:
     num_units: 1
     options:
       openstack-origin: cloud:xenial-ocata
+    bindings:
+      "": space-0
     to:
     - lxd:3
   rabbitmq-server:
