@@ -114,7 +114,7 @@ services:
     annotations:
       gui-x: '1250'
       gui-y: '0'
-    charm: cs:ceilometer-242
+    charm: cs:ceilometer-243
     num_units: 1
     options:
       openstack-origin: cloud:xenial-newton
@@ -162,7 +162,7 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '0'
-    charm: cs:cinder-260
+    charm: cs:cinder-261
     num_units: 1
     options:
       block-device: None
@@ -175,7 +175,7 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '250'
-    charm: cs:cinder-ceph-223
+    charm: cs:cinder-ceph-224
     num_units: 0
   glance:
     annotations:
@@ -192,7 +192,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '0'
-    charm: cs:keystone-264
+    charm: cs:keystone-265
     num_units: 1
     options:
       admin-password: openstack
@@ -204,7 +204,7 @@ services:
     annotations:
       gui-x: '1287.9999389648438'
       gui-y: '251.24996948242188'
-    charm: cs:trusty/mongodb-37
+    charm: cs:mongodb-43
     num_units: 1
     to:
     - lxc:1
@@ -212,7 +212,7 @@ services:
     annotations:
       gui-x: '0'
       gui-y: '250'
-    charm: cs:percona-cluster-249
+    charm: cs:percona-cluster-250
     num_units: 1
     options:
       innodb-buffer-pool-size: 512M
@@ -223,7 +223,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '500'
-    charm: cs:neutron-api-249
+    charm: cs:neutron-api-250
     num_units: 1
     options:
       flat-network-providers: physnet1
@@ -267,7 +267,7 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '250'
-    charm: cs:nova-compute-264
+    charm: cs:nova-compute-266
     num_units: 3
     options:
       enable-live-migration: true

@@ -1,10 +1,10 @@
 # Basic OpenStack Cloud
 
-This example bundle deploys a basic OpenStack Cloud (Newton release) on Ubuntu 16.04 LTS, providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.
+This example bundle deploys a basic OpenStack Cloud (Ocata release with Keystone V3) on Ubuntu 16.04 LTS, providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.
 
 ## Requirements
 
-This example bundle is designed to run on bare metal using Juju with [MAAS][] (Metal-as-a-Service); you will need to have setup a [MAAS][] deployment with a minimum of 4 physical servers prior to using this bundle.
+This example bundle is designed to run on bare metal using Juju 2.x with [MAAS][] (Metal-as-a-Service); you will need to have setup a [MAAS][] deployment with a minimum of 4 physical servers prior to using this bundle.
 
 Certain configuration options within the bundle may need to be adjusted prior to deployment to fit your particular set of hardware. For example, network device names and block device names can vary, and passwords should be yours.
 
@@ -13,7 +13,7 @@ Servers should have:
  - A minimum of 8GB of physical RAM.
  - Enough CPU cores to support your capacity requirements.
  - Two disks (identified by /dev/sda and /dev/sdb); the first is used by MAAS for the OS install, the second for Ceph storage.
- - Two cabled network ports on eth0 and eth1 (see below).
+ - Two cabled network ports on ens1 and ens2 (see below).
 
 Servers should have two physical network ports cabled; the first is used for general communication between services in the Cloud, the second is used for 'public' network traffic to and from instances (North/South traffic) running within the Cloud.
 
@@ -57,7 +57,9 @@ All commands are executed from within the expanded bundle.
 
 In order to configure and use your cloud, you'll need to install the appropriate client tools:
 
-    sudo apt-get -y install python-novaclient python-keystoneclient \
+    sudo add-apt-repository cloud-archive:ocata -y
+    sudo apt update
+    sudo apt-get -y install python-openstackclient python-novaclient python-keystoneclient \
         python-glanceclient python-neutronclient
 
 ### Accessing the cloud
@@ -74,11 +76,11 @@ You should get a full listing of all services registered in the cloud which shou
 In order to run instances on your cloud, you'll need to upload an image to boot instances from:
 
     mkdir -p ~/images
-    wget -O ~/images/trusty-server-cloudimg-amd64-disk1.img \
-        http://cloud-images.ubuntu.com/trusty/current/trusty-server-cloudimg-amd64-disk1.img
+    wget -O ~/images/xenial-server-cloudimg-amd64-disk1.img \
+        http://cloud-images.ubuntu.com/trusty/current/xenial-server-cloudimg-amd64-disk1.img
     glance image-create --name="trusty" --visibility public --progress \
         --container-format=bare --disk-format=qcow2 \
-        < ~/images/trusty-server-cloudimg-amd64-disk1.img
+        < ~/images/xenial-server-cloudimg-amd64-disk1.img
 
 ### Configure networking
 
@@ -121,7 +123,7 @@ You can now boot an instance on your cloud:
 
     nova boot --image xenial --flavor m1.small --key-name mykey \
         --nic net-id=$(neutron net-list | grep internal | awk '{ print $2 }') \
-        trusty-test
+        xenial-test
 
 ### Attaching a volume
 
@@ -131,7 +133,7 @@ First, create a volume in cinder:
 
 then attach it to the instance we just booted in nova:
 
-    nova volume-attach trusty-test <uuid-of-volume> /dev/vdc
+    nova volume-attach xenial-test <uuid-of-volume> /dev/vdc
 
 The attached volume will be accessible once you login to the instance (see below).  It will need to be formatted and mounted!
 
