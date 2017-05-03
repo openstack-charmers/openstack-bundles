@@ -59,15 +59,15 @@ In order to configure and use your cloud, you'll need to install the appropriate
 
     sudo add-apt-repository cloud-archive:ocata -y
     sudo apt update
-    sudo apt-get -y install python-openstackclient python-novaclient python-keystoneclient \
-        python-glanceclient python-neutronclient
+    sudo apt install python-novaclient python-keystoneclient python-glanceclient \
+        python-neutronclient python-openstackclient -y
 
 ### Accessing the cloud
 
 Check that you can access your cloud from the command line:
 
     source novarc
-    keystone catalog
+    openstack catalog list
 
 You should get a full listing of all services registered in the cloud which should include identity, compute, image and network.
 
@@ -75,23 +75,21 @@ You should get a full listing of all services registered in the cloud which shou
 
 In order to run instances on your cloud, you'll need to upload an image to boot instances from:
 
-    mkdir -p ~/images
-    wget -O ~/images/xenial-server-cloudimg-amd64-disk1.img \
-        http://cloud-images.ubuntu.com/trusty/current/xenial-server-cloudimg-amd64-disk1.img
-    glance image-create --name="trusty" --visibility public --progress \
-        --container-format=bare --disk-format=qcow2 \
-        < ~/images/xenial-server-cloudimg-amd64-disk1.img
+    curl http://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-disk1.img | \
+        openstack image create --public --container-format=bare --disk-format=qcow2 xenial
 
 ### Configure networking
 
 For the purposes of a quick test, we'll setup an 'external' network and shared router ('provider-router') which will be used by all tenants for public access to instances:
 
-    ./neutron-ext-net -g <gateway-ip> -c <network-cidr> \
+    ./neutron-ext-net --network-type flat \
+        -g <gateway-ip> -c <network-cidr> \
         -f <pool-start>:<pool-end> ext_net
 
 for example (for a private cloud):
 
-    ./neutron-ext-net -g 10.230.168.1 -c 10.230.168.0/21 \
+    ./neutron-ext-net --network-type flat
+        -g 10.230.168.1 -c 10.230.168.0/21 \
         -f 10.230.168.10:10.230.175.254 ext_net
 
 You'll need to adapt the parameters for the network configuration that eth1 on all the servers is connected to; in a public cloud deployment these ports would be connected to a publicly addressable part of the Internet.
@@ -107,7 +105,7 @@ Neutron provides a wide range of configuration options; see the [OpenStack Neutr
 
 Starting with the OpenStack Newton release, default flavors are no longer created at install time. You therefore need to create at least one machine type before you can boot an instance:
 
-    nova flavor-create m1.small auto 2048 10 1 --ephemeral 20
+    nova flavor-create m1.small auto 2048 20 1 --ephemeral 20
 
 ### Booting an instance
 
