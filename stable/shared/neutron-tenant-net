@@ -1,9 +1,9 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 try:
-  from quantumclient.v2_0 import client
+    from quantumclient.v2_0 import client
 except ImportError:
-  from neutronclient.v2_0 import client
+    from neutronclient.v2_0 import client
 
 from keystoneclient.v2_0 import client as ks_client
 import optparse
@@ -75,8 +75,7 @@ if __name__ == '__main__':
     # Resolve tenant id
     tenant_id = None
     for tenant in [t._info for t in keystone.tenants.list()]:
-        if (tenant['name'] ==
-            (opts.tenant or os.environ['OS_TENANT_NAME'])):
+        if (tenant['name'] == (opts.tenant or os.environ['OS_TENANT_NAME'])):
             tenant_id = tenant['id']
             break  # Tenant ID found - stop looking
     if not tenant_id:
@@ -86,18 +85,24 @@ if __name__ == '__main__':
     # Create network
     networks = quantum.list_networks(name=net_name)
     if len(networks['networks']) == 0:
-        logging.info('Creating network: %s',
-                     net_name)
+        logging.info('Creating tenant network: %s', net_name)
         network_msg = {
             'network': {
                 'name': net_name,
                 'shared': opts.shared,
                 'tenant_id': tenant_id,
+                'provider:network_type': opts.network_type,
             }
         }
+
         if opts.network_type == 'vxlan':
             network_msg['network']['provider:segmentation_id'] = 1233
-            network_msg['network']['provider:network_type'] = opts.network_type
+        elif opts.network_type == 'vlan':
+            network_msg['network']['provider:segmentation_id'] = 5
+            network_msg['network']['provider:physical_network'] = 'physnet1'
+        else:
+            network_msg['network']['provider:segmentation_id'] = 5
+
         network = quantum.create_network(network_msg)['network']
     else:
         logging.warning('Network %s already exists.', net_name)
@@ -145,7 +150,12 @@ if __name__ == '__main__':
             # Check to see if subnet already plugged into router
             ports = quantum.list_ports(device_owner='network:router_interface',
                                        network_id=network['id'])
-            if len(ports['ports']) == 0:
+
+            ha_ports = quantum.list_ports(
+                device_owner='network:ha_router_replicated_interface',
+                network_id=network['id'])
+
+            if len(ports['ports'] + ha_ports['ports']) == 0:
                 logging.info('Adding interface from %s to %s',
                              opts.router, subnet_name)
                 router = routers['routers'][0]
