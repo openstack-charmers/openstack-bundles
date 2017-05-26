@@ -194,6 +194,7 @@ services:
     charm: cs:~openstack-charmers-next/nova-compute
     num_units: 3
     options:
+      config-flags: default_ephemeral_format=ext4
       enable-live-migration: true
       enable-resize: true
       migration-auth-type: ssh
