@@ -109,7 +109,7 @@ services:
     options:
       openstack-origin: cloud:xenial-newton
     to:
-    - lxc:0
+    - lxd:0
   ceilometer:
     annotations:
       gui-x: '1250'
@@ -119,7 +119,7 @@ services:
     options:
       openstack-origin: cloud:xenial-newton
     to:
-    - lxc:2
+    - lxd:2
   ceilometer-agent:
     annotations:
       gui-x: '1250'
@@ -134,9 +134,9 @@ services:
     options:
       expected-osd-count: 3
     to:
-    - lxc:1
-    - lxc:2
-    - lxc:3
+    - lxd:1
+    - lxd:2
+    - lxd:3
   ceph-osd:
     annotations:
       gui-x: '1000'
@@ -157,7 +157,7 @@ services:
     charm: cs:~openstack-charmers-next/ceph-radosgw
     num_units: 1
     to:
-    - lxc:0
+    - lxd:0
   cinder:
     annotations:
       gui-x: '750'
@@ -170,7 +170,7 @@ services:
       block-device: None
       glance-api-version: 2
     to:
-    - lxc:1
+    - lxd:1
   cinder-ceph:
     annotations:
       gui-x: '750'
@@ -187,7 +187,7 @@ services:
       openstack-origin: cloud:xenial-newton
       worker-multiplier: 0.25
     to:
-    - lxc:2
+    - lxd:2
   keystone:
     annotations:
       gui-x: '500'
@@ -199,7 +199,7 @@ services:
       admin-password: openstack
       worker-multiplier: 0.25
     to:
-    - lxc:3
+    - lxd:3
   mongodb:
     annotations:
       gui-x: '1287.9999389648438'
@@ -207,7 +207,7 @@ services:
     charm: cs:trusty/mongodb
     num_units: 1
     to:
-    - lxc:1
+    - lxd:1
   mysql:
     annotations:
       gui-x: '0'
@@ -218,7 +218,7 @@ services:
       max-connections: 1000
       innodb-buffer-pool-size: 512M
     to:
-    - lxc:0
+    - lxd:0
   neutron-api:
     annotations:
       gui-x: '500'
@@ -231,7 +231,7 @@ services:
       neutron-security-groups: true
       worker-multiplier: 0.25
     to:
-    - lxc:1
+    - lxd:1
   neutron-gateway:
     annotations:
       gui-x: '0'
@@ -262,7 +262,7 @@ services:
       network-manager: Neutron
       worker-multiplier: 0.25
     to:
-    - lxc:2
+    - lxd:2
   nova-compute:
     annotations:
       gui-x: '250'
@@ -293,7 +293,7 @@ services:
     options:
       openstack-origin: cloud:xenial-newton
     to:
-    - lxc:3
+    - lxd:3
   rabbitmq-server:
     annotations:
       gui-x: '500'
@@ -301,4 +301,4 @@ services:
     charm: cs:~openstack-charmers-next/rabbitmq-server
     num_units: 1
     to:
-    - lxc:0
+    - lxd:0
