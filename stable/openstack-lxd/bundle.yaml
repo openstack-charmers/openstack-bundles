@@ -161,7 +161,7 @@ services:
     num_units: 1
     options:
       bridge-mappings: physnet1:br-ex
-      data-port: br-ex:eth1
+      data-port: br-ex:eno2
       instance-mtu: 1456
       openstack-origin: cloud:xenial-newton
       worker-multiplier: 0.25

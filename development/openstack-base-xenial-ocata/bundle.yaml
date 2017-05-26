@@ -190,7 +190,7 @@ services:
     options:
       openstack-origin: cloud:xenial-ocata
       bridge-mappings: physnet1:br-ex
-      data-port: br-ex:eth1
+      data-port: br-ex:eno2
       worker-multiplier: 0.25
     to:
     - '0'
