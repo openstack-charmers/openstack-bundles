@@ -92,9 +92,9 @@ services:
       source: cloud:trusty-mitaka/proposed
       expected-osd-count: 3
     to:
-    - 'lxc:1'
-    - 'lxc:2'
-    - 'lxc:3'
+    - 'lxd:1'
+    - 'lxd:2'
+    - 'lxd:3'
   ceph-osd:
     annotations:
       gui-x: '1000'
@@ -118,7 +118,7 @@ services:
     options:
       source: cloud:trusty-mitaka/proposed
     to:
-    - lxc:0
+    - lxd:0
   cinder:
     annotations:
       gui-x: '750'
@@ -130,7 +130,7 @@ services:
       glance-api-version: 2
       openstack-origin: cloud:trusty-mitaka/proposed
     to:
-    - lxc:1
+    - lxd:1
   cinder-ceph:
     annotations:
       gui-x: '750'
@@ -146,7 +146,7 @@ services:
     options:
       openstack-origin: cloud:trusty-mitaka/proposed
     to:
-    - lxc:2
+    - lxd:2
   keystone:
     annotations:
       gui-x: '500'
@@ -157,7 +157,7 @@ services:
       admin-password: openstack
       openstack-origin: cloud:trusty-mitaka/proposed
     to:
-    - lxc:3
+    - lxd:3
   mysql:
     annotations:
       gui-x: '0'
@@ -167,7 +167,7 @@ services:
     options:
       max-connections: 20000
     to:
-    - lxc:0
+    - lxd:0
   neutron-api:
     annotations:
       gui-x: '500'
@@ -178,7 +178,7 @@ services:
       neutron-security-groups: true
       openstack-origin: cloud:trusty-mitaka/proposed
     to:
-    - lxc:1
+    - lxd:1
   neutron-gateway:
     annotations:
       gui-x: '0'
@@ -206,7 +206,7 @@ services:
       network-manager: Neutron
       openstack-origin: cloud:trusty-mitaka/proposed
     to:
-    - lxc:2
+    - lxd:2
   nova-compute:
     annotations:
       gui-x: '250'
@@ -237,7 +237,7 @@ services:
     options:
       openstack-origin: cloud:trusty-mitaka/proposed
     to:
-    - lxc:3
+    - lxd:3
   rabbitmq-server:
     annotations:
       gui-x: '500'
@@ -247,5 +247,5 @@ services:
     options:
       source: cloud:trusty-mitaka/proposed
     to:
-    - lxc:0
+    - lxd:0
 
