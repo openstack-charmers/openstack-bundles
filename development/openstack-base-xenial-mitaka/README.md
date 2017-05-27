@@ -13,7 +13,7 @@ Servers should have:
  - A minimum of 8GB of physical RAM.
  - Enough CPU cores to support your capacity requirements.
  - Two disks (identified by /dev/sda and /dev/sdb); the first is used by MAAS for the OS install, the second for Ceph storage.
- - Two cabled network ports on ens1 and ens2 (see below).
+ - Two cabled network ports on eno1 and eno2 (see below).
 
 Servers should have two physical network ports cabled; the first is used for general communication between services in the Cloud, the second is used for 'public' network traffic to and from instances (North/South traffic) running within the Cloud.
 
