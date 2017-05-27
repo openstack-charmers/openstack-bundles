@@ -138,9 +138,9 @@ services:
       gui-x: '250'
       gui-y: '0'
     charm: cs:~openstack-charmers-next/xenial/glance
+    num_units: 1
     options:
       worker-multiplier: 0.25
-    num_units: 1
     to:
     - lxd:2
   keystone:

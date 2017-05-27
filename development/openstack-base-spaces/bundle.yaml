@@ -211,9 +211,9 @@ services:
       gui-x: '250'
       gui-y: '500'
     charm: cs:~openstack-charmers-next/xenial/neutron-openvswitch
+    num_units: 0
     bindings:
       data: data
-    num_units: 0
   nova-cloud-controller:
     annotations:
       gui-x: '0'
@@ -253,9 +253,9 @@ services:
       gui-x: '500'
       gui-y: '-250'
     charm: cs:~openstack-charmers-next/xenial/openstack-dashboard
+    num_units: 1
     bindings:
       website: internal
-    num_units: 1
     to:
     - "lxd:0"
   rabbitmq-server:
