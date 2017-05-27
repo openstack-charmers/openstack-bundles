@@ -107,7 +107,7 @@ services:
     charm: cs:aodh-6
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-newton
+      openstack-origin: cloud:xenial-ocata
     to:
     - lxd:0
   ceilometer:
@@ -117,7 +117,7 @@ services:
     charm: cs:ceilometer-245
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-newton
+      openstack-origin: cloud:xenial-ocata
     to:
     - lxd:2
   ceilometer-agent:
@@ -125,6 +125,7 @@ services:
       gui-x: '1250'
       gui-y: '500'
     charm: cs:ceilometer-agent-237
+    num_units: 0
   ceph-mon:
     annotations:
       gui-x: '750'
@@ -167,7 +168,7 @@ services:
     options:
       block-device: None
       glance-api-version: 2
-      openstack-origin: cloud:xenial-newton
+      openstack-origin: cloud:xenial-ocata
       worker-multiplier: 0.25
     to:
     - lxd:1
@@ -184,7 +185,7 @@ services:
     charm: cs:glance-256
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-newton
+      openstack-origin: cloud:xenial-ocata
       worker-multiplier: 0.25
     to:
     - lxd:2
@@ -196,7 +197,7 @@ services:
     num_units: 1
     options:
       admin-password: openstack
-      openstack-origin: cloud:xenial-newton
+      openstack-origin: cloud:xenial-ocata
       worker-multiplier: 0.25
     to:
     - lxd:3
@@ -228,7 +229,7 @@ services:
     options:
       flat-network-providers: physnet1
       neutron-security-groups: true
-      openstack-origin: cloud:xenial-newton
+      openstack-origin: cloud:xenial-ocata
       worker-multiplier: 0.25
     to:
     - lxd:1
@@ -241,7 +242,7 @@ services:
     options:
       bridge-mappings: physnet1:br-ex
       data-port: br-ex:eno2
-      openstack-origin: cloud:xenial-newton
+      openstack-origin: cloud:xenial-ocata
       worker-multiplier: 0.25
     to:
     - '0'
@@ -259,7 +260,7 @@ services:
     num_units: 1
     options:
       network-manager: Neutron
-      openstack-origin: cloud:xenial-newton
+      openstack-origin: cloud:xenial-ocata
       worker-multiplier: 0.25
     to:
     - lxd:2
@@ -274,7 +275,7 @@ services:
       enable-live-migration: true
       enable-resize: true
       migration-auth-type: ssh
-      openstack-origin: cloud:xenial-newton
+      openstack-origin: cloud:xenial-ocata
     to:
     - '1'
     - '2'
@@ -292,7 +293,7 @@ services:
     charm: cs:openstack-dashboard-245
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-newton
+      openstack-origin: cloud:xenial-ocata
     to:
     - lxd:3
   rabbitmq-server:

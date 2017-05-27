@@ -125,6 +125,7 @@ services:
       gui-x: '1250'
       gui-y: '500'
     charm: cs:~openstack-charmers-next/ceilometer-agent
+    num_units: 0
   ceph-mon:
     annotations:
       gui-x: '750'
