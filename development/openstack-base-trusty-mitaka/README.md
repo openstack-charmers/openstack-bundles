@@ -73,10 +73,12 @@ You should get a full listing of all services registered in the cloud which shou
 
 ### Configuring an image
 
-In order to run instances on your cloud, you'll need to upload an image to boot instances from:
+In order to run instances on your cloud, you'll need to upload an image to boot instances:
 
     curl http://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-disk1.img | \
         openstack image create --public --container-format=bare --disk-format=qcow2 xenial
+
+Images for other architectures can be obtained from [CloudImages][].  Be sure to use the appropriate image for the cpu architecture.
 
 ### Configure networking
 
@@ -92,7 +94,7 @@ for example (for a private cloud):
         -g 10.230.168.1 -c 10.230.168.0/21 \
         -f 10.230.168.10:10.230.175.254 ext_net
 
-You'll need to adapt the parameters for the network configuration that eth1 on all the servers is connected to; in a public cloud deployment these ports would be connected to a publicly addressable part of the Internet.
+You'll need to adapt the parameters for the network configuration that eno2 on all the servers is connected to; in a public cloud deployment these ports would be connected to a publicly addressable part of the Internet.
 
 We'll also need an 'internal' network for the admin user which instances are actually connected to:
 
@@ -166,3 +168,4 @@ Configuring and managing services on an OpenStack cloud is complex; take a look 
 [Simplestreams]: https://launchpad.net/simplestreams
 [OpenStack Neutron]: http://docs.openstack.org/admin-guide-cloud/content/ch_networking.html
 [OpenStack Admin Guide]: http://docs.openstack.org/user-guide-admin/content
+[CloudImages]: http://cloud-images.ubuntu.com/xenial/current/
