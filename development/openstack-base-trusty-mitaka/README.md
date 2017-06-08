@@ -78,7 +78,7 @@ In order to run instances on your cloud, you'll need to upload an image to boot 
     curl http://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-disk1.img | \
         openstack image create --public --container-format=bare --disk-format=qcow2 xenial
 
-Images for other architectures can be obtained from [CloudImages][].  Be sure to use the appropriate image for the cpu architecture.
+Images for other architectures can be obtained from [Ubuntu Cloud Images][].  Be sure to use the appropriate image for the cpu architecture.
 
 ### Configure networking
 
@@ -168,4 +168,4 @@ Configuring and managing services on an OpenStack cloud is complex; take a look 
 [Simplestreams]: https://launchpad.net/simplestreams
 [OpenStack Neutron]: http://docs.openstack.org/admin-guide-cloud/content/ch_networking.html
 [OpenStack Admin Guide]: http://docs.openstack.org/user-guide-admin/content
-[CloudImages]: http://cloud-images.ubuntu.com/xenial/current/
+[Ubuntu Cloud Images]: http://cloud-images.ubuntu.com/xenial/current/
