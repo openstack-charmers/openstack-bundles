@@ -14,7 +14,7 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: cs:~openstack-charmers-next/xenial/ceph-mon
+    charm: cs:~openstack-charmers-next/ceph-mon
     num_units: 3
     options:
       expected-osd-count: 3
@@ -26,7 +26,7 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '500'
-    charm: cs:~openstack-charmers-next/xenial/ceph-osd
+    charm: cs:~openstack-charmers-next/ceph-osd
     num_units: 3
     options:
       osd-devices: /dev/sdb
