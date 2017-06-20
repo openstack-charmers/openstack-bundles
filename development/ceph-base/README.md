@@ -24,3 +24,15 @@ To horizontally scale Ceph:
 
     juju add-unit ceph-osd # Add one more unit
     juju add-unit -n50 ceph-osd # add 50 more units
+
+## Ensuring it's working
+
+To ensure your cluster is functioning correctly, run through the following commands.
+
+Connect to a monitor:
+
+    juju ssh ceph-mon/0
+
+Ensure the cluster is healthy:
+
+    sudo ceph -s
