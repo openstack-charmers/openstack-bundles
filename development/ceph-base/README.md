@@ -1,4 +1,4 @@
-# Basic OpenStack Cloud
+# Basic Ceph Cluster
 
 This example bundle deploys a Ceph cluster on Ubuntu 16.04 LTS.
 
@@ -18,7 +18,7 @@ Servers should have:
  - 3 Nodes for Ceph OSDs
  - 3 Ceph monitors in LXD containers on the OSD machines
 
-All physical servers (not LXC containers) will also have NTP installed and configured to keep time in sync.
+All physical servers (not LXD containers) will also have NTP installed and configured to keep time in sync.
 
 To horizontally scale Ceph:
 
