@@ -76,8 +76,6 @@ services:
       gui-y: '500'
     charm: cs:ceph-mon-9
     num_units: 3
-    options:
-      default-rbd-features: 1
     to:
     - lxc:1
     - lxc:2
