@@ -65,14 +65,14 @@ relations:
   - nova-compute:juju-info
 - - ntp:juju-info
   - neutron-gateway:juju-info
-- - swift-proxy
-  - keystone
-- - swift-proxy
-  - swift-storage-z1
-- - swift-proxy
-  - swift-storage-z2
-- - swift-proxy
-  - swift-storage-z3
+- - swift-proxy:identity-service
+  - keystone:identity-service
+- - swift-proxy:swift-storage
+  - swift-storage-z1:swift-storage
+- - swift-proxy:swift-storage
+  - swift-storage-z2:swift-storage
+- - swift-proxy:swift-storage
+  - swift-storage-z3:swift-storage
 series: xenial
 services:
   swift-proxy:
