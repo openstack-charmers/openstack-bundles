@@ -200,7 +200,7 @@ services:
     annotations:
       gui-x: '1287.9999389648438'
       gui-y: '251.24996948242188'
-    charm: cs:trusty/mongodb
+    charm: cs:mongodb
     num_units: 1
     to:
     - lxd:1
@@ -283,7 +283,7 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '0'
-    charm: cs:xenial/ntp-0
+    charm: cs:ntp
     num_units: 0
   openstack-dashboard:
     annotations:
