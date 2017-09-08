@@ -310,6 +310,6 @@ services:
     options:
       openstack-origin: cloud:xenial-ocata
       zone: 1
-      block-device: /var/lib/swift-testing.img|$40G  # Not for production
+      block-device: /var/lib/swift-testing.img|40G  # Not for production
     to:
     - '0'
