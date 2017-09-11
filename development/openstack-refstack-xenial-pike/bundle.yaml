@@ -134,6 +134,7 @@ services:
     num_units: 3
     options:
       expected-osd-count: 3
+      source: cloud:xenial-pike
     to:
     - lxd:0
     - lxd:1
@@ -143,11 +144,13 @@ services:
       gui-x: '1000'
       gui-y: '500'
     charm: cs:~openstack-charmers-next/ceph-osd
-    num_units: 2
+    num_units: 3
     options:
       osd-devices: /dev/sdb
       osd-reformat: 'yes'
+      source: cloud:xenial-pike
     to:
+    - '0'
     - '1'
     - '2'
   cinder:
@@ -312,4 +315,4 @@ services:
       zone: 1
       block-device: /var/lib/swift-testing.img|40G  # Not for production
     to:
-    - '0'
+    - "lxd:0"
