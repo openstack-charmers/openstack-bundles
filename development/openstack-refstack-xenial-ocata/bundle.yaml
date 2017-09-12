@@ -313,4 +313,4 @@ services:
       zone: 1
       block-device: /var/lib/swift-testing.img|40G  # Not for production
     to:
-    - "lxd:0"
+    - '0'
