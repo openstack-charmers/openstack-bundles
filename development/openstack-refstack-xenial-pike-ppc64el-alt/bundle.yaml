@@ -68,6 +68,8 @@ relations:
   - cinder:storage-backend
 - - ceph-mon:client
   - nova-compute:ceph
+- - nova-compute:ceph-access
+  - cinder-ceph:ceph-access
 - - cinder:shared-db
   - mysql:shared-db
 - - ceph-mon:client
