@@ -160,7 +160,7 @@ After running these commands you should be able to access the instance:
 
 Configuring and managing services on an OpenStack cloud is complex; take a look a the [OpenStack Admin Guide][] for a complete reference on how to configure an OpenStack cloud for your requirements.
 
-## Useful Cloud URL's
+## Useful Cloud URLs
 
  - OpenStack Dashboard: http://openstack-dashboard_ip/horizon
 

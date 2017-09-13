@@ -1,4 +1,4 @@
-# OpenStack Charms: a Ocata Cloud for Refstack Testing
+# OpenStack Charms: Dev/Test Cloud for Refstack Testing
 
 This bundle is intended to aid in exercising refstack tests on a small metal footprint.  It does not yield a HA cloud and is not intended for production use.  It utilizes development and test-only config options to achieve density of applications.
 
@@ -32,7 +32,7 @@ Collect values necessary to construct the [Tempest][] config file which is requi
 
 Exercise [Refstack][].
 
-## Useful Cloud URL's
+## Useful Cloud URLs
 
  - OpenStack Dashboard: http://openstack-dashboard_ip/horizon
 
