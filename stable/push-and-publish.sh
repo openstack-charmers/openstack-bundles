@@ -1,11 +1,9 @@
-#!/bin/bash
-
-set -ex
+#!/bin/bash -uex
 
 bundle="$1"
 
 if [ -z "$bundle" ]; then
-    echo "Please provide bundle as the only parameter"
+    echo "Please provide bundle directory name as the only parameter"
     exit 1
 fi
 
@@ -14,13 +12,16 @@ if [ ! -d $bundle ]; then
     exit 1
 fi
 
-echo "Add foo"
-cp shared/* $bundle/
+# NOTE(beisner):  The snap-based charm tool can only upload from within
+# the user's HOME dir, and it cannot follow symlinks.  So, we copy and
+# dereference before upload.
+mkdir -p $HOME/temp
+home_tmp="$(mktemp -d -p $HOME/temp)"
+cp -Lrfv $bundle $home_tmp
 
 echo "Pushing bundle to charm store"
-bundle_id=$(charm push $bundle cs:~openstack-charmers/$bundle | grep url | awk '{ print $2 }')
-
-rm -f $bundle/neutron-* $bundle/novarc
+./generate-repo-info.sh . > $home_tmp/$bundle/repo-info
+bundle_id=$(charm push $home_tmp/$bundle cs:~openstack-charmers/$bundle | grep url | awk '{ print $2 }')
 
 if [ -z "$bundle_id" ]; then
     echo "Publishing failed"
@@ -28,8 +29,7 @@ if [ -z "$bundle_id" ]; then
 fi
 
 echo "Publishing new bundle version to stable"
-charm publish $bundle_id
+charm release $bundle_id
 echo "Ensuring global read permissions"
 charm grant cs:~openstack-charmers/$bundle --acl read everyone
-charm set cs:~openstack-charmers/$bundle homepage=https://github.com/openstack-charmers/openstack-bundles \
-    bugs-url=https://github.com/openstack-charmers/openstack-bundles/issues
+rm -rfv $home_tmp
