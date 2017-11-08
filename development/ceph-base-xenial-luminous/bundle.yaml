@@ -20,10 +20,11 @@ services:
     num_units: 3
     options:
       expected-osd-count: 3
+      source: cloud:xenial-pike
     to:
-    - 'lxc:0'
-    - 'lxc:1'
-    - 'lxc:2'
+    - 'lxd:0'
+    - 'lxd:1'
+    - 'lxd:2'
   ceph-osd:
     annotations:
       gui-x: '1000'
@@ -33,6 +34,7 @@ services:
     options:
       osd-devices: /dev/sdb
       osd-reformat: 'yes'
+      source: cloud:xenial-pike
     to:
     - '0'
     - '1'

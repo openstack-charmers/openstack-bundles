@@ -1,11 +1,11 @@
+# This test/example bundle is not HA and is not for production use.
+# It is for validating refstack tests with a small metal footprint.
 machines:
   '0':
     series: xenial
   '1':
     series: xenial
   '2':
-    series: xenial
-  '3':
     series: xenial
 relations:
 - - nova-compute:amqp
@@ -52,8 +52,24 @@ relations:
   - mysql:shared-db
 - - nova-cloud-controller:neutron-api
   - neutron-api:neutron-api
+- - cinder:image-service
+  - glance:image-service
+- - cinder:amqp
+  - rabbitmq-server:amqp
+- - cinder:identity-service
+  - keystone:identity-service
+- - cinder:cinder-volume-service
+  - nova-cloud-controller:cinder-volume-service
+- - cinder-ceph:storage-backend
+  - cinder:storage-backend
 - - ceph-mon:client
   - nova-compute:ceph
+- - nova-compute:ceph-access
+  - cinder-ceph:ceph-access
+- - cinder:shared-db
+  - mysql:shared-db
+- - ceph-mon:client
+  - cinder-ceph:ceph
 - - ceph-mon:client
   - glance:ceph
 - - ceph-osd:mon
@@ -62,14 +78,56 @@ relations:
   - nova-compute:juju-info
 - - ntp:juju-info
   - neutron-gateway:juju-info
-- - ceph-radosgw:mon
-  - ceph-mon:radosgw
-- - ceph-radosgw:identity-service
+- - ceilometer:amqp
+  - rabbitmq-server:amqp
+- - ceilometer-agent:ceilometer-service
+  - ceilometer:ceilometer-service
+- - ceilometer:identity-service
   - keystone:identity-service
-- - nova-compute:lxd
-  - lxd:lxd
+- - ceilometer:identity-notifications
+  - keystone:identity-notifications
+- - ceilometer-agent:nova-ceilometer
+  - nova-compute:nova-ceilometer
+- - ceilometer:shared-db
+  - mongodb:database
+- - aodh:shared-db
+  - mysql:shared-db
+- - aodh:identity-service
+  - keystone:identity-service
+- - aodh:amqp
+  - rabbitmq-server:amqp
+- - swift-proxy:identity-service
+  - keystone:identity-service
+- - swift-proxy:swift-storage
+  - swift-storage:swift-storage
 series: xenial
 services:
+  aodh:
+    annotations:
+      gui-x: '1500'
+      gui-y: '0'
+    charm: cs:~openstack-charmers-next/aodh
+    num_units: 1
+    options:
+      openstack-origin: cloud:xenial-ocata
+    to:
+    - lxd:0
+  ceilometer:
+    annotations:
+      gui-x: '1250'
+      gui-y: '0'
+    charm: cs:~openstack-charmers-next/ceilometer
+    num_units: 1
+    options:
+      openstack-origin: cloud:xenial-ocata
+    to:
+    - lxd:2
+  ceilometer-agent:
+    annotations:
+      gui-x: '1250'
+      gui-y: '500'
+    charm: cs:~openstack-charmers-next/ceilometer-agent
+    num_units: 0
   ceph-mon:
     annotations:
       gui-x: '750'
@@ -77,11 +135,11 @@ services:
     charm: cs:~openstack-charmers-next/ceph-mon
     num_units: 3
     options:
-      default-rbd-features: 1
+      expected-osd-count: 3
     to:
-    - lxc:1
-    - lxc:2
-    - lxc:3
+    - lxd:0
+    - lxd:1
+    - lxd:2
   ceph-osd:
     annotations:
       gui-x: '1000'
@@ -89,28 +147,42 @@ services:
     charm: cs:~openstack-charmers-next/ceph-osd
     num_units: 3
     options:
-      osd-devices: /srv/ceph-osd
+      osd-devices: /dev/sdb
       osd-reformat: 'yes'
     to:
+    - '0'
     - '1'
     - '2'
-    - '3'
-  ceph-radosgw:
+  cinder:
     annotations:
-      gui-x: '1000'
-      gui-y: '250'
-    charm: cs:~openstack-charmers-next/ceph-radosgw
+      gui-x: '750'
+      gui-y: '0'
+    charm: cs:~openstack-charmers-next/cinder
     num_units: 1
+    options:
+      worker-multiplier: 0.25
+      openstack-origin: cloud:xenial-ocata
+      block-device: None
+      glance-api-version: 2
     to:
-    - lxc:0
+    - lxd:1
+  cinder-ceph:
+    annotations:
+      gui-x: '750'
+      gui-y: '250'
+    charm: cs:~openstack-charmers-next/cinder-ceph
+    num_units: 0
   glance:
     annotations:
       gui-x: '250'
       gui-y: '0'
     charm: cs:~openstack-charmers-next/glance
     num_units: 1
+    options:
+      openstack-origin: cloud:xenial-ocata
+      worker-multiplier: 0.25
     to:
-    - lxc:2
+    - lxd:2
   keystone:
     annotations:
       gui-x: '500'
@@ -118,19 +190,19 @@ services:
     charm: cs:~openstack-charmers-next/keystone
     num_units: 1
     options:
+      openstack-origin: cloud:xenial-ocata
       admin-password: openstack
+      worker-multiplier: 0.25
     to:
-    - lxc:3
-  lxd:
+    - lxd:0
+  mongodb:
     annotations:
-      gui-x: '750'
-      gui-y: '250'
-    charm: cs:~openstack-charmers-next/lxd
-    num_units: 0
-    options:
-      block-devices: /dev/sdb
-      overwrite: true
-      storage-type: zfs
+      gui-x: '1287.9999389648438'
+      gui-y: '251.24996948242188'
+    charm: cs:mongodb
+    num_units: 1
+    to:
+    - lxd:1
   mysql:
     annotations:
       gui-x: '0'
@@ -138,10 +210,10 @@ services:
     charm: cs:~openstack-charmers-next/percona-cluster
     num_units: 1
     options:
-      innodb-buffer-pool-size: 512M
       max-connections: 1000
+      innodb-buffer-pool-size: 256M
     to:
-    - lxc:0
+    - lxd:0
   neutron-api:
     annotations:
       gui-x: '500'
@@ -149,12 +221,12 @@ services:
     charm: cs:~openstack-charmers-next/neutron-api
     num_units: 1
     options:
+      openstack-origin: cloud:xenial-ocata
       flat-network-providers: physnet1
       neutron-security-groups: true
-      openstack-origin: cloud:xenial-newton
       worker-multiplier: 0.25
     to:
-    - lxc:1
+    - lxd:1
   neutron-gateway:
     annotations:
       gui-x: '0'
@@ -162,11 +234,10 @@ services:
     charm: cs:~openstack-charmers-next/neutron-gateway
     num_units: 1
     options:
+      openstack-origin: cloud:xenial-ocata
       bridge-mappings: physnet1:br-ex
-      data-port: br-ex:eth1
-      openstack-origin: cloud:xenial-newton
+      data-port: br-ex:eno2
       worker-multiplier: 0.25
-      instance-mtu: 1456
     to:
     - '0'
   neutron-openvswitch:
@@ -182,32 +253,31 @@ services:
     charm: cs:~openstack-charmers-next/nova-cloud-controller
     num_units: 1
     options:
+      openstack-origin: cloud:xenial-ocata
       network-manager: Neutron
-      openstack-origin: cloud:xenial-newton
       worker-multiplier: 0.25
     to:
-    - lxc:2
+    - lxd:2
   nova-compute:
     annotations:
       gui-x: '250'
       gui-y: '250'
     charm: cs:~openstack-charmers-next/nova-compute
-    num_units: 3
+    num_units: 2
     options:
+      config-flags: default_ephemeral_format=ext4
+      openstack-origin: cloud:xenial-ocata
       enable-live-migration: true
       enable-resize: true
       migration-auth-type: ssh
-      openstack-origin: cloud:xenial-newton
-      virt-type: lxd
     to:
     - '1'
     - '2'
-    - '3'
   ntp:
     annotations:
       gui-x: '1000'
       gui-y: '0'
-    charm: cs:~openstack-charmers-next/ntp
+    charm: cs:ntp
     num_units: 0
   openstack-dashboard:
     annotations:
@@ -216,9 +286,9 @@ services:
     charm: cs:~openstack-charmers-next/openstack-dashboard
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-newton
+      openstack-origin: cloud:xenial-ocata
     to:
-    - lxc:3
+    - lxd:2
   rabbitmq-server:
     annotations:
       gui-x: '500'
@@ -226,4 +296,23 @@ services:
     charm: cs:~openstack-charmers-next/rabbitmq-server
     num_units: 1
     to:
-    - lxc:0
+    - lxd:0
+  swift-proxy:
+    charm: cs:~openstack-charmers-next/swift-proxy
+    num_units: 1
+    options:
+      openstack-origin: cloud:xenial-ocata
+      zone-assignment: manual
+      replicas: 1
+      swift-hash: fdfef9d4-8b06-11e2-8ac0-531c923c8fae
+    to:
+    - "lxd:1"
+  swift-storage:
+    charm: cs:~openstack-charmers-next/swift-storage
+    num_units: 1
+    options:
+      openstack-origin: cloud:xenial-ocata
+      zone: 1
+      block-device: /var/lib/swift-testing.img|40G  # Not for production
+    to:
+    - '0'

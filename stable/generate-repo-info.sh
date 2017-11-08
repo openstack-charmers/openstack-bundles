@@ -1,0 +1,1 @@
+../development/generate-repo-info.sh
