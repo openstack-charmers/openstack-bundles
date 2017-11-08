@@ -1,4 +1,6 @@
 #!/bin/bash -uex
+# Assert that bundles will generally look and be the same, except for
+# expected differences such as openstack-origin, source, etc.
 
 # Files expected within each bundle directory
 expected_files="bundle.yaml neutron-ext-net neutron-tenant-net novarc README.md"
@@ -35,6 +37,15 @@ done
 # Check current stable openstack-base bundle diff against dev of the same release
 baseline_bundle="development/openstack-base-xenial-pike/bundle.yaml"
 stable_bundle="stable/openstack-base/bundle.yaml"
+diff -Naur $stable_bundle $baseline_bundle | \
+    egrep -v " charm:| options:| openstack-origin:| source:" | \
+    egrep "^\+ |^\- " &&\
+        export too_much_diff="$too_much_diff $stable_bundle" ||\
+        echo "Diff OK: $stable_bundle"
+
+# Check current stable openstack-telemetry bundle diff against dev of the same release
+baseline_bundle="development/openstack-telemetry-xenial-pike/bundle.yaml"
+stable_bundle="stable/openstack-telemetry/bundle.yaml"
 diff -Naur $stable_bundle $baseline_bundle | \
     egrep -v " charm:| options:| openstack-origin:| source:" | \
     egrep "^\+ |^\- " &&\
