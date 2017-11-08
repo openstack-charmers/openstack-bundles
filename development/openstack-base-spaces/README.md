@@ -1,6 +1,6 @@
-# OpenStack Cloud with Network Segregation
+# *Experimental* OpenStack Cloud with Network Segregation
 
-***NOTE***: This example bundle requires the use of Juju 2.0
+***NOTE***: This example bundle requires the use of Juju 2.x
 
 This example bundle deploys a OpenStack Cloud (Mitaka release) on Ubuntu 16.04 LTS, providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.
 
@@ -17,7 +17,7 @@ Servers should have:
  - A minimum of 8GB of physical RAM.
  - Enough CPU cores to support your capacity requirements.
  - Two disks (identified by /dev/sda and /dev/sdb); the first is used by MAAS for the OS install, the second for Ceph storage.
- - Two cabled network ports on eth0 and eth1 (see below).
+ - Two cabled network ports on eno1 and eno2 (see below).
 
 Servers should have two physical network ports cabled; the first is used for general communication between services in the Cloud, the second is used for 'public' network traffic to and from instances (North/South traffic) running within the Cloud.
 
@@ -100,7 +100,7 @@ for example (for a private cloud):
     ./neutron-ext-net -g 10.230.168.1 -c 10.230.168.0/21 \
         -f 10.230.168.10:10.230.175.254 ext_net
 
-You'll need to adapt the parameters for the network configuration that eth1 on all the servers is connected to; in a public cloud deployment these ports would be connected to a publicable addressable part of the Internet.
+You'll need to adapt the parameters for the network configuration that eno2 on all the servers is connected to; in a public cloud deployment these ports would be connected to a publicable addressable part of the Internet.
 
 We'll also need an 'internal' network for the admin user which instances are actually connected to:
 
@@ -160,7 +160,7 @@ After running these commands you should be able to access the instance:
 
 Configuring and managing services on an OpenStack cloud is complex; take a look a the [OpenStack Admin Guide][] for a complete reference on how to configure an OpenStack cloud for your requirements.
 
-## Useful Cloud URL's
+## Useful Cloud URLs
 
  - OpenStack Dashboard: http://openstack-dashboard_ip/horizon
 

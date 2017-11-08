@@ -1,4 +1,6 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+#  While this works with python3, other requirements in the
+#  venv aren't quite py3-ready.
 
 try:
     from quantumclient.v2_0 import client

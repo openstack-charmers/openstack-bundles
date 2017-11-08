@@ -1,10 +1,10 @@
 # Basic OpenStack Cloud
 
-This example bundle deploys a basic OpenStack Cloud (Mitaka release) on Ubuntu 16.04 LTS, providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.
+This development example bundle deploys a basic OpenStack Cloud providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.
 
 ## Requirements
 
-This example bundle is designed to run on bare metal using Juju with [MAAS][] (Metal-as-a-Service); you will need to have setup a [MAAS][] deployment with a minimum of 4 physical servers prior to using this bundle.
+This example bundle is designed to run on bare metal using Juju 2.x with [MAAS][] (Metal-as-a-Service); you will need to have setup a [MAAS][] deployment with a minimum of 4 physical servers prior to using this bundle.
 
 Certain configuration options within the bundle may need to be adjusted prior to deployment to fit your particular set of hardware. For example, network device names and block device names can vary, and passwords should be yours.
 
@@ -13,7 +13,7 @@ Servers should have:
  - A minimum of 8GB of physical RAM.
  - Enough CPU cores to support your capacity requirements.
  - Two disks (identified by /dev/sda and /dev/sdb); the first is used by MAAS for the OS install, the second for Ceph storage.
- - Two cabled network ports on eth0 and eth1 (see below).
+ - Two cabled network ports on eno1 and eno2 (see below).
 
 Servers should have two physical network ports cabled; the first is used for general communication between services in the Cloud, the second is used for 'public' network traffic to and from instances (North/South traffic) running within the Cloud.
 
@@ -57,42 +57,44 @@ All commands are executed from within the expanded bundle.
 
 In order to configure and use your cloud, you'll need to install the appropriate client tools:
 
-    sudo apt-get -y install python-novaclient python-keystoneclient \
-        python-glanceclient python-neutronclient
+    sudo add-apt-repository cloud-archive:ocata -y
+    sudo apt update
+    sudo apt install python-novaclient python-keystoneclient python-glanceclient \
+        python-neutronclient python-openstackclient -y
 
 ### Accessing the cloud
 
 Check that you can access your cloud from the command line:
 
     source novarc
-    keystone catalog
+    openstack catalog list
 
 You should get a full listing of all services registered in the cloud which should include identity, compute, image and network.
 
 ### Configuring an image
 
-In order to run instances on your cloud, you'll need to upload an image to boot instances from:
+In order to run instances on your cloud, you'll need to upload an image to boot instances:
 
-    mkdir -p ~/images
-    wget -O ~/images/trusty-server-cloudimg-amd64-disk1.img \
-        http://cloud-images.ubuntu.com/trusty/current/trusty-server-cloudimg-amd64-disk1.img
-    glance image-create --name="trusty" --visibility public --progress \
-        --container-format=bare --disk-format=qcow2 \
-        < ~/images/trusty-server-cloudimg-amd64-disk1.img
+    curl http://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-disk1.img | \
+        openstack image create --public --container-format=bare --disk-format=qcow2 xenial
+
+Images for other architectures can be obtained from [Ubuntu Cloud Images][].  Be sure to use the appropriate image for the cpu architecture.
 
 ### Configure networking
 
 For the purposes of a quick test, we'll setup an 'external' network and shared router ('provider-router') which will be used by all tenants for public access to instances:
 
-    ./neutron-ext-net -g <gateway-ip> -c <network-cidr> \
+    ./neutron-ext-net --network-type flat \
+        -g <gateway-ip> -c <network-cidr> \
         -f <pool-start>:<pool-end> ext_net
 
 for example (for a private cloud):
 
-    ./neutron-ext-net -g 10.230.168.1 -c 10.230.168.0/21 \
+    ./neutron-ext-net --network-type flat
+        -g 10.230.168.1 -c 10.230.168.0/21 \
         -f 10.230.168.10:10.230.175.254 ext_net
 
-You'll need to adapt the parameters for the network configuration which eth1 on all the servers is connected to; in a public cloud deployment these ports would be connected to a publicly-addressable part of the Internet.
+You'll need to adapt the parameters for the network configuration that eno2 on all the servers is connected to; in a public cloud deployment these ports would be connected to a publicly addressable part of the Internet.
 
 We'll also need an 'internal' network for the admin user which instances are actually connected to:
 
@@ -100,6 +102,12 @@ We'll also need an 'internal' network for the admin user which instances are act
         [-N <dns-server>] internal 10.5.5.0/24
 
 Neutron provides a wide range of configuration options; see the [OpenStack Neutron][] documentation for more details.
+
+### Configuring a flavor
+
+Starting with the OpenStack Newton release, default flavors are no longer created at install time. You therefore need to create at least one machine type before you can boot an instance:
+
+    nova flavor-create m1.small auto 2048 20 1 --ephemeral 20
 
 ### Booting an instance
 
@@ -115,7 +123,7 @@ You can now boot an instance on your cloud:
 
     nova boot --image xenial --flavor m1.small --key-name mykey \
         --nic net-id=$(neutron net-list | grep internal | awk '{ print $2 }') \
-        trusty-test
+        xenial-test
 
 ### Attaching a volume
 
@@ -125,7 +133,7 @@ First, create a volume in cinder:
 
 then attach it to the instance we just booted in nova:
 
-    nova volume-attach trusty-test <uuid-of-volume> /dev/vdc
+    nova volume-attach xenial-test <uuid-of-volume> /dev/vdc
 
 The attached volume will be accessible once you login to the instance (see below).  It will need to be formatted and mounted!
 
@@ -152,7 +160,7 @@ After running these commands you should be able to access the instance:
 
 Configuring and managing services on an OpenStack cloud is complex; take a look a the [OpenStack Admin Guide][] for a complete reference on how to configure an OpenStack cloud for your requirements.
 
-## Useful Cloud URL's
+## Useful Cloud URLs
 
  - OpenStack Dashboard: http://openstack-dashboard_ip/horizon
 
@@ -160,3 +168,4 @@ Configuring and managing services on an OpenStack cloud is complex; take a look 
 [Simplestreams]: https://launchpad.net/simplestreams
 [OpenStack Neutron]: http://docs.openstack.org/admin-guide-cloud/content/ch_networking.html
 [OpenStack Admin Guide]: http://docs.openstack.org/user-guide-admin/content
+[Ubuntu Cloud Images]: http://cloud-images.ubuntu.com/xenial/current/
