@@ -1,6 +1,6 @@
-# OpenStack Cloud with Network Segregation
+# *Experimental* OpenStack Cloud with Network Segregation
 
-***NOTE***: This example bundle requires the use of Juju 2.0
+***NOTE***: This example bundle requires the use of Juju 2.x
 
 This example bundle deploys a OpenStack Cloud (Mitaka release) on Ubuntu 16.04 LTS, providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.
 

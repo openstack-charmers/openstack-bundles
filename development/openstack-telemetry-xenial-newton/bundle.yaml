@@ -64,6 +64,8 @@ relations:
   - cinder:storage-backend
 - - ceph-mon:client
   - nova-compute:ceph
+- - nova-compute:ceph-access
+  - cinder-ceph:ceph-access
 - - cinder:shared-db
   - mysql:shared-db
 - - ceph-mon:client
@@ -134,6 +136,7 @@ services:
     num_units: 3
     options:
       expected-osd-count: 3
+      source: cloud:xenial-newton
     to:
     - lxd:1
     - lxd:2
@@ -147,6 +150,7 @@ services:
     options:
       osd-devices: /dev/sdb
       osd-reformat: 'yes'
+      source: cloud:xenial-newton
     to:
     - '1'
     - '2'
@@ -157,6 +161,8 @@ services:
       gui-y: '250'
     charm: cs:~openstack-charmers-next/ceph-radosgw
     num_units: 1
+    options:
+      source: cloud:xenial-newton
     to:
     - lxd:0
   cinder:
