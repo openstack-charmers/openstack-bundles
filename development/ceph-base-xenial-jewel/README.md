@@ -1,6 +1,6 @@
 # Basic Ceph Cluster
 
-This example bundle deploys a Ceph cluster on Ubuntu 16.04 LTS.
+This example bundle deploys a Ceph (Jewel) cluster on Ubuntu 16.04 LTS.
 
 ## Requirements
 
@@ -29,10 +29,11 @@ To horizontally scale Ceph:
 
 To ensure your cluster is functioning correctly, run through the following commands.
 
-Connect to a monitor:
+Connect to a monitor shell:
 
     juju ssh ceph-mon/0
 
-Ensure the cluster is healthy:
+Check that the cluster is healthy:
 
     sudo ceph -s
+
