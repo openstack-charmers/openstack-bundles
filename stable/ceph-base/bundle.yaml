@@ -1,0 +1,47 @@
+machines:
+  '0':
+    series: xenial
+  '1':
+    series: xenial
+  '2':
+    series: xenial
+relations:
+- - ceph-osd:mon
+  - ceph-mon:osd
+- - ntp:juju-info
+  - ceph-osd:juju-info
+series: xenial
+services:
+  ceph-mon:
+    annotations:
+      gui-x: '750'
+      gui-y: '500'
+    charm: cs:ceph-mon-15
+    num_units: 3
+    options:
+      expected-osd-count: 3
+      source: cloud:xenial-pike
+    to:
+    - lxd:0
+    - lxd:1
+    - lxd:2
+  ceph-osd:
+    annotations:
+      gui-x: '1000'
+      gui-y: '500'
+    charm: cs:ceph-osd-250
+    num_units: 3
+    options:
+      osd-devices: /dev/sdb
+      osd-reformat: 'yes'
+      source: cloud:xenial-pike
+    to:
+    - '0'
+    - '1'
+    - '2'
+  ntp:
+    annotations:
+      gui-x: '1000'
+      gui-y: '0'
+    charm: cs:ntp-24
+    num_units: 0

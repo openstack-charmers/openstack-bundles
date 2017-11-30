@@ -88,20 +88,20 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: cs:ceph-mon-12
+    charm: cs:ceph-mon-15
     num_units: 3
     options:
       expected-osd-count: 3
       source: cloud:xenial-pike
     to:
-    - 'lxd:1'
-    - 'lxd:2'
-    - 'lxd:3'
+    - lxd:1
+    - lxd:2
+    - lxd:3
   ceph-osd:
     annotations:
       gui-x: '1000'
       gui-y: '500'
-    charm: cs:ceph-osd-246
+    charm: cs:ceph-osd-250
     num_units: 3
     options:
       osd-devices: /dev/sdb
@@ -115,7 +115,7 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '250'
-    charm: cs:ceph-radosgw-251
+    charm: cs:ceph-radosgw-253
     num_units: 1
     options:
       source: cloud:xenial-pike
@@ -125,7 +125,7 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '0'
-    charm: cs:cinder-264
+    charm: cs:cinder-265
     num_units: 1
     options:
       block-device: None
@@ -138,13 +138,13 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '250'
-    charm: cs:cinder-ceph-227
+    charm: cs:cinder-ceph-228
     num_units: 0
   glance:
     annotations:
       gui-x: '250'
       gui-y: '0'
-    charm: cs:glance-259
+    charm: cs:glance-260
     num_units: 1
     options:
       openstack-origin: cloud:xenial-pike
@@ -155,11 +155,11 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '0'
-    charm: cs:keystone-268
+    charm: cs:keystone-272
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-pike
       admin-password: openstack
+      openstack-origin: cloud:xenial-pike
       worker-multiplier: 0.25
     to:
     - lxd:3
@@ -167,23 +167,23 @@ services:
     annotations:
       gui-x: '0'
       gui-y: '250'
-    charm: cs:percona-cluster-254
+    charm: cs:percona-cluster-256
     num_units: 1
     options:
-      max-connections: 1000
       innodb-buffer-pool-size: 256M
+      max-connections: 1000
     to:
     - lxd:0
   neutron-api:
     annotations:
       gui-x: '500'
       gui-y: '500'
-    charm: cs:neutron-api-252
+    charm: cs:neutron-api-254
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-pike
-      neutron-security-groups: true
       flat-network-providers: physnet1
+      neutron-security-groups: true
+      openstack-origin: cloud:xenial-pike
       worker-multiplier: 0.25
     to:
     - lxd:1
@@ -191,7 +191,7 @@ services:
     annotations:
       gui-x: '0'
       gui-y: '0'
-    charm: cs:neutron-gateway-238
+    charm: cs:neutron-gateway-242
     num_units: 1
     options:
       bridge-mappings: physnet1:br-ex
@@ -204,17 +204,17 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '500'
-    charm: cs:neutron-openvswitch-244
+    charm: cs:neutron-openvswitch-245
     num_units: 0
   nova-cloud-controller:
     annotations:
       gui-x: '0'
       gui-y: '500'
-    charm: cs:nova-cloud-controller-300
+    charm: cs:nova-cloud-controller-302
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-pike
       network-manager: Neutron
+      openstack-origin: cloud:xenial-pike
       worker-multiplier: 0.25
     to:
     - lxd:2
@@ -222,7 +222,7 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '250'
-    charm: cs:nova-compute-273
+    charm: cs:nova-compute-275
     num_units: 3
     options:
       config-flags: default_ephemeral_format=ext4
@@ -238,13 +238,13 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '0'
-    charm: cs:ntp-18
+    charm: cs:ntp-24
     num_units: 0
   openstack-dashboard:
     annotations:
       gui-x: '500'
       gui-y: '-250'
-    charm: cs:openstack-dashboard-250
+    charm: cs:openstack-dashboard-252
     num_units: 1
     options:
       openstack-origin: cloud:xenial-pike
@@ -254,7 +254,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '250'
-    charm: cs:rabbitmq-server-65
+    charm: cs:rabbitmq-server-69
     num_units: 1
     to:
     - lxd:0
