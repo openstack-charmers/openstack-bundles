@@ -1,4 +1,4 @@
-#!/bin/bash -uex
+#!/bin/bash -ex
 
 bundle="$1"
 
