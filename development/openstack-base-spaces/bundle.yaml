@@ -64,6 +64,8 @@ relations:
   - nova-compute:ceph
 - - cinder:shared-db
   - mysql:shared-db
+- - nova-compute:ceph-access
+  - cinder-ceph:ceph-access
 - - ceph-mon:client
   - cinder-ceph:ceph
 - - ceph-mon:client
@@ -86,9 +88,16 @@ services:
       gui-y: '500'
     charm: cs:~openstack-charmers-next/xenial/ceph-mon
     num_units: 3
+    options:
+      expected-osd-count: 3
     bindings:
-      public: storage
+      public: public
       cluster: internal
+      radosgw: internal
+      osd: internal
+      client: internal
+      mds: internal
+      admin: internal
     to:
     - 'lxd:0'
     - 'lxd:1'
@@ -103,8 +112,9 @@ services:
       osd-devices: /dev/sdb
       osd-reformat: 'yes'
     bindings:
-      public: storage
+      public: public
       cluster: internal
+      mon: internal
     to:
     - '0'
     - '1'
@@ -116,9 +126,12 @@ services:
     charm: cs:~openstack-charmers-next/xenial/ceph-radosgw
     num_units: 1
     bindings:
-      public: internal
+      public: public
       admin: admin
       internal: internal
+      mon: internal
+      identity-service: internal
+      gateway: public
     to:
     - 'lxd:0'
   cinder:
@@ -131,9 +144,11 @@ services:
       block-device: None
       glance-api-version: 2
     bindings:
-      public: internal
+      public: public
       admin: admin
       internal: internal
+      shared-db: internal
+      amqp: internal
     to:
     - "lxd:1"
   cinder-ceph:
@@ -142,6 +157,10 @@ services:
       gui-y: '250'
     charm: cs:~openstack-charmers-next/xenial/cinder-ceph
     num_units: 0
+    bindings:
+      ceph: internal
+      storage-backend: internal
+      ceph-access: internal
   glance:
     annotations:
       gui-x: '250'
@@ -149,9 +168,11 @@ services:
     charm: cs:~openstack-charmers-next/xenial/glance
     num_units: 1
     bindings:
-      public: internal
+      public: public
       admin: admin
       internal: internal
+      shared-db: internal
+      amqp: internal
     to:
     - "lxd:2"
   keystone:
@@ -163,9 +184,10 @@ services:
     options:
       admin-password: openstack
     bindings:
-      public: internal
+      public: public
       admin: admin
       internal: internal
+      shared-db: internal
     to:
     - "lxd:0"
   mysql:
@@ -189,9 +211,11 @@ services:
     options:
       neutron-security-groups: true
     bindings:
-      public: internal
+      public: public
       admin: admin
       internal: internal
+      shared-db: internal
+      amqp: internal
     to:
     - "lxd:1"
   neutron-gateway:
@@ -204,6 +228,7 @@ services:
       ext-port: eth1
     bindings:
       data: data
+      amqp: internal
     to:
     - '0'
   neutron-openvswitch:
@@ -214,6 +239,7 @@ services:
     num_units: 0
     bindings:
       data: data
+      amqp: internal
   nova-cloud-controller:
     annotations:
       gui-x: '0'
@@ -223,9 +249,11 @@ services:
     options:
       network-manager: Neutron
     bindings:
-      public: internal
+      public: public
       admin: admin
       internal: internal
+      shared-db: internal
+      amqp: internal
     to:
     - "lxd:2"
   nova-compute:
@@ -239,6 +267,9 @@ services:
       enable-live-migration: true
       enable-resize: true
       migration-auth-type: ssh
+    bindings:
+      amqp: internal
+      internal: internal
     to:
     - '1'
     - '2'
