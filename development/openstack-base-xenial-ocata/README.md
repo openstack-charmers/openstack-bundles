@@ -80,6 +80,11 @@ In order to run instances on your cloud, you'll need to upload an image to boot 
 
 Images for other architectures can be obtained from [Ubuntu Cloud Images][].  Be sure to use the appropriate image for the cpu architecture.
 
+**Note:** for ARM 64-bit (arm64) guests, you will also need to configure the image to boot in UEFI mode:
+
+    curl http://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-arm64-uefi1.img | \
+        openstack image create --public --container-format=bare --disk-format=qcow2 --property hw_firmware_type=uefi xenial
+
 ### Configure networking
 
 For the purposes of a quick test, we'll setup an 'external' network and shared router ('provider-router') which will be used by all tenants for public access to instances:

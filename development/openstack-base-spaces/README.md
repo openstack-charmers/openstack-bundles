@@ -88,6 +88,16 @@ In order to run instances on your cloud, you'll need to upload an image to boot 
         --container-format=bare --disk-format=qcow2 \
         < ~/images/trusty-server-cloudimg-amd64-disk1.img
 
+**Note:** for ARM 64-bit (arm64) guests, you will also need to configure the image to boot in UEFI mode:
+
+    mkdir -p ~/images
+    wget -O ~/images/trusty-server-cloudimg-arm64-uefi1.img \
+        http://cloud-images.ubuntu.com/trusty/current/trusty-server-cloudimg-arm64-uefi1.img
+    glance image-create --name="trusty" --visibility public --progress \
+        --container-format=bare --disk-format=qcow2 \
+        --property="hw_firmware_type=uefi" \
+        < ~/images/trusty-server-cloudimg-arm64-uefi1.img
+
 ### Configure networking
 
 For the purposes of a quick test, we'll setup an 'external' network and shared router ('provider-router') which will be used by all tenants for public access to instances:
