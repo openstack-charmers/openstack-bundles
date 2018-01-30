@@ -43,5 +43,5 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '0'
-    charm: cs:~openstack-charmers-next/ntp
+    charm: cs:ntp
     num_units: 0
