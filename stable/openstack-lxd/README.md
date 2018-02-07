@@ -111,6 +111,9 @@ Starting with the OpenStack Newton release, default flavors are no longer create
 
 First generate a SSH keypair so that you can access your instances once you've booted them:
 
+    mkdir -p ~/.ssh
+    touch ~/.ssh/id_rsa_cloud
+    chmod 600 ~/.ssh/id_rsa_cloud
     nova keypair-add mykey > ~/.ssh/id_rsa_cloud
 
 **Note:** you can also upload an existing public key to the cloud rather than generating a new one:
