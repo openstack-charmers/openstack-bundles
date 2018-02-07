@@ -124,8 +124,8 @@ You can now boot an instance on your cloud:
 
 In order to access the instance you just booted on the cloud, you'll need to assign a floating IP address to the instance:
 
-    nova floating-ip-create
-    nova add-floating-ip <uuid-of-instance> <new-floating-ip>
+    openstack floating ip create ext_net
+    openstack server add floating ip xenial-test <new-floating-ip>
 
 and then allow access via SSH (and ping) - you only need todo this once:
 
