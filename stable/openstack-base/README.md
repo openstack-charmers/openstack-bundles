@@ -150,13 +150,17 @@ In order to access the instance you just booted on the cloud, you'll need to ass
     openstack floating ip create ext_net
     openstack server add floating ip xenial-test <new-floating-ip>
 
-and then allow access via SSH (and ping) - you only need to do these steps:
+and then allow access via SSH (and ping) - you only need to do these steps once:
+
+    neutron security-group-list
+
+For each security group in the list, identify the UUID and run:
 
     neutron security-group-rule-create --protocol icmp \
-        --direction ingress default
+        --direction ingress <uuid>
     neutron security-group-rule-create --protocol tcp \
         --port-range-min 22 --port-range-max 22 \
-        --direction ingress default
+        --direction ingress <uuid>
 
 After running these commands you should be able to access the instance:
 
