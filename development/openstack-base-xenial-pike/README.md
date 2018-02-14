@@ -118,6 +118,9 @@ Starting with the OpenStack Newton release, default flavors are no longer create
 
 First generate a SSH keypair so that you can access your instances once you've booted them:
 
+    mkdir -p ~/.ssh
+    touch ~/.ssh/id_rsa_cloud
+    chmod 600 ~/.ssh/id_rsa_cloud
     nova keypair-add mykey > ~/.ssh/id_rsa_cloud
 
 **Note:** you can also upload an existing public key to the cloud rather than generating a new one:
@@ -146,16 +149,20 @@ The attached volume will be accessible once you login to the instance (see below
 
 In order to access the instance you just booted on the cloud, you'll need to assign a floating IP address to the instance:
 
-    nova floating-ip-create
-    nova add-floating-ip <uuid-of-instance> <new-floating-ip>
+    openstack floating ip create ext_net
+    openstack server add floating ip xenial-test <new-floating-ip>
 
-and then allow access via SSH (and ping) - you only need todo this once:
+and then allow access via SSH (and ping) - you only need to do these steps once:
+
+    neutron security-group-list
+
+For each security group in the list, identify the UUID and run:
 
     neutron security-group-rule-create --protocol icmp \
-        --direction ingress default
+        --direction ingress <uuid>
     neutron security-group-rule-create --protocol tcp \
         --port-range-min 22 --port-range-max 22 \
-        --direction ingress default
+        --direction ingress <uuid>
 
 After running these commands you should be able to access the instance:
 
