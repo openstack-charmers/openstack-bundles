@@ -4,7 +4,7 @@
 oct_tmp="$(mktemp -d)"
 bzr export $oct_tmp https://code.launchpad.net/~ost-maintainers/openstack-charm-testing/trunk
 
-tools="neutron-ext-net neutron-tenant-net"
+tools="neutron-ext-net neutron-tenant-net neutron-ext-net-ksv3 neutron-tenant-net-ksv3"
 for tool in $tools; do
     cp -fvp $oct_tmp/bin/$tool stable/shared/$tool
     cp -fvp $oct_tmp/bin/$tool development/shared/$tool

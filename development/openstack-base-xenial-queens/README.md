@@ -66,7 +66,7 @@ In order to configure and use your cloud, you'll need to install the appropriate
 
 Check that you can access your cloud from the command line:
 
-    source novarc
+    source novarc_auto
     openstack catalog list
 
 You should get a full listing of all services registered in the cloud which should include identity, compute, image and network.
@@ -89,13 +89,13 @@ Images for other architectures can be obtained from [Ubuntu Cloud Images][].  Be
 
 For the purposes of a quick test, we'll setup an 'external' network and shared router ('provider-router') which will be used by all tenants for public access to instances:
 
-    ./neutron-ext-net --network-type flat \
+    ./neutron-ext-net-ksv3 --network-type flat \
         -g <gateway-ip> -c <network-cidr> \
         -f <pool-start>:<pool-end> ext_net
 
 for example (for a private cloud):
 
-    ./neutron-ext-net --network-type flat
+    ./neutron-ext-net-ksv3 --network-type flat
         -g 10.230.168.1 -c 10.230.168.0/21 \
         -f 10.230.168.10:10.230.175.254 ext_net
 
@@ -103,7 +103,7 @@ You'll need to adapt the parameters for the network configuration that eno2 on a
 
 We'll also need an 'internal' network for the admin user which instances are actually connected to:
 
-    ./neutron-tenant-net -t admin -r provider-router \
+    ./neutron-tenant-net-ksv3 -p admin -r provider-router \
         [-N <dns-server>] internal 10.5.5.0/24
 
 Neutron provides a wide range of configuration options; see the [OpenStack Neutron][] documentation for more details.
