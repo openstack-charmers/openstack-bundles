@@ -112,7 +112,7 @@ Neutron provides a wide range of configuration options; see the [OpenStack Neutr
 
 Starting with the OpenStack Newton release, default flavors are no longer created at install time. You therefore need to create at least one machine type before you can boot an instance:
 
-    nova flavor-create m1.small auto 2048 20 1 --ephemeral 20
+    openstack flavor create --ram 2048 --disk 20 --ephemeral 20 m1.small
 
 ### Booting an instance
 
@@ -125,23 +125,23 @@ First generate a SSH keypair so that you can access your instances once you've b
 
 **Note:** you can also upload an existing public key to the cloud rather than generating a new one:
 
-    nova keypair-add --pub-key ~/.ssh/id_rsa.pub mykey
+    openstack keypair create --public-key ~/.ssh/id_rsa.pub mykey
 
 You can now boot an instance on your cloud:
 
-    nova boot --image xenial --flavor m1.small --key-name mykey \
-        --nic net-id=$(neutron net-list | grep internal | awk '{ print $2 }') \
+    openstack server create --image xenial --flavor m1.small --key-name mykey \
+        --nic net-id=$(openstack network list | grep internal | awk '{ print $2 }') \
         xenial-test
 
 ### Attaching a volume
 
-First, create a volume in cinder:
+First, create a 10G volume in cinder:
 
-    cinder create 10 # Create a 10G volume
+    openstack volume create --size=10 <name-of-volume>
 
-then attach it to the instance we just booted in nova:
+then attach it to the instance we just booted:
 
-    nova volume-attach xenial-test <uuid-of-volume> /dev/vdc
+    openstack server add volume xenial-test <name-of-volume>
 
 The attached volume will be accessible once you login to the instance (see below).  It will need to be formatted and mounted!
 
@@ -154,15 +154,16 @@ In order to access the instance you just booted on the cloud, you'll need to ass
 
 and then allow access via SSH (and ping) - you only need to do these steps once:
 
-    neutron security-group-list
+    openstack security group list
 
 For each security group in the list, identify the UUID and run:
 
-    neutron security-group-rule-create --protocol icmp \
-        --direction ingress <uuid>
-    neutron security-group-rule-create --protocol tcp \
-        --port-range-min 22 --port-range-max 22 \
-        --direction ingress <uuid>
+
+    openstack security group rule create <uuid> \
+        --protocol icmp --remote-ip 0.0.0.0/0
+
+    openstack security group rule create <security-group-name> \
+        --protocol tcp --remote-ip 0.0.0.0/0 --dst-port 22
 
 After running these commands you should be able to access the instance:
 
