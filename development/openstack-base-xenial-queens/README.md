@@ -66,7 +66,7 @@ In order to configure and use your cloud, you'll need to install the appropriate
 
 Check that you can access your cloud from the command line:
 
-    source novarc
+    source novarc_auto
     openstack catalog list
 
 You should get a full listing of all services registered in the cloud which should include identity, compute, image and network.
@@ -89,13 +89,13 @@ Images for other architectures can be obtained from [Ubuntu Cloud Images][].  Be
 
 For the purposes of a quick test, we'll setup an 'external' network and shared router ('provider-router') which will be used by all tenants for public access to instances:
 
-    ./neutron-ext-net --network-type flat \
+    ./neutron-ext-net-ksv3 --network-type flat \
         -g <gateway-ip> -c <network-cidr> \
         -f <pool-start>:<pool-end> ext_net
 
 for example (for a private cloud):
 
-    ./neutron-ext-net --network-type flat
+    ./neutron-ext-net-ksv3 --network-type flat
         -g 10.230.168.1 -c 10.230.168.0/21 \
         -f 10.230.168.10:10.230.175.254 ext_net
 
@@ -103,7 +103,7 @@ You'll need to adapt the parameters for the network configuration that eno2 on a
 
 We'll also need an 'internal' network for the admin user which instances are actually connected to:
 
-    ./neutron-tenant-net -t admin -r provider-router \
+    ./neutron-tenant-net-ksv3 -p admin -r provider-router \
         [-N <dns-server>] internal 10.5.5.0/24
 
 Neutron provides a wide range of configuration options; see the [OpenStack Neutron][] documentation for more details.
@@ -112,7 +112,7 @@ Neutron provides a wide range of configuration options; see the [OpenStack Neutr
 
 Starting with the OpenStack Newton release, default flavors are no longer created at install time. You therefore need to create at least one machine type before you can boot an instance:
 
-    nova flavor-create m1.small auto 2048 20 1 --ephemeral 20
+    openstack flavor create --ram 2048 --disk 20 --ephemeral 20 m1.small
 
 ### Booting an instance
 
@@ -125,23 +125,23 @@ First generate a SSH keypair so that you can access your instances once you've b
 
 **Note:** you can also upload an existing public key to the cloud rather than generating a new one:
 
-    nova keypair-add --pub-key ~/.ssh/id_rsa.pub mykey
+    openstack keypair create --public-key ~/.ssh/id_rsa.pub mykey
 
 You can now boot an instance on your cloud:
 
-    nova boot --image xenial --flavor m1.small --key-name mykey \
-        --nic net-id=$(neutron net-list | grep internal | awk '{ print $2 }') \
+    openstack server create --image xenial --flavor m1.small --key-name mykey \
+        --nic net-id=$(openstack network list | grep internal | awk '{ print $2 }') \
         xenial-test
 
 ### Attaching a volume
 
-First, create a volume in cinder:
+First, create a 10G volume in cinder:
 
-    cinder create 10 # Create a 10G volume
+    openstack volume create --size=10 <name-of-volume>
 
-then attach it to the instance we just booted in nova:
+then attach it to the instance we just booted:
 
-    nova volume-attach xenial-test <uuid-of-volume> /dev/vdc
+    openstack server add volume xenial-test <name-of-volume>
 
 The attached volume will be accessible once you login to the instance (see below).  It will need to be formatted and mounted!
 
@@ -154,15 +154,16 @@ In order to access the instance you just booted on the cloud, you'll need to ass
 
 and then allow access via SSH (and ping) - you only need to do these steps once:
 
-    neutron security-group-list
+    openstack security group list
 
 For each security group in the list, identify the UUID and run:
 
-    neutron security-group-rule-create --protocol icmp \
-        --direction ingress <uuid>
-    neutron security-group-rule-create --protocol tcp \
-        --port-range-min 22 --port-range-max 22 \
-        --direction ingress <uuid>
+
+    openstack security group rule create <uuid> \
+        --protocol icmp --remote-ip 0.0.0.0/0
+
+    openstack security group rule create <security-group-name> \
+        --protocol tcp --remote-ip 0.0.0.0/0 --dst-port 22
 
 After running these commands you should be able to access the instance:
 
