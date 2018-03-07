@@ -322,4 +322,3 @@ services:
     charm: cs:memcached
     to:
     - lxd:2
-
