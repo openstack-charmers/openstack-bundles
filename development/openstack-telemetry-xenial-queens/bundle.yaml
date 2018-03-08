@@ -86,20 +86,30 @@ relations:
   - rabbitmq-server:amqp
 - - ceilometer-agent:ceilometer-service
   - ceilometer:ceilometer-service
-- - ceilometer:identity-service
-  - keystone:identity-service
 - - ceilometer:identity-notifications
   - keystone:identity-notifications
 - - ceilometer-agent:nova-ceilometer
   - nova-compute:nova-ceilometer
-- - ceilometer:shared-db
-  - mongodb:database
 - - aodh:shared-db
   - mysql:shared-db
 - - aodh:identity-service
   - keystone:identity-service
 - - aodh:amqp
   - rabbitmq-server:amqp
+- - gnocchi:storage-ceph
+  - ceph-mon:client
+- - gnocchi:shared-db
+  - mysql:shared-db
+- - gnocchi:amqp
+  - rabbitmq-server:amqp
+- - gnocchi:coordinator-memcached
+  - memcached:cache
+- - gnocchi:metric-service
+  - ceilometer:metric-service
+- - gnocchi:identity-service
+  - keystone:identity-service
+- - ceilometer:identity-credentials
+  - keystone:identity-credentials
 series: xenial
 services:
   aodh:
@@ -207,14 +217,6 @@ services:
       worker-multiplier: 0.25
     to:
     - lxd:3
-  mongodb:
-    annotations:
-      gui-x: '1287.9999389648438'
-      gui-y: '251.24996948242188'
-    charm: cs:mongodb
-    num_units: 1
-    to:
-    - lxd:1
   mysql:
     annotations:
       gui-x: '0'
@@ -310,3 +312,13 @@ services:
     num_units: 1
     to:
     - lxd:0
+  gnocchi:
+    num_units: 1
+    charm: cs:~openstack-charmers-next/gnocchi
+    to:
+    - lxd:1
+  memcached:
+    num_units: 1
+    charm: cs:memcached
+    to:
+    - lxd:2
