@@ -106,6 +106,8 @@ relations:
   - rabbitmq-server:amqp
 - - gnocchi:coordinator-memcached
   - memcached:cache
+- - gnocchi:metric-service
+  - mysql:metric-service
 - - gnocchi:identity-service
   - keystone:identity-service
 - - ceilometer:identity-credentials
