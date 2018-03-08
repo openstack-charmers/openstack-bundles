@@ -119,7 +119,7 @@ services:
     charm: cs:aodh-10
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-queens/proposed
+      openstack-origin: cloud:xenial-queens
     to:
     - lxd:0
   ceilometer:
@@ -129,7 +129,7 @@ services:
     charm: cs:ceilometer-250
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-queens/proposed
+      openstack-origin: cloud:xenial-queens
     to:
     - lxd:2
   ceilometer-agent:
@@ -146,7 +146,7 @@ services:
     num_units: 3
     options:
       expected-osd-count: 3
-      source: cloud:xenial-queens/proposed
+      source: cloud:xenial-queens
     to:
     - lxd:1
     - lxd:2
@@ -160,7 +160,7 @@ services:
     options:
       osd-devices: /dev/sdb
       osd-reformat: 'yes'
-      source: cloud:xenial-queens/proposed
+      source: cloud:xenial-queens
     to:
     - '1'
     - '2'
@@ -172,7 +172,7 @@ services:
     charm: cs:ceph-radosgw-254
     num_units: 1
     options:
-      source: cloud:xenial-queens/proposed
+      source: cloud:xenial-queens
     to:
     - lxd:0
   cinder:
@@ -184,7 +184,7 @@ services:
     options:
       block-device: None
       glance-api-version: 2
-      openstack-origin: cloud:xenial-queens/proposed
+      openstack-origin: cloud:xenial-queens
       worker-multiplier: 0.25
     to:
     - lxd:1
@@ -201,7 +201,7 @@ services:
     charm: cs:glance-261
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-queens/proposed
+      openstack-origin: cloud:xenial-queens
       worker-multiplier: 0.25
     to:
     - lxd:2
@@ -218,7 +218,7 @@ services:
     num_units: 1
     options:
       admin-password: openstack
-      openstack-origin: cloud:xenial-queens/proposed
+      openstack-origin: cloud:xenial-queens
       worker-multiplier: 0.25
     to:
     - lxd:3
@@ -247,7 +247,7 @@ services:
     options:
       flat-network-providers: physnet1
       neutron-security-groups: true
-      openstack-origin: cloud:xenial-queens/proposed
+      openstack-origin: cloud:xenial-queens
       worker-multiplier: 0.25
     to:
     - lxd:1
@@ -260,7 +260,7 @@ services:
     options:
       bridge-mappings: physnet1:br-ex
       data-port: br-ex:eno2
-      openstack-origin: cloud:xenial-queens/proposed
+      openstack-origin: cloud:xenial-queens
       worker-multiplier: 0.25
     to:
     - '0'
@@ -278,7 +278,7 @@ services:
     num_units: 1
     options:
       network-manager: Neutron
-      openstack-origin: cloud:xenial-queens/proposed
+      openstack-origin: cloud:xenial-queens
       worker-multiplier: 0.25
     to:
     - lxd:2
@@ -293,7 +293,7 @@ services:
       enable-live-migration: true
       enable-resize: true
       migration-auth-type: ssh
-      openstack-origin: cloud:xenial-queens/proposed
+      openstack-origin: cloud:xenial-queens
     to:
     - '1'
     - '2'
@@ -311,7 +311,7 @@ services:
     charm: cs:openstack-dashboard-255
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-queens/proposed
+      openstack-origin: cloud:xenial-queens
     to:
     - lxd:3
   rabbitmq-server:
