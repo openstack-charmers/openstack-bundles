@@ -76,6 +76,10 @@ services:
       gui-y: '500'
     charm: cs:ceph-mon-20
     num_units: 3
+    options:
+      default-rbd-features: 1
+      expected-osd-count: 3
+      source: cloud:xenial-queens/proposed
     to:
     - lxd:1
     - lxd:2
@@ -89,6 +93,7 @@ services:
     options:
       osd-devices: /srv/ceph-osd
       osd-reformat: 'yes'
+      source: cloud:xenial-queens/proposed
     to:
     - '1'
     - '2'
@@ -99,6 +104,8 @@ services:
       gui-y: '250'
     charm: cs:ceph-radosgw-254
     num_units: 1
+    options:
+      source: cloud:xenial-queens/proposed
     to:
     - lxd:0
   glance:
@@ -107,6 +114,8 @@ services:
       gui-y: '0'
     charm: cs:glance-261
     num_units: 1
+    options:
+      openstack-origin: cloud:xenial-queens/proposed
     to:
     - lxd:2
   keystone:
@@ -117,6 +126,7 @@ services:
     num_units: 1
     options:
       admin-password: openstack
+      openstack-origin: cloud:xenial-queens/proposed
     to:
     - lxd:3
   lxd:
@@ -149,7 +159,7 @@ services:
     options:
       flat-network-providers: physnet1
       neutron-security-groups: true
-      openstack-origin: cloud:xenial-pike
+      openstack-origin: cloud:xenial-queens/proposed
       worker-multiplier: 0.25
     to:
     - lxd:1
@@ -163,7 +173,7 @@ services:
       bridge-mappings: physnet1:br-ex
       data-port: br-ex:eno2
       instance-mtu: 1456
-      openstack-origin: cloud:xenial-pike
+      openstack-origin: cloud:xenial-queens/proposed
       worker-multiplier: 0.25
     to:
     - '0'
@@ -181,7 +191,7 @@ services:
     num_units: 1
     options:
       network-manager: Neutron
-      openstack-origin: cloud:xenial-pike
+      openstack-origin: cloud:xenial-queens/proposed
       worker-multiplier: 0.25
     to:
     - lxd:2
@@ -196,7 +206,7 @@ services:
       enable-live-migration: true
       enable-resize: true
       migration-auth-type: ssh
-      openstack-origin: cloud:xenial-pike
+      openstack-origin: cloud:xenial-queens/proposed
       virt-type: lxd
     to:
     - '1'
@@ -215,7 +225,7 @@ services:
     charm: cs:openstack-dashboard-255
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-pike
+      openstack-origin: cloud:xenial-queens/proposed
     to:
     - lxd:3
   rabbitmq-server:
