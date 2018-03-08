@@ -107,7 +107,7 @@ relations:
 - - gnocchi:coordinator-memcached
   - memcached:cache
 - - gnocchi:metric-service
-  - mysql:metric-service
+  - ceilometer:metric-service
 - - gnocchi:identity-service
   - keystone:identity-service
 - - ceilometer:identity-credentials
