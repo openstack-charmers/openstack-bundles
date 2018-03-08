@@ -57,14 +57,15 @@ All commands are executed from within the expanded bundle.
 
 In order to configure and use your cloud, you'll need to install the appropriate client tools:
 
-    sudo apt-get -y install python-novaclient python-keystoneclient \
+    sudo apt install -y python-openstackclient \
+        python-novaclient python-keystoneclient \
         python-glanceclient python-neutronclient
 
 ### Accessing the cloud
 
 Check that you can access your cloud from the command line:
 
-    source novarc
+    source novarc_auto
     openstack service list
 
 You should get a full listing of all services registered in the cloud which should include identity, compute, image and network.
@@ -85,21 +86,21 @@ In order to run instances on your cloud, you'll need to upload a root disk archi
 
 For the purposes of a quick test, we'll setup an 'external' network and shared router ('provider-router') which will be used by all tenants for public access to instances:
 
-    ./neutron-ext-net --network-type flat \
+    ./neutron-ext-net-ksv3 --network-type flat \
         -g <gateway-ip> -c <network-cidr> \
         -f <pool-start>:<pool-end> ext_net
 
 for example (for a private cloud):
 
-    ./neutron-ext-net --network-type flat -g \
-        10.245.168.1 -c 10.245.168.0/21 \
+    ./neutron-ext-net-ksv3 --network-type flat \
+        -g 10.245.168.1 -c 10.245.168.0/21 \
 	-f 10.245.172.0:10.245.172.254 ext_net
 
 You'll need to adapt the parameters for the network configuration that eno2 on all the servers is connected to; in a public cloud deployment these ports would be connected to a publicable addressable part of the Internet.
 
 We'll also need an 'internal' network for the admin user which instances are actually connected to:
 
-    ./neutron-tenant-net -t admin -r provider-router \
+    ./neutron-tenant-net-ksv3 -p admin -r provider-router \
         [-N <dns-server>] internal 10.5.5.0/24
 
 Neutron provides a wide range of configuration options; see the [OpenStack Neutron][] documentation for more details.
@@ -125,7 +126,7 @@ You can now boot an instance on your cloud:
 
     openstack server create --flavor m1.small \
        --image xenial --key-name testkey \
-       --nic net-id=(openstack network list -c Name -c ID -f value | grep internal | awk '{print 1}') \
+       --nic net-id=$(openstack network list -c Name -c ID -f value | grep internal | awk '{print $1}') \
        xenial-test
 
 ### Accessing your instance
