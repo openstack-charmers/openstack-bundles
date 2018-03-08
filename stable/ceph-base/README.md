@@ -1,6 +1,6 @@
 # Basic Ceph Cluster
 
-This example bundle deploys a Ceph (Luminous) cluster on Ubuntu 16.04 LTS.
+This example bundle deploys a Ceph (Luminous) cluster on Ubuntu 16.04 LTS (Xenial).
 
 ## Requirements
 

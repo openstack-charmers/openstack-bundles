@@ -74,7 +74,7 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: cs:ceph-mon-15
+    charm: cs:ceph-mon-20
     num_units: 3
     to:
     - lxd:1
@@ -84,7 +84,7 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '500'
-    charm: cs:ceph-osd-250
+    charm: cs:ceph-osd-255
     num_units: 3
     options:
       osd-devices: /srv/ceph-osd
@@ -97,7 +97,7 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '250'
-    charm: cs:ceph-radosgw-253
+    charm: cs:ceph-radosgw-254
     num_units: 1
     to:
     - lxd:0
@@ -105,7 +105,7 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '0'
-    charm: cs:glance-260
+    charm: cs:glance-261
     num_units: 1
     to:
     - lxd:2
@@ -113,7 +113,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '0'
-    charm: cs:keystone-272
+    charm: cs:keystone-273
     num_units: 1
     options:
       admin-password: openstack
@@ -123,7 +123,7 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '250'
-    charm: cs:lxd-14
+    charm: cs:lxd-15
     num_units: 0
     options:
       block-devices: /dev/sdb
@@ -133,7 +133,7 @@ services:
     annotations:
       gui-x: '0'
       gui-y: '250'
-    charm: cs:percona-cluster-256
+    charm: cs:percona-cluster-257
     num_units: 1
     options:
       innodb-buffer-pool-size: 256M
@@ -144,7 +144,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '500'
-    charm: cs:neutron-api-254
+    charm: cs:neutron-api-256
     num_units: 1
     options:
       flat-network-providers: physnet1
@@ -157,7 +157,7 @@ services:
     annotations:
       gui-x: '0'
       gui-y: '0'
-    charm: cs:neutron-gateway-242
+    charm: cs:neutron-gateway-245
     num_units: 1
     options:
       bridge-mappings: physnet1:br-ex
@@ -171,13 +171,13 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '500'
-    charm: cs:neutron-openvswitch-245
+    charm: cs:neutron-openvswitch-247
     num_units: 0
   nova-cloud-controller:
     annotations:
       gui-x: '0'
       gui-y: '500'
-    charm: cs:nova-cloud-controller-302
+    charm: cs:nova-cloud-controller-304
     num_units: 1
     options:
       network-manager: Neutron
@@ -189,7 +189,7 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '250'
-    charm: cs:nova-compute-275
+    charm: cs:nova-compute-280
     num_units: 3
     options:
       config-flags: default_ephemeral_format=ext4
@@ -212,7 +212,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '-250'
-    charm: cs:openstack-dashboard-252
+    charm: cs:openstack-dashboard-255
     num_units: 1
     options:
       openstack-origin: cloud:xenial-pike
@@ -222,7 +222,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '250'
-    charm: cs:rabbitmq-server-69
+    charm: cs:rabbitmq-server-70
     num_units: 1
     to:
     - lxd:0

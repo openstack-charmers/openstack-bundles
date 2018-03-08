@@ -16,7 +16,7 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: cs:ceph-mon-15
+    charm: cs:ceph-mon-20
     num_units: 3
     options:
       expected-osd-count: 3
@@ -29,7 +29,7 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '500'
-    charm: cs:ceph-osd-250
+    charm: cs:ceph-osd-255
     num_units: 3
     options:
       osd-devices: /dev/sdb
