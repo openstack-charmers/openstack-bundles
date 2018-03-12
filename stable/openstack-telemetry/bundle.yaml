@@ -206,6 +206,9 @@ services:
     to:
     - lxd:2
   gnocchi:
+    annotations:
+      gui-x: '1500'
+      gui-y: '250'
     charm: cs:gnocchi-7
     num_units: 1
     to:
@@ -223,6 +226,9 @@ services:
     to:
     - lxd:3
   memcached:
+    annotations:
+      gui-x: '1500'
+      gui-y: '500'
     charm: cs:memcached-18
     num_units: 1
     to:

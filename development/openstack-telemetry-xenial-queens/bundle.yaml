@@ -313,11 +313,17 @@ services:
     to:
     - lxd:0
   gnocchi:
+    annotations:
+      gui-x: '1500'
+      gui-y: '250'
     num_units: 1
     charm: cs:~openstack-charmers-next/gnocchi
     to:
     - lxd:1
   memcached:
+    annotations:
+      gui-x: '1500'
+      gui-y: '500'
     num_units: 1
     charm: cs:memcached
     to:
