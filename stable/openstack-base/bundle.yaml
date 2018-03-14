@@ -88,7 +88,7 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: cs:ceph-mon-21
+    charm: cs:ceph-mon-23
     num_units: 3
     options:
       expected-osd-count: 3
@@ -144,7 +144,7 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '0'
-    charm: cs:glance-262
+    charm: cs:glance-263
     num_units: 1
     options:
       openstack-origin: cloud:xenial-queens
