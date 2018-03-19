@@ -2,7 +2,7 @@
 
 ***NOTE***: This example bundle requires the use of Juju 2.x
 
-This example bundle deploys a OpenStack Cloud (Mitaka release) on Ubuntu 16.04 LTS, providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.
+*DEV/TEST ONLY*: This unstable, development example bundle deploys a OpenStack Cloud (Mitaka release) on Ubuntu 16.04 LTS, providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services. See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
 
 API service endpoints and the various network traffic flows are bound onto different network spaces.
 
