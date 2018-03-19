@@ -1,6 +1,6 @@
 # LXD OpenStack Cloud
 
-This example bundle deploys an OpenStack Cloud (Mitaka release), configured to use [LXD][] (the lightweight container hypervisor), on Ubuntu 16.04, providing Dashboard, Compute, Network, Object Storage, Identity and Image services.
+*DEV/TEST ONLY*: This unstable, development example bundle deploys an OpenStack Cloud (Mitaka release), configured to use [LXD][] (the lightweight container hypervisor), on Ubuntu 16.04, providing Dashboard, Compute, Network, Object Storage, Identity and Image services. See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
 
 ## Requirements
 

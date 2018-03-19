@@ -1,6 +1,6 @@
 # Basic Ceph Cluster
 
-This example bundle deploys a Ceph (Luminous) cluster on Ubuntu 18.04 LTS.
+*DEV/TEST ONLY*: This unstable, development example bundle deploys a Ceph (Luminous) cluster on Ubuntu 18.04 LTS.
 
 ## Requirements
 

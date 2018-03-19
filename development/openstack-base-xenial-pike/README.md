@@ -1,6 +1,6 @@
 # Basic OpenStack Cloud
 
-This development example bundle deploys a basic OpenStack Cloud providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.
+*DEV/TEST ONLY*: This unstable, development example bundle deploys a basic OpenStack Cloud providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services. See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
 
 ## Requirements
 
