@@ -318,6 +318,8 @@ services:
       gui-y: '250'
     num_units: 1
     charm: cs:~openstack-charmers-next/gnocchi
+    options:
+      openstack-origin: cloud:xenial-queens/proposed
     to:
     - lxd:1
   memcached:
