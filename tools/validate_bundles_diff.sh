@@ -3,7 +3,7 @@
 # expected differences such as openstack-origin, source, etc.
 
 # Files expected within each bundle directory
-expected_files="bundle.yaml neutron-ext-net* neutron-tenant-net* novarc* README.md"
+expected_files="bundle.yaml neutron-ext-net* neutron-tenant-net* novarc openrc README.md"
 
 # Confirm files exist in dirs
 for d in $(find development/ -type d -name openstack-*); do
