@@ -1,30 +1,63 @@
+# Print deprecation warning when using `novarc` filename
+#
+# Source file detection for deprecation warning is bash specifc, rest assured
+# this script sources fine in the original bourne shell still.
+SOURCE=$(basename ${BASH_SOURCE[@]})
+if [ $SOURCE = 'novarc' -o $SOURCE = 'novarc_auto' ]; then
+    msg=$(cat << EOF
+WARNING: support for use of \`novarc\` and \`novarc_auto\` filenames has been
+         deprecated and will be removed in a future release.
+         Please update your scripts to use \`openrc\`.
+EOF
+    )
+    # Print warning to STDERR using subshell to avoid messing with redirection
+    (>&2 echo -e "$msg")
+fi
+
+
+# Clear any previous OS_* environment variables
 _OS_PARAMS=$(env | awk 'BEGIN {FS="="} /^OS_/ {print $1;}' | paste -sd ' ')
 for param in $_OS_PARAMS; do
     unset $param
 done
 unset _OS_PARAMS
 
-keystone_unit=$(juju status keystone|grep -i workload -A1|tail -n1|awk '{print $1}'|tr -d '*')
-echo Keystone unit: ${keystone_unit}
-if ! curl -qs `juju run --unit ${keystone_unit} "unit-get private-address"`:5000/v3 | grep 404 ;
+
+# Get information about deployment from Juju
+juju_status=$(juju status keystone)
+KEYSTONE_UNIT=$(
+    echo "$juju_status"|grep -i workload -A1|tail -n1|awk '{print $1}' \
+        |tr -d '*')
+KEYSTONE_IP=$(juju run --unit ${KEYSTONE_UNIT} 'unit-get private-address')
+KEYSTONE_MAJOR_VERSION=$(
+    echo "$juju_status"|grep -i version -A1|tail -n1|awk '{print $2}' \
+        |cut -f1 -d\.
+    )
+KEYSTONE_PREFERRED_API_VERSION=$(juju config keystone preferred-api-version)
+
+
+# Keystone API v2.0 was removed in Keystone version 13
+# shipped with OpenStack Queens
+if [ $KEYSTONE_MAJOR_VERSION -ge 13 -o \
+     "$KEYSTONE_PREFERRED_API_VERSION" = '3' ];
 then
-echo Using keystone v3 api
-export OS_AUTH_URL=${OS_AUTH_PROTOCOL:-http}://`juju run --unit ${keystone_unit} "unit-get private-address"`:5000/v3
-export OS_USERNAME=admin
-export OS_PASSWORD=openstack
-export OS_DOMAIN_NAME=admin_domain
-export OS_USER_DOMAIN_NAME=admin_domain
-export OS_PROJECT_DOMAIN_NAME=admin_domain
-export OS_PROJECT_NAME=admin
-export OS_REGION_NAME=RegionOne
-export OS_IDENTITY_API_VERSION=3
-# Swift needs this:
-export OS_AUTH_VERSION=3
+    echo Using Keystone v3 API
+    export OS_AUTH_URL=${OS_AUTH_PROTOCOL:-http}://${KEYSTONE_IP}:5000/v3
+    export OS_USERNAME=admin
+    export OS_PASSWORD=openstack
+    export OS_DOMAIN_NAME=admin_domain
+    export OS_USER_DOMAIN_NAME=admin_domain
+    export OS_PROJECT_DOMAIN_NAME=admin_domain
+    export OS_PROJECT_NAME=admin
+    export OS_REGION_NAME=RegionOne
+    export OS_IDENTITY_API_VERSION=3
+    # Swift needs this:
+    export OS_AUTH_VERSION=3
 else
-echo Using keystone v2 api
-export OS_USERNAME=admin
-export OS_PASSWORD=openstack
-export OS_TENANT_NAME=admin
-export OS_REGION_NAME=RegionOne
-export OS_AUTH_URL=${OS_AUTH_PROTOCOL:-http}://`juju run --unit ${keystone_unit} "unit-get private-address"`:5000/v2.0
+    echo Using Keystone v2.0 API
+    export OS_USERNAME=admin
+    export OS_PASSWORD=openstack
+    export OS_TENANT_NAME=admin
+    export OS_REGION_NAME=RegionOne
+    export OS_AUTH_URL=${OS_AUTH_PROTOCOL:-http}://${KEYSTONE_IP}:5000/v2.0
 fi
