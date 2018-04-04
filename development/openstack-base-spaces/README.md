@@ -72,7 +72,7 @@ In order to configure and use your cloud, you'll need to install the appropriate
 
 Check that you can access your cloud from the command line:
 
-    source novarc
+    source openrc
     keystone catalog
 
 You should get a full listing of all services registered in the cloud which should include identity, compute, image and network.
