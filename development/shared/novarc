@@ -1,3 +1,14 @@
+# Print deprecation warning when using `novarc` filename
+msg=$(cat << EOF
+WARNING: support for use of \`novarc\` and \`novarc_auto\` filenames has been
+         deprecated and will be removed in a future release.
+         Please update your scripts to use \`openrc\`.
+EOF
+)
+# Print warning to STDERR using subshell to avoid messing with redirection
+(>&2 echo -e "$msg")
+
+
 _OS_PARAMS=$(env | awk 'BEGIN {FS="="} /^OS_/ {print $1;}' | paste -sd ' ')
 for param in $_OS_PARAMS; do
     unset $param
