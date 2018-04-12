@@ -105,7 +105,7 @@ services:
     num_units: 3
     options:
       osd-devices: /dev/sdb
-      osd-reformat: 'yes'
+      osd-reformat: True
       source: cloud:xenial-queens/proposed
     to:
     - '1'

@@ -104,7 +104,7 @@ services:
     num_units: 3
     options:
       osd-devices: /dev/sdb
-      osd-reformat: 'yes'
+      osd-reformat: True
     to:
     - '1'
     - '2'

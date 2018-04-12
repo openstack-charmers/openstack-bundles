@@ -90,7 +90,7 @@ services:
     num_units: 3
     options:
       osd-devices: /srv/ceph-osd
-      osd-reformat: 'yes'
+      osd-reformat: True
     to:
     - '1'
     - '2'
