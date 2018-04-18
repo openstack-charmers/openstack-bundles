@@ -86,20 +86,30 @@ relations:
   - rabbitmq-server:amqp
 - - ceilometer-agent:ceilometer-service
   - ceilometer:ceilometer-service
-- - ceilometer:identity-service
-  - keystone:identity-service
 - - ceilometer:identity-notifications
   - keystone:identity-notifications
 - - ceilometer-agent:nova-ceilometer
   - nova-compute:nova-ceilometer
-- - ceilometer:shared-db
-  - mongodb:database
 - - aodh:shared-db
   - mysql:shared-db
 - - aodh:identity-service
   - keystone:identity-service
 - - aodh:amqp
   - rabbitmq-server:amqp
+- - gnocchi:storage-ceph
+  - ceph-mon:client
+- - gnocchi:shared-db
+  - mysql:shared-db
+- - gnocchi:amqp
+  - rabbitmq-server:amqp
+- - gnocchi:coordinator-memcached
+  - memcached:cache
+- - gnocchi:metric-service
+  - ceilometer:metric-service
+- - gnocchi:identity-service
+  - keystone:identity-service
+- - ceilometer:identity-credentials
+  - keystone:identity-credentials
 series: bionic
 services:
   aodh:
@@ -108,8 +118,6 @@ services:
       gui-y: '0'
     charm: cs:~openstack-charmers-next/aodh
     num_units: 1
-    options:
-      openstack-origin: distro-proposed
     to:
     - lxd:0
   ceilometer:
@@ -118,8 +126,6 @@ services:
       gui-y: '0'
     charm: cs:~openstack-charmers-next/ceilometer
     num_units: 1
-    options:
-      openstack-origin: distro-proposed
     to:
     - lxd:2
   ceilometer-agent:
@@ -136,7 +142,6 @@ services:
     num_units: 3
     options:
       expected-osd-count: 3
-      source: proposed
     to:
     - lxd:1
     - lxd:2
@@ -150,7 +155,6 @@ services:
     options:
       osd-devices: /dev/sdb
       osd-reformat: True
-      source: proposed
     to:
     - '1'
     - '2'
@@ -161,8 +165,6 @@ services:
       gui-y: '250'
     charm: cs:~openstack-charmers-next/ceph-radosgw
     num_units: 1
-    options:
-      source: proposed
     to:
     - lxd:0
   cinder:
@@ -173,7 +175,6 @@ services:
     num_units: 1
     options:
       worker-multiplier: 0.25
-      openstack-origin: distro-proposed
       block-device: None
       glance-api-version: 2
     to:
@@ -191,7 +192,6 @@ services:
     charm: cs:~openstack-charmers-next/glance
     num_units: 1
     options:
-      openstack-origin: distro-proposed 
       worker-multiplier: 0.25
     to:
     - lxd:2
@@ -202,19 +202,10 @@ services:
     charm: cs:~openstack-charmers-next/keystone
     num_units: 1
     options:
-      openstack-origin:  distro-proposed
       admin-password: openstack
       worker-multiplier: 0.25
     to:
     - lxd:3
-  mongodb:
-    annotations:
-      gui-x: '1287.9999389648438'
-      gui-y: '251.24996948242188'
-    charm: cs:mongodb
-    num_units: 1
-    to:
-    - lxd:1
   mysql:
     annotations:
       gui-x: '0'
@@ -233,7 +224,6 @@ services:
     charm: cs:~openstack-charmers-next/neutron-api
     num_units: 1
     options:
-      openstack-origin: distro-proposed 
       flat-network-providers: physnet1
       neutron-security-groups: true
       worker-multiplier: 0.25
@@ -246,7 +236,6 @@ services:
     charm: cs:~openstack-charmers-next/neutron-gateway
     num_units: 1
     options:
-      openstack-origin: distro-proposed
       bridge-mappings: physnet1:br-ex
       data-port: br-ex:eno2
       worker-multiplier: 0.25
@@ -265,7 +254,6 @@ services:
     charm: cs:~openstack-charmers-next/nova-cloud-controller
     num_units: 1
     options:
-      openstack-origin: distro-proposed
       network-manager: Neutron
       worker-multiplier: 0.25
     to:
@@ -278,7 +266,6 @@ services:
     num_units: 3
     options:
       config-flags: default_ephemeral_format=ext4
-      openstack-origin: distro-proposed
       enable-live-migration: true
       enable-resize: true
       migration-auth-type: ssh
@@ -298,8 +285,6 @@ services:
       gui-y: '-250'
     charm: cs:~openstack-charmers-next/openstack-dashboard
     num_units: 1
-    options:
-      openstack-origin: distro-proposed
     to:
     - lxd:3
   rabbitmq-server:
@@ -310,3 +295,19 @@ services:
     num_units: 1
     to:
     - lxd:0
+  gnocchi:
+    annotations:
+      gui-x: '1500'
+      gui-y: '250'
+    num_units: 1
+    charm: cs:~openstack-charmers-next/gnocchi
+    to:
+    - lxd:1
+  memcached:
+    annotations:
+      gui-x: '1500'
+      gui-y: '500'
+    num_units: 1
+    charm: cs:memcached
+    to:
+    - lxd:2
