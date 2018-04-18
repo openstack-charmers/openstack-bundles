@@ -89,7 +89,7 @@ services:
       fsid: 5a791d94-980b-11e4-b6f6-3c970e8b1cf7
       monitor-secret: AQAi5a9UeJXUExAA+By9u+GPhl8/XiUQ4nwI3A==
       osd-devices: /dev/sdb
-      osd-reformat: 'yes'
+      osd-reformat: True
     to:
     - '0'
     - '1'
@@ -101,7 +101,7 @@ services:
     charm: cs:~openstack-charmers-next/xenial/ceph-osd
     options:
       osd-devices: /dev/sdb
-      osd-reformat: 'yes'
+      osd-reformat: True
   ceph-radosgw:
     annotations:
       gui-x: '1000'
