@@ -1,7 +1,7 @@
 #!/bin/bash -ex
 
 oct_tmp="$(mktemp -d)"
-bzr export $oct_tmp https://code.launchpad.net/~ost-maintainers/openstack-charm-testing/trunk
+git clone --depth 1 https://github.com/openstack-charmers/openstack-charm-testing $oct_tmp
 
 tools="neutron-ext-net neutron-tenant-net"
 for tool in $tools; do
