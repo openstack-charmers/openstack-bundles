@@ -92,6 +92,7 @@ services:
     num_units: 3
     options:
       expected-osd-count: 3
+      source: proposed
     to:
     - 'lxd:1'
     - 'lxd:2'
@@ -105,6 +106,7 @@ services:
     options:
       osd-devices: /dev/sdb
       osd-reformat: True
+      source: proposed
     to:
     - '1'
     - '2'
@@ -115,6 +117,8 @@ services:
       gui-y: '250'
     charm: cs:~openstack-charmers-next/bionic/ceph-radosgw
     num_units: 1
+    options:
+      source: proposed
     to:
     - lxd:0
   cinder:
@@ -124,6 +128,7 @@ services:
     charm: cs:~openstack-charmers-next/bionic/cinder
     num_units: 1
     options:
+      openstack-origin: distro-proposed
       block-device: None
       glance-api-version: 2
       worker-multiplier: 0.25
@@ -142,6 +147,7 @@ services:
     charm: cs:~openstack-charmers-next/bionic/glance
     num_units: 1
     options:
+      openstack-origin: distro-proposed
       worker-multiplier: 0.25
     to:
     - lxd:2
@@ -152,6 +158,7 @@ services:
     charm: cs:~openstack-charmers-next/bionic/keystone
     num_units: 1
     options:
+      openstack-origin: distro-proposed
       admin-password: openstack
       worker-multiplier: 0.25
     to:
@@ -174,6 +181,7 @@ services:
     charm: cs:~openstack-charmers-next/bionic/neutron-api
     num_units: 1
     options:
+      openstack-origin: distro-proposed
       neutron-security-groups: true
       flat-network-providers: physnet1
       worker-multiplier: 0.25
@@ -186,6 +194,7 @@ services:
     charm: cs:~openstack-charmers-next/bionic/neutron-gateway
     num_units: 1
     options:
+      openstack-origin: distro-proposed
       bridge-mappings: physnet1:br-ex
       data-port: br-ex:eno2
       worker-multiplier: 0.25
@@ -204,6 +213,7 @@ services:
     charm: cs:~openstack-charmers-next/bionic/nova-cloud-controller
     num_units: 1
     options:
+      openstack-origin: distro-proposed
       network-manager: Neutron
       worker-multiplier: 0.25
     to:
@@ -216,6 +226,7 @@ services:
     num_units: 3
     options:
       config-flags: default_ephemeral_format=ext4
+      openstack-origin: distro-proposed
       enable-live-migration: true
       enable-resize: true
       migration-auth-type: ssh
@@ -235,6 +246,8 @@ services:
       gui-y: '-250'
     charm: cs:~openstack-charmers-next/bionic/openstack-dashboard
     num_units: 1
+    options:
+      openstack-origin: distro-proposed
     to:
     - lxd:3
   rabbitmq-server:
