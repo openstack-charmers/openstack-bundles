@@ -45,7 +45,6 @@ then
     export OS_AUTH_URL=${OS_AUTH_PROTOCOL:-http}://${KEYSTONE_IP}:5000/v3
     export OS_USERNAME=admin
     export OS_PASSWORD=openstack
-    export OS_DOMAIN_NAME=admin_domain
     export OS_USER_DOMAIN_NAME=admin_domain
     export OS_PROJECT_DOMAIN_NAME=admin_domain
     export OS_PROJECT_NAME=admin
@@ -53,6 +52,8 @@ then
     export OS_IDENTITY_API_VERSION=3
     # Swift needs this:
     export OS_AUTH_VERSION=3
+    # Gnocchi needs this:
+    export OS_AUTH_TYPE=password
 else
     echo Using Keystone v2.0 API
     export OS_USERNAME=admin
