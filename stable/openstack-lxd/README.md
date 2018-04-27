@@ -1,6 +1,6 @@
 # LXD OpenStack Cloud
 
-This example bundle deploys an OpenStack Cloud (Ocata release), configured to use [LXD][] (the lightweight container hypervisor), on Ubuntu 16.04, providing Dashboard, Compute, Network, Object Storage, Identity and Image services.
+This example bundle deploys an OpenStack Cloud (Queens release), configured to use [LXD][] (the lightweight container hypervisor), on Ubuntu 18.04, providing Dashboard, Compute, Network, Object Storage, Identity and Image services.
 
 ## Requirements
 
@@ -57,7 +57,6 @@ All commands are executed from within the expanded bundle.
 
 In order to configure and use your cloud, you'll need to install the appropriate client tools:
 
-    sudo add-apt-repository cloud-archive:ocata -y
     sudo apt update
     sudo apt install python-novaclient python-keystoneclient python-glanceclient \
         python-neutronclient python-openstackclient -y
@@ -67,28 +66,33 @@ In order to configure and use your cloud, you'll need to install the appropriate
 Check that you can access your cloud from the command line:
 
     source openrc
-    openstack catalog
+    openstack service list
 
-You should get a full listing of all services registered in the cloud which should include identity, compute, image and network.
+You should get a full listing of all services registered in the cloud which should include identity, compute, image,  network, placement, and object-store.
 
 ### Configuring an image
 
 In order to run instances on your cloud, you'll need to upload a root disk archive to boot instances from:
 
-    curl http://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-root.tar.gz | \
-        openstack image create --public --container-format=bare --disk-format=root-tar xenial
+    mkdir ~/images
+    wget -O ~/images/bionic.tar.gz http://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.tar.gz
+    openstack image create bionic --file ~/images/bionic.tar.gz \
+	--disk-format=raw \
+        --container-format=bare \
+	--public
+	--property architecture=x86_84
 
 ### Configure networking
 
 For the purposes of a quick test, we'll setup an 'external' network and shared router ('provider-router') which will be used by all tenants for public access to instances:
 
-    ./neutron-ext-net --network-type flat \
+    ./neutron-ext-net-ksv3 --network-type flat \
         -g <gateway-ip> -c <network-cidr> \
         -f <pool-start>:<pool-end> ext_net
 
 for example (for a private cloud):
 
-    ./neutron-ext-net --network-type flat
+    ./neutron-ext-net-ksv3 --network-type flat
         -g 10.230.168.1 -c 10.230.168.0/21 \
         -f 10.230.168.10:10.230.175.254 ext_net
 
@@ -96,16 +100,10 @@ You'll need to adapt the parameters for the network configuration that eno2 on a
 
 We'll also need an 'internal' network for the admin user which instances are actually connected to:
 
-    ./neutron-tenant-net -t admin -r provider-router \
+    ./neutron-tenant-net-ksv3 -p admin -r provider-router \
         [-N <dns-server>] internal 10.5.5.0/24
 
 Neutron provides a wide range of configuration options; see the [OpenStack Neutron][] documentation for more details.
-
-### Configuring a flavor
-
-Starting with the OpenStack Newton release, default flavors are no longer created at install time. You therefore need to create at least one machine type before you can boot an instance:
-
-    nova flavor-create m1.small auto 2048 10 1 --ephemeral 20
 
 ### Booting an instance
 
@@ -114,36 +112,40 @@ First generate a SSH keypair so that you can access your instances once you've b
     mkdir -p ~/.ssh
     touch ~/.ssh/id_rsa_cloud
     chmod 600 ~/.ssh/id_rsa_cloud
-    nova keypair-add mykey > ~/.ssh/id_rsa_cloud
+    openstack keypair create testkey > ~/.ssh/id_rsa_cloud
 
 **Note:** you can also upload an existing public key to the cloud rather than generating a new one:
 
-    nova keypair-add --pub-key ~/.ssh/id_rsa.pub mykey
+    openstack keypair create --public-key ~/.ssh/id_rsa.pub mykey
+
+Then add a flavor for the instance to be created from:
+
+    openstack flavor create  --id 1 --ram 2048  --disk 20 --vcpus 1 m1.small
 
 You can now boot an instance on your cloud:
 
-    nova boot --image xenial --flavor m1.small --key-name mykey \
-        --nic net-id=$(neutron net-list | grep internal | awk '{ print $2 }') \
-        trusty-test
+    openstack server create --flavor m1.small \
+       --image bionic --key-name testkey \
+       --nic net-id=$(openstack network list -c Name -c ID -f value | grep internal | awk '{print $1}') \
+       bionic-test
 
 ### Accessing your instance
 
 In order to access the instance you just booted on the cloud, you'll need to assign a floating IP address to the instance:
 
     openstack floating ip create ext_net
-    openstack server add floating ip xenial-test <new-floating-ip>
+    openstack server add floating ip bionic-test <new-floating-ip>
 
 and then allow access via SSH (and ping) - you only need to do these steps once:
 
-    neutron security-group-list
+    openstack security group list
 
 For each security group in the list, identify the UUID and run:
 
-    neutron security-group-rule-create --protocol icmp \
-        --direction ingress <uuid>
-    neutron security-group-rule-create --protocol tcp \
-        --port-range-min 22 --port-range-max 22 \
-        --direction ingress <uuid>
+    openstack security group rule create --protocol icmp <uuid>
+    openstack security group rule create --protocol tcp \
+        --dst-port=22:22 \
+	--remote-ip 0.0.0.0/0 <uuid>
 
 After running these commands you should be able to access the instance:
 
