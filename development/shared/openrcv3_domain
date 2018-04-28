@@ -1,0 +1,21 @@
+_OS_PARAMS=$(env | awk 'BEGIN {FS="="} /^OS_/ {print $1;}' | paste -sd ' ')
+for param in $_OS_PARAMS; do
+    unset $param
+done
+unset _OS_PARAMS
+
+_keystone_unit=$(juju status keystone --format yaml | \
+    awk '/units:$/ {getline; gsub(/:$/, ""); print $1}')
+_keystone_ip=$(juju run --unit ${_keystone_unit} 'unit-get private-address')
+
+export OS_AUTH_URL=${OS_AUTH_PROTOCOL:-http}://${_keystone_ip}:5000/v3
+export OS_USERNAME=admin
+export OS_PASSWORD=openstack
+export OS_REGION_NAME=RegionOne
+export OS_DOMAIN_NAME=admin_domain
+export OS_USER_DOMAIN_NAME=admin_domain
+export OS_IDENTITY_API_VERSION=3
+# Swift needs this:
+export OS_AUTH_VERSION=3
+# Gnocchi needs this:
+export OS_AUTH_TYPE=password

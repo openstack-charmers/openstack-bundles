@@ -1,1 +1,15 @@
-../../development/shared/openrc
+_keystone_unit=$(juju status keystone --format yaml | \
+    awk '/units:$/ {getline; gsub(/:$/, ""); print $1}')
+_keystone_major_version=$(juju status ${_keystone_unit} --format yaml| \
+    awk '/^    version:/ {print $2}' | cut -f1 -d\.)
+_keystone_preferred_api_version=$(juju config keystone preferred-api-version)
+_keystone_ip=$(juju run --unit ${_keystone_unit} 'unit-get private-address')
+
+if [ $_keystone_major_version -ge 13 -o \
+     "$_keystone_preferred_api_version" = '3' ]; then
+    echo Using Keystone v3 API
+    . $(dirname ${BASH_SOURCE[@]})/openrcv3_project
+else
+    echo Using Keystone v2.0 API
+    . $(dirname ${BASH_SOURCE[@]})/openrcv2
+fi
