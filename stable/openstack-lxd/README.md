@@ -80,7 +80,7 @@ In order to run instances on your cloud, you'll need to upload a root disk archi
 	--disk-format=raw \
         --container-format=bare \
 	--public \
-	--property architecture=x86_84
+	--property architecture=x86_64
 
 ### Configure networking
 
