@@ -79,7 +79,7 @@ In order to run instances on your cloud, you'll need to upload a root disk archi
     openstack image create bionic --file ~/images/bionic.tar.gz \
 	--disk-format=raw \
         --container-format=bare \
-	--public
+	--public \
 	--property architecture=x86_84
 
 ### Configure networking
