@@ -92,7 +92,7 @@ For the purposes of a quick test, we'll setup an 'external' network and shared r
 
 for example (for a private cloud):
 
-    ./neutron-ext-net-ksv3 --network-type flat
+    ./neutron-ext-net-ksv3 --network-type flat \
         -g 10.230.168.1 -c 10.230.168.0/21 \
         -f 10.230.168.10:10.230.175.254 ext_net
 
