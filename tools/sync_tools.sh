@@ -9,4 +9,9 @@ for tool in $tools; do
     cp -fvp $oct_tmp/bin/$tool stable/shared/$tool
     cp -fvp $oct_tmp/bin/$tool development/shared/$tool
 done
+rcs="openrc openrcv2 openrcv3_project openrcv3_domain"
+for rc in $rcs; do
+    cp -fvp $oct_tmp/rcs/$rc stable/shared/$rc
+    cp -fvp $oct_tmp/rcs/$rc development/shared/$rc
+done
 rm -rf $oct_tmp
