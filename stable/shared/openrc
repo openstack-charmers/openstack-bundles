@@ -3,7 +3,6 @@ _keystone_unit=$(juju status keystone --format yaml | \
 _keystone_major_version=$(juju status ${_keystone_unit} --format yaml| \
     awk '/^    version:/ {print $2}' | cut -f1 -d\.)
 _keystone_preferred_api_version=$(juju config keystone preferred-api-version)
-_keystone_ip=$(juju run --unit ${_keystone_unit} 'unit-get private-address')
 
 if [ $_keystone_major_version -ge 13 -o \
      "$_keystone_preferred_api_version" = '3' ]; then
