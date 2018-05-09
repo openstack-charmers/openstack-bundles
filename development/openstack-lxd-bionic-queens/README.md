@@ -75,12 +75,13 @@ You should get a full listing of all services registered in the cloud which shou
 In order to run instances on your cloud, you'll need to upload a root disk archive to boot instances from:
 
     mkdir -p ~/images
-    wget -O ~/images/xenial.tar.gz http://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-root.tar.gz
-    openstack image create xenial --file ~/images/xenial.tar.gz \
+    wget -O ~/images/bionic.squashfs \
+	http://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.squashfs
+    openstack image create bionic --file ~/images/bionic.squashfs \
         --disk-format=raw \
-	--container-format=bare \
-	--public \
-	--property architecture=x86_64
+        --container-format=bare \
+        --public \
+        --property architecture=x86_64
 
 ### Configure networking
 
@@ -125,9 +126,9 @@ Then add a flavor for the instance to be created from:
 You can now boot an instance on your cloud:
 
     openstack server create --flavor m1.small \
-       --image xenial --key-name testkey \
+       --image bionic --key-name testkey \
        --nic net-id=$(openstack network list -c Name -c ID -f value | grep internal | awk '{print $1}') \
-       xenial-test
+       bionic-test
 
 ### Accessing your instance
 
