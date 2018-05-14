@@ -1,0 +1,52 @@
+machines:
+  '0':
+    series: xenial
+    constraints: "tags=summit-demo,^gpu"
+  '1':
+    series: xenial
+    constraints: "tags=summit-demo,^gpu"
+  '2':
+    series: xenial
+    constraints: "tags=summit-demo,^gpu"
+  '3':
+    series: xenial
+    constraints: "tags=summit-demo,^gpu"
+  '4':
+    series: xenial
+    constraints: "tags=summit-demo,^gpu"
+  '5':
+    series: xenial
+    constraints: "tags=summit-demo,gpu"
+series: xenial
+services:
+  magpie:
+    annotations:
+      gui-x: '500'
+      gui-y: '500'
+    charm: cs:~admcleod/magpie
+    num_units: 24
+    to:
+    - '0'
+    - '1'
+    - '2'
+    - '3'
+    - '4'
+    - '5'
+    - 'lxd:0'
+    - 'lxd:0'
+    - 'lxd:0'
+    - 'lxd:1'
+    - 'lxd:1'
+    - 'lxd:1'
+    - 'lxd:2'
+    - 'lxd:2'
+    - 'lxd:2'
+    - 'lxd:3'
+    - 'lxd:3'
+    - 'lxd:3'
+    - 'lxd:4'
+    - 'lxd:4'
+    - 'lxd:4'
+    - 'lxd:5'
+    - 'lxd:5'
+    - 'lxd:5'
