@@ -148,6 +148,7 @@ services:
     options:
       innodb-buffer-pool-size: 256M
       max-connections: 1000
+      source: cloud:xenial-queens
     to:
     - lxd:0
   neutron-api:
@@ -234,5 +235,7 @@ services:
       gui-y: '250'
     charm: cs:rabbitmq-server-73
     num_units: 1
+    options:
+      source: cloud:xenial-queens
     to:
     - lxd:0
