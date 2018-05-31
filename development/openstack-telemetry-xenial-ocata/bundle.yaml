@@ -202,7 +202,6 @@ services:
     num_units: 1
     options:
       openstack-origin: cloud:xenial-ocata
-      admin-password: openstack
       worker-multiplier: 0.25
     to:
     - lxd:3

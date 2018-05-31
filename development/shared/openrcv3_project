@@ -1,5 +1,7 @@
 _OS_PARAMS=$(env | awk 'BEGIN {FS="="} /^OS_/ {print $1;}' | paste -sd ' ')
 for param in $_OS_PARAMS; do
+    if [ "$param" = "OS_AUTH_PROTOCOL" ]; then continue; fi
+    if [ "$param" = "OS_CACERT" ]; then continue; fi
     unset $param
 done
 unset _OS_PARAMS
@@ -7,10 +9,11 @@ unset _OS_PARAMS
 _keystone_unit=$(juju status keystone --format yaml | \
     awk '/units:$/ {getline; gsub(/:$/, ""); print $1}')
 _keystone_ip=$(juju run --unit ${_keystone_unit} 'unit-get private-address')
+_password=$(juju run --unit ${_keystone_unit} 'leader-get admin_passwd')
 
 export OS_AUTH_URL=${OS_AUTH_PROTOCOL:-http}://${_keystone_ip}:5000/v3
 export OS_USERNAME=admin
-export OS_PASSWORD=openstack
+export OS_PASSWORD=${_password}
 export OS_USER_DOMAIN_NAME=admin_domain
 export OS_PROJECT_DOMAIN_NAME=admin_domain
 export OS_PROJECT_NAME=admin
