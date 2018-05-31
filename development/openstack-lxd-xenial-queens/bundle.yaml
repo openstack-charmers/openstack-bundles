@@ -92,7 +92,6 @@ services:
     num_units: 3
     options:
       osd-devices: /srv/ceph-osd
-      osd-reformat: True
       source: cloud:xenial-queens/proposed
     to:
     - '1'
@@ -137,7 +136,6 @@ services:
     num_units: 0
     options:
       block-devices: /dev/sdb
-      overwrite: true
       storage-type: zfs
   mysql:
     annotations:

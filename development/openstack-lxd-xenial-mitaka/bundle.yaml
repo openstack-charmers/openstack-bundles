@@ -90,7 +90,6 @@ services:
     num_units: 3
     options:
       osd-devices: /srv/ceph-osd
-      osd-reformat: True
     to:
     - '1'
     - '2'
@@ -129,7 +128,6 @@ services:
     num_units: 0
     options:
       block-devices: /dev/sdb
-      overwrite: true
       storage-type: zfs
   mysql:
     annotations:
