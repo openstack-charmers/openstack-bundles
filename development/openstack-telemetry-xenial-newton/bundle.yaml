@@ -149,7 +149,6 @@ services:
     num_units: 3
     options:
       osd-devices: /dev/sdb
-      osd-reformat: True
       source: cloud:xenial-newton
     to:
     - '1'
