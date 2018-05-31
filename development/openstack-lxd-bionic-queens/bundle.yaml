@@ -124,7 +124,6 @@ services:
     charm: cs:~openstack-charmers-next/keystone
     num_units: 1
     options:
-      admin-password: openstack
       #openstack-origin: cloud:bionic-queens
     to:
     - lxd:3
