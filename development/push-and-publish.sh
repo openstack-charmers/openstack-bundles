@@ -28,6 +28,11 @@ if [ -z "$bundle_id" ]; then
     exit 1
 fi
 
+echo "Setting bugs-url and homepage"
+charm set $bundle_id \
+    bugs-url=https://bugs.launchpad.net/openstack-bundles/+filebug \
+    homepage=https://github.com/openstack-charmers/openstack-bundles/
+
 echo "Publishing new bundle version to stable"
 charm release $bundle_id
 echo "Ensuring global read permissions"
