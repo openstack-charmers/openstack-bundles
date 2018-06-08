@@ -79,7 +79,7 @@ services:
     options:
       default-rbd-features: 1
       expected-osd-count: 3
-      source: cloud:xenial-queens/proposed
+      source: cloud:xenial-queens
     to:
     - lxd:1
     - lxd:2
@@ -92,7 +92,7 @@ services:
     num_units: 3
     options:
       osd-devices: /srv/ceph-osd
-      source: cloud:xenial-queens/proposed
+      source: cloud:xenial-queens
     to:
     - '1'
     - '2'
@@ -106,7 +106,7 @@ services:
     to:
     - lxd:0
     options:
-      source: cloud:xenial-queens/proposed
+      source: cloud:xenial-queens
   glance:
     annotations:
       gui-x: '250'
@@ -116,7 +116,7 @@ services:
     to:
     - lxd:2
     options:
-      openstack-origin: cloud:xenial-queens/proposed
+      openstack-origin: cloud:xenial-queens
   keystone:
     annotations:
       gui-x: '500'
@@ -124,7 +124,7 @@ services:
     charm: cs:~openstack-charmers-next/keystone
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-queens/proposed
+      openstack-origin: cloud:xenial-queens
     to:
     - lxd:3
   lxd:
@@ -157,7 +157,7 @@ services:
       flat-network-providers: physnet1
       neutron-security-groups: true
       worker-multiplier: 0.25
-      openstack-origin: cloud:xenial-queens/proposed
+      openstack-origin: cloud:xenial-queens
     to:
     - lxd:1
   neutron-gateway:
@@ -169,7 +169,7 @@ services:
     options:
       bridge-mappings: physnet1:br-ex
       data-port: br-ex:eno2
-      openstack-origin: cloud:xenial-queens/proposed
+      openstack-origin: cloud:xenial-queens
       worker-multiplier: 0.25
       instance-mtu: 1456
     to:
@@ -188,7 +188,7 @@ services:
     num_units: 1
     options:
       network-manager: Neutron
-      openstack-origin: cloud:xenial-queens/proposed
+      openstack-origin: cloud:xenial-queens
       worker-multiplier: 0.25
     to:
     - lxd:2
@@ -204,7 +204,7 @@ services:
       enable-resize: true
       migration-auth-type: ssh
       virt-type: lxd
-      openstack-origin: cloud:xenial-queens/proposed
+      openstack-origin: cloud:xenial-queens
     to:
     - '1'
     - '2'
@@ -222,7 +222,7 @@ services:
     charm: cs:~openstack-charmers-next/openstack-dashboard
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-queens/proposed
+      openstack-origin: cloud:xenial-queens
     to:
     - lxd:3
   rabbitmq-server:
@@ -232,6 +232,6 @@ services:
     charm: cs:~openstack-charmers-next/rabbitmq-server
     num_units: 1
     options:
-      source: cloud:xenial-queens/proposed
+      source: cloud:xenial-queens
     to:
     - lxd:0
