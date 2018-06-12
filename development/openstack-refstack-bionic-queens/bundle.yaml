@@ -1,3 +1,5 @@
+# This test/example bundle is not HA and is not for production use.
+# It is for validating refstack tests with a small metal footprint.
 machines:
   '0':
     series: bionic
@@ -17,6 +19,8 @@ relations:
 - - nova-cloud-controller:identity-service
   - keystone:identity-service
 - - glance:identity-service
+  - keystone:identity-service
+- - glance-simplestreams-sync:identity-service
   - keystone:identity-service
 - - neutron-api:identity-service
   - keystone:identity-service
@@ -78,67 +82,59 @@ relations:
   - nova-compute:juju-info
 - - ntp:juju-info
   - neutron-gateway:juju-info
-- - ceph-radosgw:mon
-  - ceph-mon:radosgw
-- - ceph-radosgw:identity-service
+- - swift-proxy:identity-service
   - keystone:identity-service
+- - swift-proxy:swift-storage
+  - swift-storage:swift-storage
 series: bionic
 services:
   ceph-mon:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: cs:ceph-mon-24
+    charm: cs:~openstack-charmers-next/ceph-mon
     num_units: 3
     options:
       expected-osd-count: 3
     to:
+    - lxd:0
     - lxd:1
     - lxd:2
-    - lxd:3
   ceph-osd:
     annotations:
       gui-x: '1000'
       gui-y: '500'
-    charm: cs:ceph-osd-261
+    charm: cs:~openstack-charmers-next/ceph-osd
     num_units: 3
     options:
       osd-devices: /dev/sdb
     to:
+    - '0'
     - '1'
     - '2'
-    - '3'
-  ceph-radosgw:
-    annotations:
-      gui-x: '1000'
-      gui-y: '250'
-    charm: cs:ceph-radosgw-257
-    num_units: 1
-    to:
-    - lxd:0
   cinder:
     annotations:
       gui-x: '750'
       gui-y: '0'
-    charm: cs:cinder-271
+    charm: cs:~openstack-charmers-next/cinder
     num_units: 1
     options:
+      worker-multiplier: 0.25
       block-device: None
       glance-api-version: 2
-      worker-multiplier: 0.25
     to:
     - lxd:1
   cinder-ceph:
     annotations:
       gui-x: '750'
       gui-y: '250'
-    charm: cs:cinder-ceph-232
+    charm: cs:~openstack-charmers-next/cinder-ceph
     num_units: 0
   glance:
     annotations:
       gui-x: '250'
       gui-y: '0'
-    charm: cs:glance-264
+    charm: cs:~openstack-charmers-next/glance
     num_units: 1
     options:
       worker-multiplier: 0.25
@@ -148,32 +144,32 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '0'
-    charm: cs:keystone-278
+    charm: cs:~openstack-charmers-next/keystone
     num_units: 1
     options:
       worker-multiplier: 0.25
     to:
-    - lxd:3
+    - lxd:0
   mysql:
     annotations:
       gui-x: '0'
       gui-y: '250'
-    charm: cs:percona-cluster-263
+    charm: cs:~openstack-charmers-next/percona-cluster
     num_units: 1
     options:
       max-connections: 1000
       innodb-buffer-pool-size: 256M
     to:
-    - lxd:0
+    - lxd:3
   neutron-api:
     annotations:
       gui-x: '500'
       gui-y: '500'
-    charm: cs:neutron-api-259
+    charm: cs:~openstack-charmers-next/neutron-api
     num_units: 1
     options:
-      neutron-security-groups: true
       flat-network-providers: physnet1
+      neutron-security-groups: true
       worker-multiplier: 0.25
     to:
     - lxd:1
@@ -181,7 +177,7 @@ services:
     annotations:
       gui-x: '0'
       gui-y: '0'
-    charm: cs:neutron-gateway-248
+    charm: cs:~openstack-charmers-next/neutron-gateway
     num_units: 1
     options:
       bridge-mappings: physnet1:br-ex
@@ -193,13 +189,13 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '500'
-    charm: cs:neutron-openvswitch-249
+    charm: cs:~openstack-charmers-next/neutron-openvswitch
     num_units: 0
   nova-cloud-controller:
     annotations:
       gui-x: '0'
       gui-y: '500'
-    charm: cs:nova-cloud-controller-309
+    charm: cs:~openstack-charmers-next/nova-cloud-controller
     num_units: 1
     options:
       network-manager: Neutron
@@ -210,7 +206,7 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '250'
-    charm: cs:nova-compute-282
+    charm: cs:~openstack-charmers-next/nova-compute
     num_units: 3
     options:
       config-flags: default_ephemeral_format=ext4
@@ -225,21 +221,43 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '0'
-    charm: cs:ntp-24
+    charm: cs:ntp
     num_units: 0
   openstack-dashboard:
     annotations:
       gui-x: '500'
       gui-y: '-250'
-    charm: cs:openstack-dashboard-258
+    charm: cs:~openstack-charmers-next/openstack-dashboard
     num_units: 1
     to:
-    - lxd:3
+    - lxd:2
   rabbitmq-server:
     annotations:
       gui-x: '500'
       gui-y: '250'
-    charm: cs:rabbitmq-server-73
+    charm: cs:~openstack-charmers-next/rabbitmq-server
     num_units: 1
     to:
-    - lxd:0
+    - lxd:3
+  swift-proxy:
+    charm: cs:~openstack-charmers-next/swift-proxy
+    num_units: 1
+    options:
+      zone-assignment: manual
+      replicas: 1
+      swift-hash: fdfef9d4-8b06-11e2-8ac0-531c923c8fae
+    to:
+    - "lxd:1"
+  swift-storage:
+    charm: cs:~openstack-charmers-next/swift-storage
+    num_units: 1
+    options:
+      zone: 1
+      block-device: /var/lib/swift-testing.img|40G  # Not for production
+    to:
+    - '0'
+  glance-simplestreams-sync:
+    charm: cs:~openstack-charmers-next/glance-simplestreams-sync
+    num_units: 1
+    to:
+    - lxd:3

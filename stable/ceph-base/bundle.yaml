@@ -1,16 +1,16 @@
 machines:
   '0':
-    series: xenial
+    series: bionic
   '1':
-    series: xenial
+    series: bionic
   '2':
-    series: xenial
+    series: bionic
 relations:
 - - ceph-osd:mon
   - ceph-mon:osd
 - - ntp:juju-info
   - ceph-osd:juju-info
-series: xenial
+series: bionic
 services:
   ceph-mon:
     annotations:
@@ -20,7 +20,6 @@ services:
     num_units: 3
     options:
       expected-osd-count: 3
-      source: cloud:xenial-pike
     to:
     - lxd:0
     - lxd:1
@@ -33,7 +32,6 @@ services:
     num_units: 3
     options:
       osd-devices: /dev/sdb
-      source: cloud:xenial-pike
     to:
     - '0'
     - '1'
