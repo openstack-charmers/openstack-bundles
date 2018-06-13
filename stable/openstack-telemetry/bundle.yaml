@@ -1,12 +1,12 @@
 machines:
   '0':
-    series: xenial
+    series: bionic
   '1':
-    series: xenial
+    series: bionic
   '2':
-    series: xenial
+    series: bionic
   '3':
-    series: xenial
+    series: bionic
 relations:
 - - nova-compute:amqp
   - rabbitmq-server:amqp
@@ -110,43 +110,40 @@ relations:
   - keystone:identity-service
 - - ceilometer:identity-credentials
   - keystone:identity-credentials
-series: xenial
+series: bionic
 services:
   aodh:
     annotations:
       gui-x: '1500'
       gui-y: '0'
-    charm: cs:aodh-12
+    charm: cs:aodh-13
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-queens
     to:
     - lxd:0
   ceilometer:
     annotations:
       gui-x: '1250'
       gui-y: '0'
-    charm: cs:ceilometer-252
+    charm: cs:ceilometer-253
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-queens
     to:
     - lxd:2
   ceilometer-agent:
     annotations:
       gui-x: '1250'
       gui-y: '500'
-    charm: cs:ceilometer-agent-243
+    charm: cs:ceilometer-agent-244
     num_units: 0
   ceph-mon:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: cs:ceph-mon-24
+    charm: cs:ceph-mon-25
     num_units: 3
     options:
       expected-osd-count: 3
-      source: cloud:xenial-queens
     to:
     - lxd:1
     - lxd:2
@@ -155,11 +152,10 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '500'
-    charm: cs:ceph-osd-261
+    charm: cs:ceph-osd-262
     num_units: 3
     options:
       osd-devices: /dev/sdb
-      source: cloud:xenial-queens
     to:
     - '1'
     - '2'
@@ -168,22 +164,20 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '250'
-    charm: cs:ceph-radosgw-257
+    charm: cs:ceph-radosgw-258
     num_units: 1
     options:
-      source: cloud:xenial-queens
     to:
     - lxd:0
   cinder:
     annotations:
       gui-x: '750'
       gui-y: '0'
-    charm: cs:cinder-271
+    charm: cs:cinder-272
     num_units: 1
     options:
       block-device: None
       glance-api-version: 2
-      openstack-origin: cloud:xenial-queens
       worker-multiplier: 0.25
     to:
     - lxd:1
@@ -191,16 +185,15 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '250'
-    charm: cs:cinder-ceph-232
+    charm: cs:cinder-ceph-233
     num_units: 0
   glance:
     annotations:
       gui-x: '250'
       gui-y: '0'
-    charm: cs:glance-264
+    charm: cs:glance-265
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-queens
       worker-multiplier: 0.25
     to:
     - lxd:2
@@ -208,20 +201,18 @@ services:
     annotations:
       gui-x: '1500'
       gui-y: '250'
-    charm: cs:gnocchi-7
+    charm: cs:gnocchi-8
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-queens
     to:
     - lxd:1
   keystone:
     annotations:
       gui-x: '500'
       gui-y: '0'
-    charm: cs:keystone-278
+    charm: cs:keystone-281
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-queens
       worker-multiplier: 0.25
     to:
     - lxd:3
@@ -237,7 +228,7 @@ services:
     annotations:
       gui-x: '0'
       gui-y: '250'
-    charm: cs:percona-cluster-263
+    charm: cs:percona-cluster-266
     num_units: 1
     options:
       innodb-buffer-pool-size: 256M
@@ -248,12 +239,11 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '500'
-    charm: cs:neutron-api-259
+    charm: cs:neutron-api-260
     num_units: 1
     options:
       flat-network-providers: physnet1
       neutron-security-groups: true
-      openstack-origin: cloud:xenial-queens
       worker-multiplier: 0.25
     to:
     - lxd:1
@@ -261,12 +251,11 @@ services:
     annotations:
       gui-x: '0'
       gui-y: '0'
-    charm: cs:neutron-gateway-248
+    charm: cs:neutron-gateway-252
     num_units: 1
     options:
       bridge-mappings: physnet1:br-ex
       data-port: br-ex:eno2
-      openstack-origin: cloud:xenial-queens
       worker-multiplier: 0.25
     to:
     - '0'
@@ -274,17 +263,16 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '500'
-    charm: cs:neutron-openvswitch-249
+    charm: cs:neutron-openvswitch-250
     num_units: 0
   nova-cloud-controller:
     annotations:
       gui-x: '0'
       gui-y: '500'
-    charm: cs:nova-cloud-controller-309
+    charm: cs:nova-cloud-controller-310
     num_units: 1
     options:
       network-manager: Neutron
-      openstack-origin: cloud:xenial-queens
       worker-multiplier: 0.25
     to:
     - lxd:2
@@ -292,14 +280,13 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '250'
-    charm: cs:nova-compute-282
+    charm: cs:nova-compute-284
     num_units: 3
     options:
       config-flags: default_ephemeral_format=ext4
       enable-live-migration: true
       enable-resize: true
       migration-auth-type: ssh
-      openstack-origin: cloud:xenial-queens
     to:
     - '1'
     - '2'
@@ -314,19 +301,17 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '-250'
-    charm: cs:openstack-dashboard-258
+    charm: cs:openstack-dashboard-259
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-queens
     to:
     - lxd:3
   rabbitmq-server:
     annotations:
       gui-x: '500'
       gui-y: '250'
-    charm: cs:rabbitmq-server-73
+    charm: cs:rabbitmq-server-74
     num_units: 1
     options:
-      source: cloud:xenial-queens
     to:
     - lxd:0
