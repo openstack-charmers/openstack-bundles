@@ -20,7 +20,6 @@ services:
     num_units: 3
     options:
       expected-osd-count: 3
-      source: proposed
     to:
     - 'lxd:0'
     - 'lxd:1'
@@ -33,7 +32,6 @@ services:
     num_units: 3
     options:
       osd-devices: /dev/sdb
-      source: proposed
     to:
     - '0'
     - '1'
