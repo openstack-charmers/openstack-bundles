@@ -125,7 +125,7 @@ You can now boot an instance on your cloud:
 
     openstack server create --flavor m1.small \
        --image xenial --key-name testkey \
-       --nic net-id=(openstack network list -c Name -c ID -f value | grep internal | awk '{print 1}') \
+       --nic net-id=$(openstack network list -c Name -c ID -f value | grep internal | awk '{print $1}') \
        xenial-test
 
 ### Accessing your instance
