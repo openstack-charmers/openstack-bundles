@@ -1,6 +1,6 @@
 # Basic OpenStack Cloud
 
-This example bundle deploys a basic OpenStack Cloud (Queens with Ceph Luminous) on Ubuntu 16.04 LTS (Xenial), providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Im
+This example bundle deploys a basic OpenStack Cloud (Queens with Ceph Luminous) on Ubuntu 18.04 LTS (Bionic), providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Im
 age services.
 
 ## Requirements
