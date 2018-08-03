@@ -7,8 +7,8 @@ _keystone_preferred_api_version=$(juju config keystone preferred-api-version)
 if [ $_keystone_major_version -ge 13 -o \
      "$_keystone_preferred_api_version" = '3' ]; then
     echo Using Keystone v3 API
-    . $(dirname ${BASH_SOURCE[@]})/openrcv3_project
+    . $(dirname ${BASH_SOURCE[0]})/openrcv3_project
 else
     echo Using Keystone v2.0 API
-    . $(dirname ${BASH_SOURCE[@]})/openrcv2
+    . $(dirname ${BASH_SOURCE[0]})/openrcv2
 fi
