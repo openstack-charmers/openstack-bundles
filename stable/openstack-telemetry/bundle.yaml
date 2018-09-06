@@ -116,32 +116,37 @@ services:
     annotations:
       gui-x: '1500'
       gui-y: '0'
-    charm: cs:aodh-13
+    charm: cs:aodh-15
     num_units: 1
+    options:
+      openstack-origin: cloud:bionic-rocky
     to:
     - lxd:0
   ceilometer:
     annotations:
       gui-x: '1250'
       gui-y: '0'
-    charm: cs:ceilometer-253
+    charm: cs:ceilometer-254
     num_units: 1
+    options:
+      openstack-origin: cloud:bionic-rocky
     to:
     - lxd:2
   ceilometer-agent:
     annotations:
       gui-x: '1250'
       gui-y: '500'
-    charm: cs:ceilometer-agent-244
+    charm: cs:ceilometer-agent-245
     num_units: 0
   ceph-mon:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: cs:ceph-mon-25
+    charm: cs:ceph-mon-26
     num_units: 3
     options:
       expected-osd-count: 3
+      source: cloud:bionic-rocky
     to:
     - lxd:1
     - lxd:2
@@ -150,10 +155,11 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '500'
-    charm: cs:ceph-osd-262
+    charm: cs:ceph-osd-269
     num_units: 3
     options:
       osd-devices: /dev/sdb
+      source: cloud:bionic-rocky
     to:
     - '1'
     - '2'
@@ -162,19 +168,22 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '250'
-    charm: cs:ceph-radosgw-258
+    charm: cs:ceph-radosgw-259
     num_units: 1
+    options:
+      source: cloud:bionic-rocky
     to:
     - lxd:0
   cinder:
     annotations:
       gui-x: '750'
       gui-y: '0'
-    charm: cs:cinder-272
+    charm: cs:cinder-273
     num_units: 1
     options:
       block-device: None
       glance-api-version: 2
+      openstack-origin: cloud:bionic-rocky
       worker-multiplier: 0.25
     to:
     - lxd:1
@@ -182,15 +191,16 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '250'
-    charm: cs:cinder-ceph-233
+    charm: cs:cinder-ceph-234
     num_units: 0
   glance:
     annotations:
       gui-x: '250'
       gui-y: '0'
-    charm: cs:glance-265
+    charm: cs:glance-268
     num_units: 1
     options:
+      openstack-origin: cloud:bionic-rocky
       worker-multiplier: 0.25
     to:
     - lxd:2
@@ -198,17 +208,20 @@ services:
     annotations:
       gui-x: '1500'
       gui-y: '250'
-    charm: cs:gnocchi-8
+    charm: cs:gnocchi-11
     num_units: 1
+    options:
+      openstack-origin: cloud:bionic-rocky
     to:
     - lxd:1
   keystone:
     annotations:
       gui-x: '500'
       gui-y: '0'
-    charm: cs:keystone-281
+    charm: cs:keystone-283
     num_units: 1
     options:
+      openstack-origin: cloud:bionic-rocky
       worker-multiplier: 0.25
     to:
     - lxd:3
@@ -224,7 +237,7 @@ services:
     annotations:
       gui-x: '0'
       gui-y: '250'
-    charm: cs:percona-cluster-266
+    charm: cs:percona-cluster-269
     num_units: 1
     options:
       innodb-buffer-pool-size: 256M
@@ -235,11 +248,12 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '500'
-    charm: cs:neutron-api-260
+    charm: cs:neutron-api-262
     num_units: 1
     options:
       flat-network-providers: physnet1
       neutron-security-groups: true
+      openstack-origin: cloud:bionic-rocky
       worker-multiplier: 0.25
     to:
     - lxd:1
@@ -247,11 +261,12 @@ services:
     annotations:
       gui-x: '0'
       gui-y: '0'
-    charm: cs:neutron-gateway-252
+    charm: cs:neutron-gateway-253
     num_units: 1
     options:
       bridge-mappings: physnet1:br-ex
       data-port: br-ex:eno2
+      openstack-origin: cloud:bionic-rocky
       worker-multiplier: 0.25
     to:
     - '0'
@@ -259,16 +274,17 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '500'
-    charm: cs:neutron-openvswitch-250
+    charm: cs:neutron-openvswitch-251
     num_units: 0
   nova-cloud-controller:
     annotations:
       gui-x: '0'
       gui-y: '500'
-    charm: cs:nova-cloud-controller-310
+    charm: cs:nova-cloud-controller-311
     num_units: 1
     options:
       network-manager: Neutron
+      openstack-origin: cloud:bionic-rocky
       worker-multiplier: 0.25
     to:
     - lxd:2
@@ -276,13 +292,14 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '250'
-    charm: cs:nova-compute-284
+    charm: cs:nova-compute-287
     num_units: 3
     options:
       config-flags: default_ephemeral_format=ext4
       enable-live-migration: true
       enable-resize: true
       migration-auth-type: ssh
+      openstack-origin: cloud:bionic-rocky
     to:
     - '1'
     - '2'
@@ -291,21 +308,25 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '0'
-    charm: cs:ntp-24
+    charm: cs:ntp-27
     num_units: 0
   openstack-dashboard:
     annotations:
       gui-x: '500'
       gui-y: '-250'
-    charm: cs:openstack-dashboard-259
+    charm: cs:openstack-dashboard-266
     num_units: 1
+    options:
+      openstack-origin: cloud:bionic-rocky
     to:
     - lxd:3
   rabbitmq-server:
     annotations:
       gui-x: '500'
       gui-y: '250'
-    charm: cs:rabbitmq-server-74
+    charm: cs:rabbitmq-server-78
     num_units: 1
+    options:
+      source: cloud:bionic-rocky
     to:
     - lxd:0

@@ -16,10 +16,11 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: cs:ceph-mon-25
+    charm: cs:ceph-mon-26
     num_units: 3
     options:
       expected-osd-count: 3
+      source: cloud:bionic-rocky
     to:
     - lxd:0
     - lxd:1
@@ -28,10 +29,11 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '500'
-    charm: cs:ceph-osd-262
+    charm: cs:ceph-osd-269
     num_units: 3
     options:
       osd-devices: /dev/sdb
+      source: cloud:bionic-rocky
     to:
     - '0'
     - '1'
@@ -40,5 +42,5 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '0'
-    charm: cs:ntp-24
+    charm: cs:ntp-27
     num_units: 0
