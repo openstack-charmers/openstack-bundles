@@ -1,12 +1,12 @@
 machines:
   '0':
-    series: xenial
+    series: bionic
   '1':
-    series: xenial
+    series: bionic
   '2':
-    series: xenial
+    series: bionic
   '3':
-    series: xenial
+    series: bionic
 relations:
 - - nova-compute:amqp
   - rabbitmq-server:amqp
@@ -68,7 +68,7 @@ relations:
   - keystone:identity-service
 - - nova-compute:lxd
   - lxd:lxd
-series: xenial
+series: bionic
 services:
   ceph-mon:
     annotations:
@@ -78,6 +78,8 @@ services:
     num_units: 3
     options:
       default-rbd-features: 1
+      expected-osd-count: 3
+      source: cloud:bionic-rocky
     to:
     - lxd:1
     - lxd:2
@@ -90,6 +92,7 @@ services:
     num_units: 3
     options:
       osd-devices: /srv/ceph-osd
+      source: cloud:bionic-rocky
     to:
     - '1'
     - '2'
@@ -102,6 +105,8 @@ services:
     num_units: 1
     to:
     - lxd:0
+    options:
+      source: cloud:bionic-rocky
   glance:
     annotations:
       gui-x: '250'
@@ -110,6 +115,8 @@ services:
     num_units: 1
     to:
     - lxd:2
+    options:
+      openstack-origin: cloud:bionic-rocky
   keystone:
     annotations:
       gui-x: '500'
@@ -117,6 +124,7 @@ services:
     charm: cs:~openstack-charmers-next/keystone
     num_units: 1
     options:
+      openstack-origin: cloud:bionic-rocky
     to:
     - lxd:3
   lxd:
@@ -149,8 +157,8 @@ services:
     options:
       flat-network-providers: physnet1
       neutron-security-groups: true
-      openstack-origin: cloud:xenial-mitaka
       worker-multiplier: 0.25
+      openstack-origin: cloud:bionic-rocky
     to:
     - lxd:1
   neutron-gateway:
@@ -162,7 +170,7 @@ services:
     options:
       bridge-mappings: physnet1:br-ex
       data-port: br-ex:eno2
-      openstack-origin: cloud:xenial-mitaka
+      openstack-origin: cloud:bionic-rocky
       worker-multiplier: 0.25
       instance-mtu: 1456
     to:
@@ -181,7 +189,7 @@ services:
     num_units: 1
     options:
       network-manager: Neutron
-      openstack-origin: cloud:xenial-mitaka
+      openstack-origin: cloud:bionic-rocky
       worker-multiplier: 0.25
     to:
     - lxd:2
@@ -196,8 +204,8 @@ services:
       enable-live-migration: true
       enable-resize: true
       migration-auth-type: ssh
-      openstack-origin: cloud:xenial-mitaka
       virt-type: lxd
+      openstack-origin: cloud:bionic-rocky
     to:
     - '1'
     - '2'
@@ -215,7 +223,7 @@ services:
     charm: cs:~openstack-charmers-next/openstack-dashboard
     num_units: 1
     options:
-      openstack-origin: cloud:xenial-mitaka
+      openstack-origin: cloud:bionic-rocky
     to:
     - lxd:3
   rabbitmq-server:
