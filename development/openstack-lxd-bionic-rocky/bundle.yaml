@@ -136,6 +136,7 @@ services:
     options:
       block-devices: /dev/sdb
       storage-type: zfs
+      overwrite: true
   mysql:
     annotations:
       gui-x: '0'

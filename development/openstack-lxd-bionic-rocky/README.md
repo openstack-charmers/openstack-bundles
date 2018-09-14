@@ -45,7 +45,7 @@ To horizontally scale Ceph:
 
     juju add-unit --to <machine-id-of-compute-service> ceph-osd
 
-**Note:** Other services in this bundle can be scaled in-conjunction with the hacluster charm to produce scalable, highly avaliable services - that will be covered in a different bundle.
+**Note:** Other services in this bundle can be scaled in-conjunction with the hacluster charm to produce scalable, highly available services - that will be covered in a different bundle.
 
 ## Ensuring it's working
 
@@ -97,7 +97,7 @@ for example (for a private cloud):
         -g 10.245.168.1 -c 10.245.168.0/21 \
 	-f 10.245.172.0:10.245.172.254 ext_net
 
-You'll need to adapt the parameters for the network configuration that eno2 on all the servers is connected to; in a public cloud deployment these ports would be connected to a publicable addressable part of the Internet.
+You'll need to adapt the parameters for the network configuration that eno2 on all the servers is connected to; in a public cloud deployment these ports would be connected to a publicly addressable part of the Internet.
 
 We'll also need an 'internal' network for the admin user which instances are actually connected to:
 
@@ -108,7 +108,7 @@ Neutron provides a wide range of configuration options; see the [OpenStack Neutr
 
 ### Booting an instance
 
-First generate a SSH keypair so that you can access your instances once you've booted them:
+First generate a SSH key pair so that you can access your instances once you've booted them:
 
     mkdir -p ~/.ssh
     touch ~/.ssh/id_rsa_cloud
@@ -135,7 +135,7 @@ You can now boot an instance on your cloud:
 In order to access the instance you just booted on the cloud, you'll need to assign a floating IP address to the instance:
 
     openstack floating ip create ext_net
-    openstack server add floating ip xenial-test <new-floating-ip>
+    openstack server add floating ip bionic-test <new-floating-ip>
 
 and then allow access via SSH (and ping) - you only need to do these steps once:
 
@@ -154,7 +154,7 @@ After running these commands you should be able to access the instance:
 
 ## What next?
 
-Configuring and managing services on an OpenStack cloud is complex; take a look a the [OpenStack Admin Guide][] for a complete reference on how to configure an OpenStack cloud for your requirements.
+Configuring and managing services on an OpenStack cloud is complex; take a look at the [OpenStack Admin Guide][] for a complete reference on how to configure an OpenStack cloud for your requirements.
 
 ## Useful Cloud URLs
 
