@@ -1,0 +1,9 @@
+ceph-mon:
+  files:
+    - path: /etc/ceph/ceph.conf
+      owner: root
+      group: root
+      mode: '777'
+    - path: /etc/ceph/ceph.client.admin.keyring
+      owner: ceph
+      group: ceph
