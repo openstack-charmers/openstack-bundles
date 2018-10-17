@@ -1,0 +1,4 @@
+applications:
+  ceph-osd:
+    storage:
+      osd-devices: 20GB
