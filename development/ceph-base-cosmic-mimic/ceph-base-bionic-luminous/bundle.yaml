@@ -1,0 +1,44 @@
+machines:
+  '0':
+    series: bionic
+  '1':
+    series: bionic
+  '2':
+    series: bionic
+relations:
+- - ceph-osd:mon
+  - ceph-mon:osd
+- - ntp:juju-info
+  - ceph-osd:juju-info
+series: bionic
+services:
+  ceph-mon:
+    annotations:
+      gui-x: '750'
+      gui-y: '500'
+    charm: cs:~openstack-charmers-next/ceph-mon
+    num_units: 3
+    options:
+      expected-osd-count: 3
+    to:
+    - 'lxd:0'
+    - 'lxd:1'
+    - 'lxd:2'
+  ceph-osd:
+    annotations:
+      gui-x: '1000'
+      gui-y: '500'
+    charm: cs:~openstack-charmers-next/ceph-osd
+    num_units: 3
+    options:
+      osd-devices: /dev/sdb
+    to:
+    - '0'
+    - '1'
+    - '2'
+  ntp:
+    annotations:
+      gui-x: '1000'
+      gui-y: '0'
+    charm: cs:ntp
+    num_units: 0
