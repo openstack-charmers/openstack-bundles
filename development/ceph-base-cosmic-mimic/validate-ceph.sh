@@ -1,0 +1,1 @@
+../shared/validate-ceph.sh
