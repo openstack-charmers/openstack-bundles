@@ -307,5 +307,6 @@ services:
       gui-y: '500'
     num_units: 1
     charm: cs:memcached
+    series: bionic
     to:
     - lxd:2
