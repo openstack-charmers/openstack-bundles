@@ -228,7 +228,7 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '0'
-    charm: cs:ntp
+    charm: cs:~admcleod/ntp
     num_units: 0
   openstack-dashboard:
     annotations:
