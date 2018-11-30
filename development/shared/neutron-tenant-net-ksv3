@@ -71,8 +71,21 @@ if __name__ == '__main__':
     keystone = v3.Client(session=sess)
     quantum = client.Client(session=sess)
 
+    # Resolve domain id
+    domain_id = None
+    for dom in [t._info for t in keystone.domains.list()]:
+        if (dom['name'] == (os.environ['OS_PROJECT_DOMAIN_NAME'])):
+            domain_id = dom['id']
+            break # Domain ID found - stop looking
+    if not domain_id:
+        logging.error("Unable to locate domain for %s.", os.environ['OS_PROJECT_DOMAIN_NAME']);
+
     # Resolve tenant id
-    project_id = auth.get_project_id(sess)
+    project_id = None
+    for proj in [t._info for t in keystone.projects.list()]:
+        if (proj['domain_id'] == domain_id and proj['name'] == (opts.project or os.environ['OS_PROJECT_NAME'])):
+            project_id = proj['id']
+            break # Tenant ID found - stop looking
     if not project_id:
         logging.error("Unable to locate project id for %s.", opts.tenant)
         sys.exit(1)
