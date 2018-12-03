@@ -1,0 +1,52 @@
+# Loadbalancer (LBAASv2) with Octavia - requires Rocky or later
+---
+applications:
+  barbican:
+    charm: cs:barbican
+    num_units: 1
+    options:
+      openstack-origin: cloud:bionic-rocky
+    to:
+    - lxd:1
+  barbican-vault:
+    charm: cs:barbican-vault
+  octavia:
+    series: bionic
+    charm: cs:octavia
+    num_units: 1
+    options:
+      openstack-origin: cloud:bionic-rocky
+    to:
+    - lxd:2
+  octavia-dashboard:
+    charm: cs:octavia-dashboard
+  vault:
+    charm: cs:vault
+    num_units: 1
+    to:
+    - lxd:3
+relations:
+- - mysql:shared-db
+  - octavia:shared-db
+- - mysql:shared-db
+  - barbican:shared-db
+- - mysql:shared-db
+  - vault:shared-db
+- - keystone:identity-service
+  - octavia:identity-service
+- - keystone:identity-service
+  - barbican:identity-service
+- - rabbitmq-server:amqp
+  - octavia:amqp
+- - rabbitmq-server:amqp
+  - barbican:amqp
+- - neutron-api:neutron-load-balancer
+  - octavia:neutron-api
+- - neutron-openvswitch:neutron-control
+  - octavia:neutron-openvswitch
+- - openstack-dashboard:dashboard-plugin
+  - octavia-dashboard:dashboard
+- - barbican-vault:secrets
+  - barbican:secrets
+- - vault:secrets
+  - barbican-vault:secrets-storage
