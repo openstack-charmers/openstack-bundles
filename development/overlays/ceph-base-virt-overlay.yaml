@@ -1,4 +1,18 @@
+machines:
+  '0':
+    constraints: mem=16G
+  '1':
+    constraints: mem=16G
+  '2':
+    constraints: mem=16G
+  '3':
+    constraints: mem=16G
 applications:
   ceph-osd:
     storage:
       osd-devices: 20GB
+  neutron-gateway:
+    options:
+      bridge-mappings: physnet1:br-ex
+      data-port:
+      openstack-origin: cloud:bionic-rocky
