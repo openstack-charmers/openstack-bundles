@@ -1,0 +1,7 @@
+configure: []
+dev_bundles: []
+gate_bundles:
+-  bionic-rocky
+smoke_bundles: []
+tests:
+- zaza.charm_tests.security.tests.FileOwnershipTest
