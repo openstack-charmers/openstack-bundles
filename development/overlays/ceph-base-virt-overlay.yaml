@@ -1,12 +1,3 @@
-machines:
-  '0':
-    constraints: mem=16G
-  '1':
-    constraints: mem=16G
-  '2':
-    constraints: mem=16G
-  '3':
-    constraints: mem=16G
 applications:
   ceph-osd:
     storage:

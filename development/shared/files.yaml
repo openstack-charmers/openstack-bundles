@@ -48,7 +48,7 @@ ceph-osd:
     - path: /var/lib/charm/ceph-osd/ceph.conf # /etc/alternatives/ceph.conf destination
       owner: ceph
       group: ceph
-      mode: 644
+      mode: '644'
 neutron-gateway:
   files:
     - path: /etc/neutron/neutron.conf
@@ -63,13 +63,14 @@ nova-cloud-controller:
     - path: /etc/nova/logging.conf
       # owner: nova
       group: nova
-      mode: '644'
+      mode: '640'
     - path: /etc/nova/nova.conf
       # owner: nova
       group: nova
       mode: '640'
     - path: /etc/nova/rootwrap.conf
-      mode: '644'
+      group: nova
+      mode: '640'
 nova-compute:
   files:
     - path: /etc/nova/api-paste.ini
@@ -83,7 +84,7 @@ nova-compute:
     - path: /etc/nova/nm.conf
       # owner: nova
       # group: nova
-      mode: '640'
+      mode: '644'
     - path: /etc/nova/nova-compute.conf
       # owner: nova
       group: nova
@@ -95,9 +96,10 @@ nova-compute:
     - path: /etc/nova/rootwrap.conf
       group: nova
       mode: '640'
-openstack-dashboard:
-  files:
-    - path: /etc/ssl/private/dashboard.key
+## TODO - add support for optional files
+# openstack-dashboard:
+#   files:
+#     - path: /etc/ssl/private/dashboard.key
 swift-proxy:
   files: []
 swift-storage:
