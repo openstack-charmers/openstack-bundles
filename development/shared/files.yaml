@@ -9,6 +9,10 @@ ceph-mon:
       group: ceph
 ceph-osd:
   files:
+    - path: /var/lib/charm/ceph-osd/ceph.conf # /etc/alternatives/ceph.conf -> /etc/ceph/ceph.conf destination
+      owner: ceph
+      group: ceph
+      mode: '644'
     - path: /etc/ceph/ceph.conf
       owner: root
       group: root
@@ -45,10 +49,6 @@ ceph-osd:
       owner: ceph
       group: ceph
       mode: '755'
-    - path: /var/lib/charm/ceph-osd/ceph.conf # /etc/alternatives/ceph.conf destination
-      owner: ceph
-      group: ceph
-      mode: '644'
 neutron-gateway:
   files:
     - path: /etc/neutron/neutron.conf
