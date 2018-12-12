@@ -2,8 +2,3 @@ applications:
   ceph-osd:
     storage:
       osd-devices: 20GB
-  neutron-gateway:
-    options:
-      bridge-mappings: physnet1:br-ex
-      data-port:
-      openstack-origin: cloud:bionic-rocky
