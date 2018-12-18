@@ -6,3 +6,4 @@ applications:
       osd-devices: 20GB
   ceph-mon:
     to: []
+  ntp:
