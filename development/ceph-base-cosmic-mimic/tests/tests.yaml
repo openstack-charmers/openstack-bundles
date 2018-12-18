@@ -2,7 +2,7 @@
 configure: []
 dev_bundles: []
 gate_bundles:
--  bionic-mimic
+-  cosmic-mimic
 smoke_bundles: []
 tests:
 - zaza.charm_tests.security.tests.FileOwnershipTest
