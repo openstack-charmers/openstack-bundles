@@ -15,21 +15,27 @@ applications:
   ceph-radosgw:
     to: []
   cinder:
+    expose: True
     to: []
   glance:
+    expose: True
     to: []
   keystone:
+    expose: True
     to: []
   mysql:
     to: []
   neutron-api:
+    expose: True
     to: []
   nova-cloud-controller:
+    expose: True
     to: []
   nova-compute:
     annotations:
     to: []
   openstack-dashboard:
+    expose: True
     to: []
   rabbitmq-server:
     to: []

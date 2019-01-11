@@ -1,7 +1,9 @@
 configure: []
 dev_bundles: []
 gate_bundles:
--  bionic-mimic
+  -  bionic-mimic
 smoke_bundles: []
 tests:
-- zaza.charm_tests.security.tests.FileOwnershipTest
+  - zaza.charm_tests.security.tests.FileOwnershipTest
+  - zaza.charm_tests.ceph.tests.CephLowLevelTest
+  - zaza.charm_tests.ceph.tests.CephRelationTest

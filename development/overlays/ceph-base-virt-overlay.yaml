@@ -4,6 +4,10 @@ applications:
     to: []
     storage:
       osd-devices: 20GB
+    options:
+      osd-devices: '/srv/ceph /dev/test-non-existent'
   ceph-mon:
     to: []
+    options:
+      expected-osd-count: 6
   ntp:
