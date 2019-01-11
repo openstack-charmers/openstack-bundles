@@ -42,7 +42,7 @@ relations:
   - barbican:amqp
 - - neutron-api:neutron-load-balancer
   - octavia:neutron-api
-- - neutron-openvswitch:neutron-control
+- - neutron-openvswitch:neutron-plugin
   - octavia:neutron-openvswitch
 - - openstack-dashboard:dashboard-plugin
   - octavia-dashboard:dashboard
