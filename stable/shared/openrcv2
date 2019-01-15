@@ -6,7 +6,7 @@ for param in $_OS_PARAMS; do
 done
 
 _keystone_unit=$(juju status keystone --format yaml | \
-    awk '/units:$/ {getline; gsub(/:$/, ""); print $1}')
+    awk '/units:$/ {getline; gsub(/:$/, ""); print $1; exit}')
 _keystone_ip=$(juju run --unit ${_keystone_unit} 'unit-get private-address')
 _password=$(juju run --unit ${_keystone_unit} 'leader-get admin_passwd')
 
