@@ -5,5 +5,3 @@ gate_bundles:
 smoke_bundles: []
 tests:
   - zaza.charm_tests.security.tests.FileOwnershipTest
-  - zaza.charm_tests.ceph.tests.CephLowLevelTest
-  - zaza.charm_tests.ceph.tests.CephRelationTest
