@@ -1,0 +1,42 @@
+machines: {}
+applications:
+  ceph-osd:
+    to: []
+    storage:
+      osd-devices: 20GB
+  neutron-gateway:
+    options:
+      bridge-mappings: physnet1:br-ex
+      data-port:
+      openstack-origin: cloud:bionic-rocky
+    to: []
+  ceph-mon:
+    to: []
+  ceph-radosgw:
+    to: []
+  cinder:
+    expose: True
+    to: []
+  glance:
+    expose: True
+    to: []
+  keystone:
+    expose: True
+    to: []
+  mysql:
+    to: []
+  neutron-api:
+    expose: True
+    to: []
+  nova-cloud-controller:
+    expose: True
+    to: []
+  nova-compute:
+    annotations:
+    to: []
+  openstack-dashboard:
+    expose: True
+    to: []
+  rabbitmq-server:
+    to: []
+  ntp:
