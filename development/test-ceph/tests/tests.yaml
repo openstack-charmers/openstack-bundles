@@ -1,7 +1,11 @@
 configure: []
 dev_bundles: []
 gate_bundles:
-  -  bionic-mimic
+  - xenial-jewel
+  - xenial-luminous
+  - bionic-luminous
+  - bionic-mimic
+  - cosmic-mimic
 smoke_bundles: []
 tests:
   - zaza.charm_tests.security.tests.FileOwnershipTest
