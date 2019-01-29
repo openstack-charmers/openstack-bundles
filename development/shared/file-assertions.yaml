@@ -4,9 +4,23 @@ ceph-mon:
       owner: root
       group: root
       mode: '777'
+    - path: /var/lib/charm/ceph-mon/ceph.conf # /etc/alternatives/ceph.conf -> /etc/ceph/ceph.conf destination
+      owner: root
+      group: root
+      mode: '644'
     - path: /etc/ceph/ceph.client.admin.keyring
       owner: ceph
       group: ceph
+    - path: /etc/ceph/rbdmap
+      mode: '644'
+    - path: /var/lib/ceph
+      owner: ceph
+      group: ceph
+      mode: '750'
+    - path: /var/lib/ceph/bootstrap-*/ceph.keyring
+      owner: ceph
+      group: ceph
+      mode: '600'
 ceph-osd:
   files:
     - path: /var/lib/charm/ceph-osd/ceph.conf # /etc/alternatives/ceph.conf -> /etc/ceph/ceph.conf destination
@@ -17,85 +31,69 @@ ceph-osd:
       owner: root
       group: root
       mode: '777'
-    - path: /var/lib/ceph/bootstrap-mds
+    - path: /var/lib/ceph
+      owner: ceph
+      group: ceph
+      mode: '750'
+    - path: /var/lib/ceph/*
       owner: ceph
       group: ceph
       mode: '755'
-    - path: /var/lib/ceph/bootstrap-mgr
+    - path: /var/lib/ceph/bootstrap-*/ceph.keyring
       owner: ceph
       group: ceph
-      mode: '755'
-    - path: /var/lib/ceph/bootstrap-osd
-      owner: ceph
-      group: ceph
-      mode: '755'
-    - path: /var/lib/ceph/bootstrap-rgw
-      owner: ceph
-      group: ceph
-      mode: '755'
-    - path: /var/lib/ceph/mgr
-      owner: ceph
-      group: ceph
-      mode: '755'
-    - path: /var/lib/ceph/mon
-      owner: ceph
-      group: ceph
-      mode: '755'
-    - path: /var/lib/ceph/osd
-      owner: ceph
-      group: ceph
-      mode: '755'
-    - path: /var/lib/ceph/radosgw
-      owner: ceph
-      group: ceph
-      mode: '755'
+      mode: '600'
 neutron-gateway:
   files:
     - path: /etc/neutron/neutron.conf
       group: neutron
       mode: '640'
+    - path: /etc/neutron/rootwrap.conf
+      mode: '640'
+    - path: /etc/neutron/rootwrap.d
+      mode: '755'
+    - path: /etc/neutron/*
+      group: neutron
+      mode: '644'
+neutron-api:
+  files:
+    - path: /etc/neutron/neutron.conf
+      group: neutron
+      mode: '640'
+    - path: /etc/neutron/rootwrap.conf
+      mode: '640'
+    - path: /etc/neutron/rootwrap.d
+      mode: '755'
+    - path: /etc/neutron/neutron_lbaas.conf
+      mode: '644'
+    - path: /etc/neutron/neutron_vpnaas.conf
+      mode: '644'
+    - path: /etc/neutron/*
+      group: neutron
+      mode: '644'
 nova-cloud-controller:
   files:
-    - path: /etc/nova/api-paste.ini
-      # owner: nova
+    - path: /etc/nova
       group: nova
-      mode: '640'
-    - path: /etc/nova/logging.conf
+      mode: '750'
+    - path: /etc/nova/*
       # owner: nova
-      group: nova
-      mode: '640'
-    - path: /etc/nova/nova.conf
-      # owner: nova
-      group: nova
-      mode: '640'
-    - path: /etc/nova/rootwrap.conf
       group: nova
       mode: '640'
 nova-compute:
   files:
-    - path: /etc/nova/api-paste.ini
-      # owner: root
-      group: nova
-      mode: '640'
-    - path: /etc/nova/logging.conf
+    - path: /etc/nova/*
       # owner: root
       group: nova
       mode: '640'
     - path: /etc/nova/nm.conf
-      # owner: nova
-      # group: nova
+      # owner: root
+      group: nova
       mode: '644'
-    - path: /etc/nova/nova-compute.conf
-      # owner: nova
-      group: nova
-      mode: '640'
-    - path: /etc/nova/nova.conf
-      # owner: nova
-      group: nova
-      mode: '640'
     - path: /etc/nova/rootwrap.conf
-      group: nova
       mode: '640'
+    - path: /etc/nova/rootwrap.d
+      mode: '755'
 
 ## TODO - add support for optional files
 # openstack-dashboard:
