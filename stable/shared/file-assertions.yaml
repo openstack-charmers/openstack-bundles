@@ -1,3 +1,15 @@
+barbican:
+  files:
+    # From security guide
+    - path: /etc/barbican/barbican.conf
+      group: barbican
+      mode: '640'
+    - path: /etc/barbican/barbican-api-paste.ini
+      group: barbican
+      mode: '640'
+    - path: /etc/barbican/policy.json
+      group: barbican
+      mode: '640'
 ceph-mon:
   files:
     - path: /etc/ceph/ceph.conf
@@ -43,6 +55,98 @@ ceph-osd:
       owner: ceph
       group: ceph
       mode: '600'
+    - path: /var/lib/ceph/radosgw
+      owner: ceph
+      group: ceph
+      mode: '755'
+cinder:
+  files:
+    # From security guide
+    - path: /etc/cinder/cinder.conf
+      group: cinder
+      mode: '640'
+    - path: /etc/cinder/api-paste.conf
+      group: cinder
+      mode: '640'
+    - path: /etc/cinder/rootwrap.conf
+      group: cinder
+      mode: '640'
+glance:
+  files:
+    # From security guide
+    - path: /etc/glance/glance-api-paste.ini
+      group: glance
+      mode: '640'
+    - path: /etc/glance/glance-api.conf
+      group: glance
+      mode: '640'
+    - path: /etc/glance/glance-cache.conf
+      group: glance
+      mode: '640'
+    - path: /etc/glance/glance-manage.conf
+      group: glance
+      mode: '640'
+    - path: /etc/glance/glance-registry-paste.ini
+      group: glance
+      mode: '640'
+    - path: /etc/glance/glance-registry.conf
+      group: glance
+      mode: '640'
+    - path: /etc/glance/glance-scrubber.conf
+      group: glance
+      mode: '640'
+    - path: /etc/glance/glance-swift-store.conf
+      group: glance
+      mode: '640'
+    - path: /etc/glance/policy.json
+      group: glance
+      mode: '640'
+    - path: /etc/glance/schema-image.json
+      group: glance
+      mode: '640'
+    - path: /etc/glance/schema.json
+      group: glance
+      mode: '640'
+keystone:
+  files:
+    # From security guide
+    - path: /etc/keystone/keystone.conf
+      group: keystone
+      mode: '640'
+    - path: /etc/keystone/keystone-paste.ini
+      group: keystone
+      mode: '640'
+    - path: /etc/keystone/policy.json
+      group: keystone
+      mode: '640'
+    - path: /etc/keystone/logging.conf
+      group: keystone
+      mode: '640'
+    - path: /etc/keystone/ssl/certs/signing_cert.pem
+      group: keystone
+      mode: '640'
+    - path: /etc/keystone/ssl/private/signing_key.pem
+      group: keystone
+      mode: '640'
+    - path: /etc/keystone/ssl/certs/ca.pem
+      group: keystone
+      mode: '640'
+manilla:
+  files:
+    # From security guide
+    - path: /etc/manila/manila.conf
+      group: manilla
+      mode: '640'
+    - path: /etc/manila/api-paste.ini
+      group: manilla
+      mode: '640'
+    - path: /etc/manila/policy.json
+      group: manilla
+      mode: '640'
+    - path: /etc/manila/rootwrap.conf
+      group: manilla
+      mode: '640'
+
 neutron-gateway:
   files:
     - path: /etc/neutron/neutron.conf
@@ -57,11 +161,17 @@ neutron-gateway:
       mode: '644'
 neutron-api:
   files:
+    # From security guide
     - path: /etc/neutron/neutron.conf
       group: neutron
       mode: '640'
-    - path: /etc/neutron/rootwrap.conf
+    - path: /etc/nova/api-paste.ini
+      group: neutron
       mode: '640'
+    - path: /etc/neutron/rootwrap.conf
+      group: neutron
+      mode: '640'
+    # Other
     - path: /etc/neutron/rootwrap.d
       mode: '755'
     - path: /etc/neutron/neutron_lbaas.conf
@@ -73,32 +183,54 @@ neutron-api:
       mode: '644'
 nova-cloud-controller:
   files:
-    - path: /etc/nova
+    - path: /etc/nova/api-paste.ini
+      group: nova
+      mode: '640'
+    - path: /etc/nova/nova.conf
       group: nova
       mode: '750'
     - path: /etc/nova/*
-      # owner: nova
+      group: nova
+      mode: '640'
+    # Other
+    - path: /etc/nova/logging.conf
       group: nova
       mode: '640'
 nova-compute:
   files:
+    # From security guide
+    - path: /etc/nova/nova.conf
+      group: nova
+      mode: '640'
+    - path: /etc/nova/api-paste.ini
+      group: nova
+      mode: '640'
+    - path: /etc/nova/rootwrap.conf
+      group: nova
+      mode: '640'
+    # Other
+    - path: /etc/nova/nova-compute.conf
+      group: nova
+      mode: '640'
+    - path: /etc/nova/logging.conf
+      group: nova
+      mode: '640'
+    - path: /etc/nova/nm.conf
+      mode: '644'
     - path: /etc/nova/*
       # owner: root
       group: nova
       mode: '640'
-    - path: /etc/nova/nm.conf
-      # owner: root
-      group: nova
-      mode: '644'
-    - path: /etc/nova/rootwrap.conf
+openstack-dashboard:
+  files:
+    # From security guide
+    - path: /etc/openstack-dashboard/local_settings.py
+      group: horizon
       mode: '640'
-    - path: /etc/nova/rootwrap.d
-      mode: '755'
+    ## TODO - add support for optional files
+    # - path: /etc/ssl/private/dashboard.key
+    #   optional: True
 
-## TODO - add support for optional files
-# openstack-dashboard:
-#   files:
-#     - path: /etc/ssl/private/dashboard.key
 swift-proxy:
   files: []
 swift-storage:
