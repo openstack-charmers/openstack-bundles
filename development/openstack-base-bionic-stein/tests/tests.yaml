@@ -1,0 +1,8 @@
+oonfigure: []
+dev_bundles: []
+gate_bundles:
+-  bionic-stein
+smoke_bundles: []
+configure: []
+tests:
+- zaza.charm_tests.security.tests.FileOwnershipTest
