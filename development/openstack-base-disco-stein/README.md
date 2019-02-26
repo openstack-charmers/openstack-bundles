@@ -1,18 +1,20 @@
-# LXD OpenStack Cloud
+# Basic OpenStack Cloud
 
-*DEV/TEST ONLY*: This unstable, development example bundle deploys an OpenStack Cloud (Stein release), configured to use [LXD][] (the lightweight container hypervisor), on Ubuntu 18.04, (bionic) providing Dashboard, Compute, Network, Object Storage, Identity and Image services. See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
+*DEV/TEST ONLY*: This unstable, development example bundle deploys a basic OpenStack Cloud providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services. See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
+
+This example bundle deploys a basic OpenStack Cloud (Rocky with Ceph Mimic) on Ubuntu 19.04 LTS (disco), providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.
 
 ## Requirements
 
-This example bundle is designed to run on bare metal using Juju with [MAAS][] (Metal-as-a-Service); you will need to have setup a [MAAS][] deployment with a minimum of 4 physical servers prior to using this bundle.
+This example bundle is designed to run on bare metal using Juju 2.x with [MAAS][] (Metal-as-a-Service); you will need to have setup a [MAAS][] deployment with a minimum of 4 physical servers prior to using this bundle.
 
-Certain configuration options within the bundle may need to be adjusted prior to deployment to fit your particular set of hardware. For example, network device names and block device names can vary.
+Certain configuration options within the bundle may need to be adjusted prior to deployment to fit your particular set of hardware. For example, network device names and block device names can vary, and passwords should be yours.
 
 Servers should have:
 
  - A minimum of 8GB of physical RAM.
  - Enough CPU cores to support your capacity requirements.
- - Two disks (identified by /dev/sda and /dev/sdb); the first is used by MAAS for the OS install, the second for LXD LVM storage.
+ - Two disks (identified by /dev/sda and /dev/sdb); the first is used by MAAS for the OS install, the second for Ceph storage.
  - Two cabled network ports on eno1 and eno2 (see below).
 
 Servers should have two physical network ports cabled; the first is used for general communication between services in the Cloud, the second is used for 'public' network traffic to and from instances (North/South traffic) running within the Cloud.
@@ -20,7 +22,7 @@ Servers should have two physical network ports cabled; the first is used for gen
 ## Components
 
  - 1 Node for Neutron Gateway and Ceph with RabbitMQ and MySQL under LXC containers.
- - 3 Nodes for Nova Compute and Ceph, with Keystone, Glance, Neutron, Nova Cloud Controller, Ceph RADOS Gateway, and Horizon under LXC containers.
+ - 3 Nodes for Nova Compute and Ceph, with Keystone, Glance, Neutron, Nova Cloud Controller, Ceph RADOS Gateway, Cinder and Horizon under LXC containers.
 
 All physical servers (not LXC containers) will also have NTP installed and configured to keep time in sync.
 
@@ -45,7 +47,7 @@ To horizontally scale Ceph:
 
     juju add-unit --to <machine-id-of-compute-service> ceph-osd
 
-**Note:** Other services in this bundle can be scaled in-conjunction with the hacluster charm to produce scalable, highly available services - that will be covered in a different bundle.
+**Note:** Other services in this bundle can be scaled in-conjunction with the hacluster charm to produce scalable, highly avaliable services - that will be covered in a different bundle.
 
 ## Ensuring it's working
 
@@ -57,31 +59,33 @@ All commands are executed from within the expanded bundle.
 
 In order to configure and use your cloud, you'll need to install the appropriate client tools:
 
-    sudo apt install -y python-openstackclient \
-        python-novaclient python-keystoneclient \
-        python-glanceclient python-neutronclient
+    sudo add-apt-repository cloud-archive:rocky -y
+    sudo apt update
+    sudo apt install python-novaclient python-keystoneclient python-glanceclient \
+        python-neutronclient python-openstackclient -y
 
 ### Accessing the cloud
 
 Check that you can access your cloud from the command line:
 
     source openrc
-    openstack service list
+    openstack catalog list
 
 You should get a full listing of all services registered in the cloud which should include identity, compute, image and network.
 
 ### Configuring an image
 
-In order to run instances on your cloud, you'll need to upload a root disk archive to boot instances from:
+In order to run instances on your cloud, you'll need to upload an image to boot instances:
 
-    mkdir -p ~/images
-    wget -O ~/images/bionic.squashfs \
-	http://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.squashfs
-    openstack image create bionic --file ~/images/bionic.squashfs \
-        --disk-format=raw \
-        --container-format=bare \
-        --public \
-        --property architecture=x86_64
+    curl http://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.img | \
+        openstack image create --public --container-format=bare --disk-format=qcow2 bionic
+
+Images for other architectures can be obtained from [Ubuntu Cloud Images][].  Be sure to use the appropriate image for the cpu architecture.
+
+**Note:** for ARM 64-bit (arm64) guests, you will also need to configure the image to boot in UEFI mode:
+
+    curl http://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-arm64.img | \
+        openstack image create --public --container-format=bare --disk-format=qcow2 --property hw_firmware_type=uefi bionic
 
 ### Configure networking
 
@@ -93,9 +97,9 @@ For the purposes of a quick test, we'll setup an 'external' network and shared r
 
 for example (for a private cloud):
 
-    ./neutron-ext-net-ksv3 --network-type flat \
-        -g 10.245.168.1 -c 10.245.168.0/21 \
-	-f 10.245.172.0:10.245.172.254 ext_net
+    ./neutron-ext-net-ksv3 --network-type flat
+        -g 10.230.168.1 -c 10.230.168.0/21 \
+        -f 10.230.168.10:10.230.175.254 ext_net
 
 You'll need to adapt the parameters for the network configuration that eno2 on all the servers is connected to; in a public cloud deployment these ports would be connected to a publicly addressable part of the Internet.
 
@@ -106,29 +110,42 @@ We'll also need an 'internal' network for the admin user which instances are act
 
 Neutron provides a wide range of configuration options; see the [OpenStack Neutron][] documentation for more details.
 
+### Configuring a flavor
+
+Starting with the OpenStack Newton release, default flavors are no longer created at install time. You therefore need to create at least one machine type before you can boot an instance:
+
+    openstack flavor create --ram 2048 --disk 20 --ephemeral 20 m1.small
+
 ### Booting an instance
 
-First generate a SSH key pair so that you can access your instances once you've booted them:
+First generate a SSH keypair so that you can access your instances once you've booted them:
 
     mkdir -p ~/.ssh
     touch ~/.ssh/id_rsa_cloud
     chmod 600 ~/.ssh/id_rsa_cloud
-    openstack keypair create testkey > ~/.ssh/id_rsa_cloud
+    nova keypair-add mykey > ~/.ssh/id_rsa_cloud
 
 **Note:** you can also upload an existing public key to the cloud rather than generating a new one:
 
     openstack keypair create --public-key ~/.ssh/id_rsa.pub mykey
 
-Then add a flavor for the instance to be created from:
-
-    openstack flavor create  --id 1 --ram 2048  --disk 20 --vcpus 1 m1.small
-
 You can now boot an instance on your cloud:
 
-    openstack server create --flavor m1.small \
-       --image bionic --key-name testkey \
-       --nic net-id=$(openstack network list -c Name -c ID -f value | grep internal | awk '{print $1}') \
-       bionic-test
+    openstack server create --image bionic --flavor m1.small --key-name mykey \
+        --nic net-id=$(openstack network list | grep internal | awk '{ print $2 }') \
+        bionic-test
+
+### Attaching a volume
+
+First, create a 10G volume in cinder:
+
+    openstack volume create --size=10 <name-of-volume>
+
+then attach it to the instance we just booted:
+
+    openstack server add volume bionic-test <name-of-volume>
+
+The attached volume will be accessible once you login to the instance (see below).  It will need to be formatted and mounted!
 
 ### Accessing your instance
 
@@ -143,10 +160,12 @@ and then allow access via SSH (and ping) - you only need to do these steps once:
 
 For each security group in the list, identify the UUID and run:
 
-    openstack security group rule create --protocol icmp <uuid>
-    openstack security group rule create --protocol tcp \
-        --dst-port=22:22 \
-	--remote-ip 0.0.0.0/0 <uuid>
+
+    openstack security group rule create <uuid> \
+        --protocol icmp --remote-ip 0.0.0.0/0
+
+    openstack security group rule create <security-group-name> \
+        --protocol tcp --remote-ip 0.0.0.0/0 --dst-port 22
 
 After running these commands you should be able to access the instance:
 
@@ -154,7 +173,7 @@ After running these commands you should be able to access the instance:
 
 ## What next?
 
-Configuring and managing services on an OpenStack cloud is complex; take a look at the [OpenStack Admin Guide][] for a complete reference on how to configure an OpenStack cloud for your requirements.
+Configuring and managing services on an OpenStack cloud is complex; take a look a the [OpenStack Admin Guide][] for a complete reference on how to configure an OpenStack cloud for your requirements.
 
 ## Useful Cloud URLs
 
@@ -164,4 +183,4 @@ Configuring and managing services on an OpenStack cloud is complex; take a look 
 [Simplestreams]: https://launchpad.net/simplestreams
 [OpenStack Neutron]: http://docs.openstack.org/admin-guide-cloud/content/ch_networking.html
 [OpenStack Admin Guide]: http://docs.openstack.org/user-guide-admin/content
-[LXD]: https://linuxcontainers.org/lxd/
+[Ubuntu Cloud Images]: http://cloud-images.ubuntu.com/bionic/current/

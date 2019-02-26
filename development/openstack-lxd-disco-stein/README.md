@@ -1,6 +1,6 @@
 # LXD OpenStack Cloud
 
-*DEV/TEST ONLY*: This unstable, development example bundle deploys an OpenStack Cloud (Stein release), configured to use [LXD][] (the lightweight container hypervisor), on Ubuntu 18.04, (bionic) providing Dashboard, Compute, Network, Object Storage, Identity and Image services. See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
+*DEV/TEST ONLY*: This unstable, development example bundle deploys an OpenStack Cloud (Queens release), configured to use [LXD][] (the lightweight container hypervisor), on Ubuntu 19.04, (disco) providing Dashboard, Compute, Network, Object Storage, Identity and Image services. See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
 
 ## Requirements
 
