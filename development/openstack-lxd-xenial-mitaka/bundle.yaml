@@ -126,7 +126,7 @@ services:
     charm: cs:~openstack-charmers-next/lxd
     num_units: 0
     options:
-      block-devices: /dev/sdb
+      block-devices: /mnt/lxd
       storage-type: zfs
       overwrite: true
   mysql:
