@@ -6,10 +6,8 @@ for param in $_OS_PARAMS; do
 done
 unset _OS_PARAMS
 
-_keystone_unit=$(juju status keystone --format yaml | \
-    awk '/units:$/ {getline; gsub(/:$/, ""); print $1; exit}')
-_keystone_ip=$(juju run --unit ${_keystone_unit} 'unit-get private-address')
-_password=$(juju run --unit ${_keystone_unit} 'leader-get admin_passwd')
+_keystone_ip=$(juju run $_juju_model_arg --unit keystone/leader 'unit-get private-address')
+_password=$(juju run $_juju_model_arg --unit keystone/leader 'leader-get admin_passwd')
 
 export OS_AUTH_URL=${OS_AUTH_PROTOCOL:-http}://${_keystone_ip}:5000/v3
 export OS_USERNAME=admin
