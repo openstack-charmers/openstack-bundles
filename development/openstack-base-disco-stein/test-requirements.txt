@@ -1,0 +1,2 @@
+# zaza
+git+https://github.com/openstack-charmers/zaza.git#egg=zaza

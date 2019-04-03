@@ -1,8 +1,9 @@
-_keystone_unit=$(juju status keystone --format yaml | \
-    awk '/units:$/ {getline; gsub(/:$/, ""); print $1; exit}')
-_keystone_major_version=$(juju status ${_keystone_unit} --format yaml| \
+if [ ! -z $JUJU_MODEL ]; then
+  _juju_model_arg="-m $JUJU_MODEL"
+fi
+_keystone_major_version=$(juju status $_juju_model_arg keystone --format yaml| \
     awk '/^    version:/ {print $2; exit}' | cut -f1 -d\.)
-_keystone_preferred_api_version=$(juju config keystone preferred-api-version)
+_keystone_preferred_api_version=$(juju config $_juju_model_arg keystone preferred-api-version)
 
 if [ $_keystone_major_version -ge 13 -o \
      "$_keystone_preferred_api_version" = '3' ]; then
