@@ -8,7 +8,18 @@ This example bundle deploys a basic OpenStack Cloud (Rocky with Ceph Mimic) on U
 
 This example bundle is designed to run on bare metal using Juju 2.x with [MAAS][] (Metal-as-a-Service); you will need to have setup a [MAAS][] deployment with a minimum of 4 physical servers prior to using this bundle.
 
-Certain configuration options within the bundle may need to be adjusted prior to deployment to fit your particular set of hardware. For example, network device names and block device names can vary, and passwords should be yours.
+Certain configuration options within the bundle may need to be adjusted prior to deployment to fit your particular set of hardware. For example, network device names and block device names can vary, and passwords should be yours.  The network space binding definition in the bundle may need to be changed to match the desired space in your environment (prior to deployment).
+
+For example, a section similar to this exists in the bundle.yaml file.  The third "column" are the values to set.  Some servers may not have eno2, they may have something like eth2 or some other network device name.  This needs to be adjusted prior to deployment.  The same principle holds for osd-devices.  The third column is a whitelist of devices to use for Ceph OSDs.  Adjust accordingly by editing bundle.yaml before deployment.
+
+```
+variables:
+  public-space:        &public-space         public-space
+  openstack-origin:    &openstack-origin     cloud:bionic-stein
+  data-port:           &data-port            br-ex:eno2
+  worker-multiplier:   &worker-multiplier    0.25
+  osd-devices:         &osd-devices          /dev/sdb /dev/vdb
+```
 
 Servers should have:
 
@@ -97,7 +108,7 @@ For the purposes of a quick test, we'll setup an 'external' network and shared r
 
 for example (for a private cloud):
 
-    ./neutron-ext-net-ksv3 --network-type flat
+    ./neutron-ext-net-ksv3 --network-type flat \
         -g 10.230.168.1 -c 10.230.168.0/21 \
         -f 10.230.168.10:10.230.175.254 ext_net
 
@@ -123,7 +134,7 @@ First generate a SSH keypair so that you can access your instances once you've b
     mkdir -p ~/.ssh
     touch ~/.ssh/id_rsa_cloud
     chmod 600 ~/.ssh/id_rsa_cloud
-    nova keypair-add mykey > ~/.ssh/id_rsa_cloud
+    openstack keypair create mykey > ~/.ssh/id_rsa_cloud
 
 **Note:** you can also upload an existing public key to the cloud rather than generating a new one:
 
@@ -164,7 +175,7 @@ For each security group in the list, identify the UUID and run:
     openstack security group rule create <uuid> \
         --protocol icmp --remote-ip 0.0.0.0/0
 
-    openstack security group rule create <security-group-name> \
+    openstack security group rule create <uuid> \
         --protocol tcp --remote-ip 0.0.0.0/0 --dst-port 22
 
 After running these commands you should be able to access the instance:
