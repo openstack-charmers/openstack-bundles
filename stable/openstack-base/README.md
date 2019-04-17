@@ -1,13 +1,23 @@
 # Basic OpenStack Cloud
 
-This example bundle deploys a basic OpenStack Cloud (Queens with Ceph Luminous) on Ubuntu 18.04 LTS (Bionic), providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Im
-age services.
+This example bundle deploys a basic OpenStack Cloud (Stein with Ceph Mimic) on Ubuntu 18.04 LTS (Bionic), providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.
 
 ## Requirements
 
 This example bundle is designed to run on bare metal using Juju 2.x with [MAAS][] (Metal-as-a-Service); you will need to have setup a [MAAS][] deployment with a minimum of 4 physical servers prior to using this bundle.
 
-Certain configuration options within the bundle may need to be adjusted prior to deployment to fit your particular set of hardware. For example, network device names and block device names can vary, and passwords should be yours.
+Certain configuration options within the bundle may need to be adjusted prior to deployment to fit your particular set of hardware. For example, network device names and block device names can vary, and passwords should be yours.  The network space binding definition in the bundle may need to be changed to match the desired space in your environment (prior to deployment).
+
+For example, a section similar to this exists in the bundle.yaml file.  The third "column" are the values to set.  Some servers may not have eno2, they may have something like eth2 or some other network device name.  This needs to be adjusted prior to deployment.  The same principle holds for osd-devices.  The third column is a whitelist of devices to use for Ceph OSDs.  Adjust accordingly by editing bundle.yaml before deployment.
+
+```
+variables:
+  public-space:        &public-space         public-space
+  openstack-origin:    &openstack-origin     cloud:bionic-stein
+  data-port:           &data-port            br-ex:eno2
+  worker-multiplier:   &worker-multiplier    0.25
+  osd-devices:         &osd-devices          /dev/sdb /dev/vdb
+```
 
 Servers should have:
 
@@ -58,10 +68,7 @@ All commands are executed from within the expanded bundle.
 
 In order to configure and use your cloud, you'll need to install the appropriate client tools:
 
-    sudo add-apt-repository cloud-archive:queens -y
-    sudo apt update
-    sudo apt install python-novaclient python-keystoneclient python-glanceclient \
-        python-neutronclient python-openstackclient -y
+    sudo snap install openstackclients
 
 ### Accessing the cloud
 
@@ -76,15 +83,15 @@ You should get a full listing of all services registered in the cloud which shou
 
 In order to run instances on your cloud, you'll need to upload an image to boot instances:
 
-    curl http://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-disk1.img | \
-        openstack image create --public --container-format=bare --disk-format=qcow2 xenial
+    curl http://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.img | \
+        openstack image create --public --container-format=bare --disk-format=qcow2 bionic
 
 Images for other architectures can be obtained from [Ubuntu Cloud Images][].  Be sure to use the appropriate image for the cpu architecture.
 
 **Note:** for ARM 64-bit (arm64) guests, you will also need to configure the image to boot in UEFI mode:
 
-    curl http://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-arm64-uefi1.img | \
-        openstack image create --public --container-format=bare --disk-format=qcow2 --property hw_firmware_type=uefi xenial
+    curl http://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-arm64.img | \
+        openstack image create --public --container-format=bare --disk-format=qcow2 --property hw_firmware_type=uefi bionic
 
 ### Configure networking
 
@@ -96,7 +103,7 @@ For the purposes of a quick test, we'll setup an 'external' network and shared r
 
 for example (for a private cloud):
 
-    ./neutron-ext-net-ksv3 --network-type flat
+    ./neutron-ext-net-ksv3 --network-type flat \
         -g 10.230.168.1 -c 10.230.168.0/21 \
         -f 10.230.168.10:10.230.175.254 ext_net
 
@@ -122,7 +129,7 @@ First generate a SSH keypair so that you can access your instances once you've b
     mkdir -p ~/.ssh
     touch ~/.ssh/id_rsa_cloud
     chmod 600 ~/.ssh/id_rsa_cloud
-    nova keypair-add mykey > ~/.ssh/id_rsa_cloud
+    openstack keypair create mykey > ~/.ssh/id_rsa_cloud
 
 **Note:** you can also upload an existing public key to the cloud rather than generating a new one:
 
@@ -130,9 +137,9 @@ First generate a SSH keypair so that you can access your instances once you've b
 
 You can now boot an instance on your cloud:
 
-    openstack server create --image xenial --flavor m1.small --key-name mykey \
+    openstack server create --image bionic --flavor m1.small --key-name mykey \
         --nic net-id=$(openstack network list | grep internal | awk '{ print $2 }') \
-        xenial-test
+        bionic-test
 
 ### Attaching a volume
 
@@ -142,7 +149,7 @@ First, create a 10G volume in cinder:
 
 then attach it to the instance we just booted:
 
-    openstack server add volume xenial-test <name-of-volume>
+    openstack server add volume bionic-test <name-of-volume>
 
 The attached volume will be accessible once you login to the instance (see below).  It will need to be formatted and mounted!
 
@@ -151,7 +158,7 @@ The attached volume will be accessible once you login to the instance (see below
 In order to access the instance you just booted on the cloud, you'll need to assign a floating IP address to the instance:
 
     openstack floating ip create ext_net
-    openstack server add floating ip xenial-test <new-floating-ip>
+    openstack server add floating ip bionic-test <new-floating-ip>
 
 and then allow access via SSH (and ping) - you only need to do these steps once:
 
@@ -163,7 +170,7 @@ For each security group in the list, identify the UUID and run:
     openstack security group rule create <uuid> \
         --protocol icmp --remote-ip 0.0.0.0/0
 
-    openstack security group rule create <security-group-name> \
+    openstack security group rule create <uuid> \
         --protocol tcp --remote-ip 0.0.0.0/0 --dst-port 22
 
 After running these commands you should be able to access the instance:
@@ -182,4 +189,4 @@ Configuring and managing services on an OpenStack cloud is complex; take a look 
 [Simplestreams]: https://launchpad.net/simplestreams
 [OpenStack Neutron]: http://docs.openstack.org/admin-guide-cloud/content/ch_networking.html
 [OpenStack Admin Guide]: http://docs.openstack.org/user-guide-admin/content
-[Ubuntu Cloud Images]: http://cloud-images.ubuntu.com/xenial/current/
+[Ubuntu Cloud Images]: http://cloud-images.ubuntu.com/bionic/current/

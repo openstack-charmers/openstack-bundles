@@ -116,7 +116,7 @@ services:
     annotations:
       gui-x: '1500'
       gui-y: '0'
-    charm: cs:aodh-19
+    charm: cs:aodh-23
     num_units: 1
     options:
       openstack-origin: cloud:bionic-rocky
@@ -126,7 +126,7 @@ services:
     annotations:
       gui-x: '1250'
       gui-y: '0'
-    charm: cs:ceilometer-257
+    charm: cs:ceilometer-258
     num_units: 1
     options:
       openstack-origin: cloud:bionic-rocky
@@ -142,7 +142,7 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: cs:ceph-mon-31
+    charm: cs:ceph-mon-34
     num_units: 3
     options:
       expected-osd-count: 3
@@ -155,7 +155,7 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '500'
-    charm: cs:ceph-osd-273
+    charm: cs:ceph-osd-278
     num_units: 3
     options:
       osd-devices: /dev/sdb
@@ -168,7 +168,7 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '250'
-    charm: cs:ceph-radosgw-262
+    charm: cs:ceph-radosgw-263
     num_units: 1
     options:
       source: cloud:bionic-rocky
@@ -178,7 +178,7 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '0'
-    charm: cs:cinder-276
+    charm: cs:cinder-280
     num_units: 1
     options:
       block-device: None
@@ -197,7 +197,7 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '0'
-    charm: cs:glance-271
+    charm: cs:glance-275
     num_units: 1
     options:
       openstack-origin: cloud:bionic-rocky
@@ -208,7 +208,7 @@ services:
     annotations:
       gui-x: '1500'
       gui-y: '250'
-    charm: cs:gnocchi-13
+    charm: cs:gnocchi-19
     num_units: 1
     options:
       openstack-origin: cloud:bionic-rocky
@@ -218,7 +218,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '0'
-    charm: cs:keystone-288
+    charm: cs:keystone-294
     num_units: 1
     options:
       openstack-origin: cloud:bionic-rocky
@@ -229,7 +229,7 @@ services:
     annotations:
       gui-x: '1500'
       gui-y: '500'
-    charm: cs:memcached-21
+    charm: cs:memcached-23
     num_units: 1
     to:
     - lxd:2
@@ -248,7 +248,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '500'
-    charm: cs:neutron-api-266
+    charm: cs:neutron-api-269
     num_units: 1
     options:
       flat-network-providers: physnet1
@@ -261,7 +261,7 @@ services:
     annotations:
       gui-x: '0'
       gui-y: '0'
-    charm: cs:neutron-gateway-256
+    charm: cs:neutron-gateway-258
     num_units: 1
     options:
       bridge-mappings: physnet1:br-ex
@@ -280,7 +280,7 @@ services:
     annotations:
       gui-x: '0'
       gui-y: '500'
-    charm: cs:nova-cloud-controller-316
+    charm: cs:nova-cloud-controller-324
     num_units: 1
     options:
       network-manager: Neutron
@@ -292,7 +292,7 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '250'
-    charm: cs:nova-compute-290
+    charm: cs:nova-compute-296
     num_units: 3
     options:
       config-flags: default_ephemeral_format=ext4
@@ -308,13 +308,13 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '0'
-    charm: cs:ntp-31
+    charm: cs:ntp-32
     num_units: 0
   openstack-dashboard:
     annotations:
       gui-x: '500'
       gui-y: '-250'
-    charm: cs:openstack-dashboard-271
+    charm: cs:openstack-dashboard-278
     num_units: 1
     options:
       openstack-origin: cloud:bionic-rocky
@@ -324,7 +324,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '250'
-    charm: cs:rabbitmq-server-82
+    charm: cs:rabbitmq-server-85
     num_units: 1
     options:
       source: cloud:bionic-rocky

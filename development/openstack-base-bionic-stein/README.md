@@ -1,8 +1,6 @@
 # Basic OpenStack Cloud
 
-*DEV/TEST ONLY*: This unstable, development example bundle deploys a basic OpenStack Cloud providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services. See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
-
-This example bundle deploys a basic OpenStack Cloud (Rocky with Ceph Mimic) on Ubuntu 18.04 LTS (Bionic), providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.
+*DEV/TEST ONLY*: This unstable, development example bundle deploys a basic OpenStack Cloud (Stein with Ceph Mimic) on Ubuntu 18.04 LTS (Bionic), providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.  See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
 
 ## Requirements
 
@@ -70,10 +68,7 @@ All commands are executed from within the expanded bundle.
 
 In order to configure and use your cloud, you'll need to install the appropriate client tools:
 
-    sudo add-apt-repository cloud-archive:rocky -y
-    sudo apt update
-    sudo apt install python-novaclient python-keystoneclient python-glanceclient \
-        python-neutronclient python-openstackclient -y
+    sudo snap install openstackclients
 
 ### Accessing the cloud
 
