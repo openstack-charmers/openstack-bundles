@@ -49,7 +49,7 @@ provided, which most likely needs to be edited (before deployment) to
 represent the intended network spaces in the existing MAAS cluster.  Example
 usage:
 
-juju deploy bundle.yaml --overlay openstack-base-spaces-overlay.yaml
+    juju deploy bundle.yaml --overlay openstack-base-spaces-overlay.yaml
 
 ## Scaling
 
