@@ -1,0 +1,43 @@
+variables:
+  public-space:        &public-space         public-space
+machines: {}
+applications:
+  neutron-gateway:
+    bindings:
+      "": *public-space
+  ceph-mon:
+    bindings:
+      "": *public-space
+  ceph-radosgw:
+    bindings:
+      "": *public-space
+  cinder:
+    bindings:
+      "": *public-space
+  glance:
+    bindings:
+      "": *public-space
+  keystone:
+    bindings:
+      "": *public-space
+  mysql:
+    bindings:
+      "": *public-space
+  neutron-api:
+    bindings:
+      "": *public-space
+  nova-cloud-controller:
+    bindings:
+      "": *public-space
+  nova-compute:
+    bindings:
+      "": *public-space
+  openstack-dashboard:
+    bindings:
+      "": *public-space
+  rabbitmq-server:
+    bindings:
+      "": *public-space
+  ntp:
+    bindings:
+      "": *public-space
