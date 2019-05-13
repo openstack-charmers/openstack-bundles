@@ -6,13 +6,12 @@
 
 This example bundle is designed to run on bare metal using Juju 2.x with [MAAS][] (Metal-as-a-Service); you will need to have setup a [MAAS][] deployment with a minimum of 4 physical servers prior to using this bundle.
 
-Certain configuration options within the bundle may need to be adjusted prior to deployment to fit your particular set of hardware. For example, network device names and block device names can vary, and passwords should be yours.  The network space binding definition in the bundle may need to be changed to match the desired space in your environment (prior to deployment).
+Certain configuration options within the bundle may need to be adjusted prior to deployment to fit your particular set of hardware. For example, network device names and block device names can vary, and passwords should be yours.
 
 For example, a section similar to this exists in the bundle.yaml file.  The third "column" are the values to set.  Some servers may not have eno2, they may have something like eth2 or some other network device name.  This needs to be adjusted prior to deployment.  The same principle holds for osd-devices.  The third column is a whitelist of devices to use for Ceph OSDs.  Adjust accordingly by editing bundle.yaml before deployment.
 
 ```
 variables:
-  public-space:        &public-space         public-space
   openstack-origin:    &openstack-origin     cloud:bionic-stein
   data-port:           &data-port            br-ex:eno2
   worker-multiplier:   &worker-multiplier    0.25
