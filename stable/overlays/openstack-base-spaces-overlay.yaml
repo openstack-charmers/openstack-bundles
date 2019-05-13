@@ -1,6 +1,10 @@
 variables:
   public-space:        &public-space         public-space
-machines: {}
+machines:
+  '0':
+  '1':
+  '2':
+  '3':
 applications:
   neutron-gateway:
     bindings:
