@@ -1,5 +1,4 @@
 variables:
-  public-space:        &public-space         public-space
   openstack-origin:    &openstack-origin     cloud:bionic-stein
   data-port:           &data-port            br-ex:eno2
   worker-multiplier:   &worker-multiplier    0.25
@@ -129,8 +128,6 @@ services:
     num_units: 1
     options:
       openstack-origin: *openstack-origin
-    bindings:
-      "": *public-space
     to:
     - 'lxd:0'
   ceilometer:
@@ -141,8 +138,6 @@ services:
     num_units: 1
     options:
       openstack-origin: *openstack-origin
-    bindings:
-      "": *public-space
     to:
     - 'lxd:2'
   ceilometer-agent:
@@ -161,8 +156,6 @@ services:
       expected-osd-count: *expected-osd-count
       monitor-count: *expected-mon-count
       source: *openstack-origin
-    bindings:
-      "": *public-space
     to:
     - 'lxd:1'
     - 'lxd:2'
@@ -188,8 +181,6 @@ services:
     num_units: 1
     options:
       source: *openstack-origin
-    bindings:
-      "": *public-space
     to:
     - 'lxd:0'
   cinder:
@@ -203,8 +194,6 @@ services:
       openstack-origin: *openstack-origin
       block-device: None
       glance-api-version: 2
-    bindings:
-      "": *public-space
     to:
     - 'lxd:1'
   cinder-ceph:
@@ -222,8 +211,6 @@ services:
     options:
       openstack-origin: *openstack-origin
       worker-multiplier: *worker-multiplier
-    bindings:
-      "": *public-space
     to:
     - 'lxd:2'
   keystone:
@@ -235,8 +222,6 @@ services:
     options:
       openstack-origin: *openstack-origin
       worker-multiplier: *worker-multiplier
-    bindings:
-      "": *public-space
     to:
     - 'lxd:3'
   mysql:
@@ -248,8 +233,6 @@ services:
     options:
       max-connections: *mysql-connections
       innodb-buffer-pool-size: 256M
-    bindings:
-      "": *public-space
     to:
     - 'lxd:0'
   neutron-api:
@@ -263,8 +246,6 @@ services:
       flat-network-providers: physnet1
       neutron-security-groups: true
       worker-multiplier: *worker-multiplier
-    bindings:
-      "": *public-space
     to:
     - 'lxd:1'
   neutron-gateway:
@@ -296,8 +277,6 @@ services:
       openstack-origin: *openstack-origin
       network-manager: Neutron
       worker-multiplier: *worker-multiplier
-    bindings:
-      "": *public-space
     to:
     - 'lxd:2'
   nova-compute:
@@ -330,8 +309,6 @@ services:
     num_units: 1
     options:
       openstack-origin: *openstack-origin
-    bindings:
-      "": *public-space
     to:
     - 'lxd:3'
   rabbitmq-server:
@@ -342,8 +319,6 @@ services:
     num_units: 1
     options:
       source: *openstack-origin
-    bindings:
-      "": *public-space
     to:
     - 'lxd:0'
   gnocchi:
@@ -354,8 +329,6 @@ services:
     charm: cs:gnocchi
     options:
       openstack-origin: *openstack-origin
-    bindings:
-      "": *public-space
     to:
     - 'lxd:1'
   memcached:
@@ -364,7 +337,5 @@ services:
       gui-y: '500'
     num_units: 1
     charm: cs:memcached
-    bindings:
-      "": *public-space
     to:
     - 'lxd:2'
