@@ -34,6 +34,25 @@ Servers should have two physical network ports cabled; the first is used for gen
 
 All physical servers (not LXC containers) will also have NTP installed and configured to keep time in sync.
 
+
+## Deployment
+
+With a Juju controller bootstrapped on a MAAS cloud with no network spaces
+defined, a basic non-HA cloud can be deployed with the following command:
+
+    juju deploy bundle.yaml
+
+When network spaces exist in the MAAS cluster, it is necessary to clarify
+and define the network space(s) to which the charm applications will deploy.
+This can be done with an overlay bundle.  An example overlay yaml file is
+provided, which most likely needs to be edited (before deployment) to
+represent the intended network spaces in the existing MAAS cluster.  Example
+usage:
+
+juju deploy bundle.yaml --overlay openstack-base-spaces-overlay.yaml
+
+## Scaling
+
 Neutron Gateway, Nova Compute and Ceph services are designed to be horizontally scalable.
 
 To horizontally scale Nova Compute:
