@@ -1,5 +1,4 @@
 variables:
-  public-space:        &public-space         public-space
   openstack-origin:    &openstack-origin     cloud:bionic-stein
   data-port:           &data-port            br-ex:eno2
   worker-multiplier:   &worker-multiplier    0.25
@@ -105,8 +104,6 @@ services:
       expected-osd-count: *expected-osd-count
       monitor-count: *expected-mon-count
       source: *openstack-origin
-    bindings:
-      "": *public-space
     to:
     - 'lxd:1'
     - 'lxd:2'
@@ -120,8 +117,6 @@ services:
     options:
       osd-devices: *osd-devices
       source: *openstack-origin
-    bindings:
-      "": *public-space
     to:
     - '1'
     - '2'
@@ -134,8 +129,6 @@ services:
     num_units: 1
     options:
       source: *openstack-origin
-    bindings:
-      "": *public-space
     to:
     - 'lxd:0'
   cinder:
@@ -149,8 +142,6 @@ services:
       glance-api-version: 2
       worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
-    bindings:
-      "": *public-space
     to:
     - 'lxd:1'
   cinder-ceph:
@@ -168,8 +159,6 @@ services:
     options:
       worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
-    bindings:
-      "": *public-space
     to:
     - 'lxd:2'
   keystone:
@@ -181,8 +170,6 @@ services:
     options:
       worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
-    bindings:
-      "": *public-space
     to:
     - 'lxd:3'
   mysql:
@@ -195,8 +182,6 @@ services:
       max-connections: *mysql-connections
       innodb-buffer-pool-size: 256M
       performance-schema: True
-    bindings:
-      "": *public-space
     to:
     - 'lxd:0'
   neutron-api:
@@ -210,8 +195,6 @@ services:
       flat-network-providers: physnet1
       worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
-    bindings:
-      "": *public-space
     to:
     - 'lxd:1'
   neutron-gateway:
@@ -225,8 +208,6 @@ services:
       data-port: *data-port
       worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
-    bindings:
-      "": *public-space
     to:
     - '0'
   neutron-openvswitch:
@@ -245,8 +226,6 @@ services:
       network-manager: Neutron
       worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
-    bindings:
-      "": *public-space
     to:
     - 'lxd:2'
   nova-compute:
@@ -261,8 +240,6 @@ services:
       enable-resize: true
       migration-auth-type: ssh
       openstack-origin: *openstack-origin
-    bindings:
-      "": *public-space
     to:
     - '1'
     - '2'
@@ -281,8 +258,6 @@ services:
     num_units: 1
     options:
       openstack-origin: *openstack-origin
-    bindings:
-      "": *public-space
     to:
     - 'lxd:3'
   rabbitmq-server:
@@ -291,7 +266,5 @@ services:
       gui-y: '250'
     charm: cs:rabbitmq-server
     num_units: 1
-    bindings:
-      "": *public-space
     to:
     - 'lxd:0'
