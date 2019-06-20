@@ -54,6 +54,7 @@ applications:
   nova-compute:
     annotations:
     to: []
+    constraints: mem=4G
     bindings:
       "": ""
   openstack-dashboard:
