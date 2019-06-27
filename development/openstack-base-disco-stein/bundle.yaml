@@ -240,6 +240,7 @@ services:
       gui-y: '0'
     charm: cs:ntp
     num_units: 0
+    series: bionic
   openstack-dashboard:
     annotations:
       gui-x: '500'
