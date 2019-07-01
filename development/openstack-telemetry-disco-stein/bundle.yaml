@@ -74,10 +74,6 @@ relations:
   - glance:ceph
 - - ceph-osd:mon
   - ceph-mon:osd
-- - ntp:juju-info
-  - nova-compute:juju-info
-- - ntp:juju-info
-  - neutron-gateway:juju-info
 - - ceph-radosgw:mon
   - ceph-mon:radosgw
 - - ceph-radosgw:identity-service
@@ -286,12 +282,6 @@ services:
     - '1'
     - '2'
     - '3'
-  ntp:
-    annotations:
-      gui-x: '1000'
-      gui-y: '0'
-    charm: cs:ntp
-    num_units: 0
   openstack-dashboard:
     annotations:
       gui-x: '500'
@@ -327,6 +317,7 @@ services:
       gui-x: '1500'
       gui-y: '500'
     num_units: 1
-    charm: cs:memcached
+    charm: cs:memcached 
+    series: bionic
     to:
     - lxd:2
