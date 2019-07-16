@@ -8,8 +8,6 @@ machines:
 relations:
 - - ceph-osd:mon
   - ceph-mon:osd
-- - ntp:juju-info
-  - ceph-osd:juju-info
 series: disco
 services:
   ceph-mon:
@@ -38,9 +36,3 @@ services:
     - '0'
     - '1'
     - '2'
-  ntp:
-    annotations:
-      gui-x: '1000'
-      gui-y: '0'
-    charm: cs:ntp
-    num_units: 0
