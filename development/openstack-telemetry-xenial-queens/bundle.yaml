@@ -86,6 +86,8 @@ relations:
   - rabbitmq-server:amqp
 - - ceilometer-agent:ceilometer-service
   - ceilometer:ceilometer-service
+- - ceilometer-agent:amqp
+  - rabbitmq-server:amqp
 - - ceilometer:identity-notifications
   - keystone:identity-notifications
 - - ceilometer-agent:nova-ceilometer
