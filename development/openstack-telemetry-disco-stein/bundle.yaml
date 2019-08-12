@@ -86,6 +86,8 @@ relations:
   - keystone:identity-notifications
 - - ceilometer-agent:nova-ceilometer
   - nova-compute:nova-ceilometer
+- - ceilometer-agent:amqp
+  - rabbitmq-server:amqp
 - - aodh:shared-db
   - mysql:shared-db
 - - aodh:identity-service

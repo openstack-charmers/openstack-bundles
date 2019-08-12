@@ -20,7 +20,7 @@ services:
     num_units: 3
     options:
       expected-osd-count: 3
-      source: cloud:bionic-rocky
+      source: cloud:bionic-stein
     to:
     - lxd:0
     - lxd:1
@@ -33,7 +33,7 @@ services:
     num_units: 3
     options:
       osd-devices: /dev/sdb
-      source: cloud:bionic-rocky
+      source: cloud:bionic-stein
     to:
     - '0'
     - '1'
