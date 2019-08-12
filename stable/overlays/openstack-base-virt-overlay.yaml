@@ -10,7 +10,7 @@ applications:
     options:
       bridge-mappings: physnet1:br-ex
       data-port:
-      openstack-origin: cloud:bionic-rocky
+      openstack-origin: cloud:bionic-stein
     to: []
     bindings:
       "": ""
