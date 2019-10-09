@@ -1,6 +1,6 @@
 # Basic Ceph Cluster
 
-*DEV/TEST ONLY*: This unstable, development example bundle deploys a Ceph (Mimic) cluster on Ubuntu 19.04 LTS. See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
+*DEV/TEST ONLY*: This unstable, development example bundle deploys a Ceph (Nautilus) cluster on Ubuntu 19.04 LTS. See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
 
 ## Requirements
 
