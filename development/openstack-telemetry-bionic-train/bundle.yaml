@@ -254,6 +254,17 @@ services:
       "": *public-space
     to:
     - 'lxd:0'
+  placement:
+    annotations:
+      gui-x: '0'
+      gui-y: '500'
+    charm: cs:~openstack-charmers-next/bionic/placement
+    num_units: 1
+    options:
+      worker-multiplier: *worker-multiplier
+      openstack-origin: *openstack-origin
+    to:
+    - 'lxd:2'
   neutron-api:
     annotations:
       gui-x: '500'
