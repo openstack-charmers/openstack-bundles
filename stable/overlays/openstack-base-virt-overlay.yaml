@@ -10,7 +10,6 @@ applications:
     options:
       bridge-mappings: physnet1:br-ex
       data-port:
-      openstack-origin: cloud:bionic-stein
     to: []
     bindings:
       "": ""
@@ -59,6 +58,10 @@ applications:
       "": ""
   openstack-dashboard:
     expose: True
+    to: []
+    bindings:
+      "": ""
+  placement:
     to: []
     bindings:
       "": ""
