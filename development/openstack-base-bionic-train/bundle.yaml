@@ -92,6 +92,12 @@ relations:
   - ceph-mon:radosgw
 - - ceph-radosgw:identity-service
   - keystone:identity-service
+- - placement
+  - mysql
+- - placement
+  - keystone
+- - placement
+  - nova-cloud-controller
 series: bionic
 services:
   ceph-mon:
@@ -197,6 +203,17 @@ services:
       openstack-origin: *openstack-origin
     to:
     - 'lxd:1'
+  placement:
+    annotations:
+      gui-x: '0'
+      gui-y: '500'
+    charm: cs:~openstack-charmers-next/bionic/placement
+    num_units: 1
+    options:
+      worker-multiplier: *worker-multiplier
+      openstack-origin: *openstack-origin
+    to:
+    - 'lxd:2'
   neutron-gateway:
     annotations:
       gui-x: '0'
