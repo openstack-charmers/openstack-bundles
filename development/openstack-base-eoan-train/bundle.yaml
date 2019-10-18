@@ -1,5 +1,5 @@
 variables:
-  openstack-origin:    &openstack-origin     cloud:eoan-train
+  openstack-origin:    &openstack-origin     distro
   data-port:           &data-port            br-ex:eno2
   worker-multiplier:   &worker-multiplier    0.25
   osd-devices:         &osd-devices          /dev/sdb /dev/vdb
