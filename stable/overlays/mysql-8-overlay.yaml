@@ -2,35 +2,35 @@ applications:
   # Remove percona-cluser
   mysql:
 
-  kmr:
+  keystone-mysql-router:
     charm: cs:~openstack-charmers-next/mysql-router
-  cmr:
+  cinder-mysql-router:
     charm: cs:~openstack-charmers-next/mysql-router
-  nomr:
+  nova-mysql-router:
     charm: cs:~openstack-charmers-next/mysql-router
-  gmr:
+  glance-mysql-router:
     charm: cs:~openstack-charmers-next/mysql-router
-  numr:
+  neutron-mysql-router:
     charm: cs:~openstack-charmers-next/mysql-router
-  omr:
+  dashbaord-mysql-router:
     charm: cs:~openstack-charmers-next/mysql-router
-  pmr:
+  placement-mysql-router:
     charm: cs:~openstack-charmers-next/mysql-router
   mysql-innodb-cluster:
     charm: cs:~openstack-charmers-next/mysql-innodb-cluster
     num_units: 3
 relations:
-- ["keystone:shared-db", "kmr:shared-db"]
-- ["cinder:shared-db", "cmr:shared-db"]
-- ["glance:shared-db", "gmr:shared-db"]
-- ["nova-cloud-controller:shared-db", "nomr:shared-db"]
-- ["neutron-api:shared-db", "numr:shared-db"]
-- ["openstack-dashboard:shared-db", "omr:shared-db"]
-- ["kmr:db-router", "mysql-innodb-cluster:db-router"]
-- ["cmr:db-router", "mysql-innodb-cluster:db-router"]
-- ["nomr:db-router", "mysql-innodb-cluster:db-router"]
-- ["gmr:db-router", "mysql-innodb-cluster:db-router"]
-- ["numr:db-router", "mysql-innodb-cluster:db-router"]
-- ["omr:db-router", "mysql-innodb-cluster:db-router"]
-- ["pmr:db-router", "mysql-innodb-cluster:db-router"]
-- ["pmr:shared-db", "placement:shared-db"]
+- ["keystone:shared-db", "keystone-mysql-router:shared-db"]
+- ["cinder:shared-db", "cinder-mysql-router:shared-db"]
+- ["glance:shared-db", "glance-mysql-router:shared-db"]
+- ["nova-cloud-controller:shared-db", "nova-mysql-router:shared-db"]
+- ["neutron-api:shared-db", "neutron-mysql-router:shared-db"]
+- ["openstack-dashboard:shared-db", "dashbaord-mysql-router:shared-db"]
+- ["keystone-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["cinder-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["nova-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["glance-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["neutron-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["dashbaord-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["placement-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["placement-mysql-router:shared-db", "placement:shared-db"]
