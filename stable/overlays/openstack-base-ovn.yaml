@@ -1,0 +1,95 @@
+# Open Virtual Network (OVN) - requires Train or later
+#
+# NOTE: Please review the value for the configuration option
+#       `interface-bridge-mappings` for the `ovn-chassis` charm.
+#       Refer to the [Open Virtual Network (OVN)](https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/app-ovn.html)
+#       section of the [OpenStack Charms Deployment Guide](https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/)
+#       for more information.
+---
+machines:
+  '0':
+    series: bionic
+  '1':
+    series: bionic
+  '2':
+    series: bionic
+relations:
+- - neutron-api-plugin-ovn:neutron-plugin
+  - neutron-api:neutron-plugin-api-subordinate
+- - vault:shared-db
+  - mysql:shared-db
+- - ovn-central:certificates
+  - vault:certificates
+- - ovn-central:ovsdb-cms
+  - neutron-api-plugin-ovn:ovsdb-cms
+- - neutron-api:certificates
+  - vault:certificates
+- - ovn-chassis:nova-compute
+  - nova-compute:neutron-plugin
+- - ovn-chassis:certificates
+  - vault:certificates
+- - ovn-chassis:ovsdb
+  - ovn-central:ovsdb
+- - vault:certificates
+  - neutron-api-plugin-ovn:certificates
+- - vault:certificates
+  - cinder:certificates
+- - vault:certificates
+  - glance:certificates
+- - vault:certificates
+  - keystone:certificates
+- - vault:certificates
+  - nova-cloud-controller:certificates
+- - vault:certificates
+  - openstack-dashboard:certificates
+- - vault:certificates
+  - placement:certificates
+applications:
+  neutron-gateway:
+  neutron-openvswitch:
+  ceph-mon:
+    to:
+    - 'lxd:0'
+    - 'lxd:1'
+    - 'lxd:2'
+  ceph-osd:
+    to:
+    - '0'
+    - '1'
+    - '2'
+  keystone:
+    to:
+    - 'lxd:0'
+  nova-compute:
+    num_units: 3
+    to:
+    - '0'
+    - '1'
+    - '2'
+  openstack-dashboard:
+    to:
+    - 'lxd:1'
+  neutron-api:
+    options:
+      manage-neutron-plugin-legacy-mode: false
+  neutron-api-plugin-ovn:
+    charm: cs:~openstack-charmers/neutron-api-plugin-ovn
+  ovn-central:
+    charm: cs:~openstack-charmers/ovn-central
+    num_units: 3
+    options:
+      source: cloud:bionic-train
+    to:
+    - 'lxd:0'
+    - 'lxd:1'
+    - 'lxd:2'
+  ovn-chassis:
+    charm: cs:~openstack-charmers/ovn-chassis
+    options:
+      ovn-bridge-mappings: physnet1:br-provider
+      interface-bridge-mappings: 00:00:5e:00:00:42:br-provider 00:00:5e:00:00:51:br-provider
+  vault:
+    charm: cs:vault
+    num_units: 1
+    to:
+    - 'lxd:0'
