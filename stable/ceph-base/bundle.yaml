@@ -16,11 +16,11 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: cs:ceph-mon-31
+    charm: cs:ceph-mon-44
     num_units: 3
     options:
       expected-osd-count: 3
-      source: cloud:bionic-stein
+      source: cloud:bionic-train
     to:
     - lxd:0
     - lxd:1
@@ -29,11 +29,11 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '500'
-    charm: cs:ceph-osd-273
+    charm: cs:ceph-osd-294
     num_units: 3
     options:
       osd-devices: /dev/sdb
-      source: cloud:bionic-stein
+      source: cloud:bionic-train
     to:
     - '0'
     - '1'
@@ -42,5 +42,5 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '0'
-    charm: cs:ntp-31
+    charm: cs:ntp-35
     num_units: 0

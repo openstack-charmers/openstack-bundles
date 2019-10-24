@@ -1,11 +1,3 @@
-variables:
-  openstack-origin:    &openstack-origin     cloud:bionic-stein
-  data-port:           &data-port            br-ex:eno2
-  worker-multiplier:   &worker-multiplier    0.25
-  osd-devices:         &osd-devices          /dev/sdb /dev/vdb
-  expected-osd-count:  &expected-osd-count   3
-  expected-mon-count:  &expected-mon-count   3
-  mysql-connections:   &mysql-connections    1000
 machines:
   '0':
     series: bionic
@@ -120,57 +112,63 @@ relations:
   - keystone:identity-service
 - - ceilometer:identity-credentials
   - keystone:identity-credentials
+- - placement
+  - mysql
+- - placement
+  - keystone
+- - placement
+  - nova-cloud-controller
 series: bionic
 services:
   aodh:
     annotations:
       gui-x: '1500'
       gui-y: '0'
-    charm: cs:aodh
+    charm: cs:aodh-35
     num_units: 1
     options:
-      openstack-origin: *openstack-origin
+      openstack-origin: cloud:bionic-train
     to:
-    - 'lxd:0'
+    - lxd:0
   ceilometer:
     annotations:
       gui-x: '1250'
       gui-y: '0'
-    charm: cs:ceilometer
+    charm: cs:ceilometer-268
     num_units: 1
     options:
-      openstack-origin: *openstack-origin
+      openstack-origin: cloud:bionic-train
     to:
-    - 'lxd:2'
+    - lxd:2
   ceilometer-agent:
     annotations:
       gui-x: '1250'
       gui-y: '500'
-    charm: cs:ceilometer-agent
+    charm: cs:ceilometer-agent-258
     num_units: 0
   ceph-mon:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: cs:ceph-mon
+    charm: cs:ceph-mon-44
     num_units: 3
     options:
-      expected-osd-count: *expected-osd-count
-      monitor-count: *expected-mon-count
-      source: *openstack-origin
+      expected-osd-count: 3
+      monitor-count: 3
+      source: cloud:bionic-train
     to:
-    - 'lxd:1'
-    - 'lxd:2'
-    - 'lxd:3'
+    - lxd:1
+    - lxd:2
+    - lxd:3
   ceph-osd:
     annotations:
       gui-x: '1000'
       gui-y: '500'
-    charm: cs:ceph-osd
+    charm: cs:ceph-osd-294
     num_units: 3
     options:
-      osd-devices: *osd-devices
-      source: *openstack-origin
+      osd-devices: /dev/sdb /dev/vdb
+      source: cloud:bionic-train
     to:
     - '1'
     - '2'
@@ -179,120 +177,138 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '250'
-    charm: cs:ceph-radosgw
+    charm: cs:ceph-radosgw-283
     num_units: 1
     options:
-      source: *openstack-origin
+      source: cloud:bionic-train
     to:
-    - 'lxd:0'
+    - lxd:0
   cinder:
     annotations:
       gui-x: '750'
       gui-y: '0'
-    charm: cs:cinder
+    charm: cs:cinder-297
     num_units: 1
     options:
-      worker-multiplier: *worker-multiplier
-      openstack-origin: *openstack-origin
       block-device: None
       glance-api-version: 2
+      openstack-origin: cloud:bionic-train
+      worker-multiplier: 0.25
     to:
-    - 'lxd:1'
+    - lxd:1
   cinder-ceph:
     annotations:
       gui-x: '750'
       gui-y: '250'
-    charm: cs:cinder-ceph
+    charm: cs:cinder-ceph-251
     num_units: 0
   glance:
     annotations:
       gui-x: '250'
       gui-y: '0'
-    charm: cs:glance
+    charm: cs:glance-290
     num_units: 1
     options:
-      openstack-origin: *openstack-origin
-      worker-multiplier: *worker-multiplier
+      openstack-origin: cloud:bionic-train
+      worker-multiplier: 0.25
     to:
-    - 'lxd:2'
+    - lxd:2
+  gnocchi:
+    annotations:
+      gui-x: '1500'
+      gui-y: '250'
+    charm: cs:gnocchi-28
+    num_units: 1
+    options:
+      openstack-origin: cloud:bionic-train
+    to:
+    - lxd:1
   keystone:
     annotations:
       gui-x: '500'
       gui-y: '0'
-    charm: cs:keystone
+    charm: cs:keystone-309
     num_units: 1
     options:
-      openstack-origin: *openstack-origin
-      worker-multiplier: *worker-multiplier
+      openstack-origin: cloud:bionic-train
+      worker-multiplier: 0.25
     to:
-    - 'lxd:3'
+    - lxd:3
+  memcached:
+    annotations:
+      gui-x: '1500'
+      gui-y: '500'
+    charm: cs:memcached-26
+    num_units: 1
+    to:
+    - lxd:2
   mysql:
     annotations:
       gui-x: '0'
       gui-y: '250'
-    charm: cs:percona-cluster
+    charm: cs:percona-cluster-281
     num_units: 1
     options:
-      max-connections: *mysql-connections
       innodb-buffer-pool-size: 256M
+      max-connections: 1000
     to:
-    - 'lxd:0'
+    - lxd:0
   neutron-api:
     annotations:
       gui-x: '500'
       gui-y: '500'
-    charm: cs:neutron-api
+    charm: cs:neutron-api-281
     num_units: 1
     options:
-      openstack-origin: *openstack-origin
       flat-network-providers: physnet1
       neutron-security-groups: true
-      worker-multiplier: *worker-multiplier
+      openstack-origin: cloud:bionic-train
+      worker-multiplier: 0.25
     to:
-    - 'lxd:1'
+    - lxd:1
   neutron-gateway:
     annotations:
       gui-x: '0'
       gui-y: '0'
-    charm: cs:neutron-gateway
+    charm: cs:neutron-gateway-275
     num_units: 1
     options:
-      openstack-origin: *openstack-origin
       bridge-mappings: physnet1:br-ex
-      data-port: *data-port
-      worker-multiplier: *worker-multiplier
+      data-port: br-ex:eno2
+      openstack-origin: cloud:bionic-train
+      worker-multiplier: 0.25
     to:
     - '0'
   neutron-openvswitch:
     annotations:
       gui-x: '250'
       gui-y: '500'
-    charm: cs:neutron-openvswitch
+    charm: cs:neutron-openvswitch-269
     num_units: 0
   nova-cloud-controller:
     annotations:
       gui-x: '0'
       gui-y: '500'
-    charm: cs:nova-cloud-controller
+    charm: cs:nova-cloud-controller-338
     num_units: 1
     options:
-      openstack-origin: *openstack-origin
       network-manager: Neutron
-      worker-multiplier: *worker-multiplier
+      openstack-origin: cloud:bionic-train
+      worker-multiplier: 0.25
     to:
-    - 'lxd:2'
+    - lxd:2
   nova-compute:
     annotations:
       gui-x: '250'
       gui-y: '250'
-    charm: cs:nova-compute
+    charm: cs:nova-compute-309
     num_units: 3
     options:
       config-flags: default_ephemeral_format=ext4
-      openstack-origin: *openstack-origin
       enable-live-migration: true
       enable-resize: true
       migration-auth-type: ssh
+      openstack-origin: cloud:bionic-train
     to:
     - '1'
     - '2'
@@ -301,43 +317,44 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '0'
-    charm: cs:ntp
+    charm: cs:ntp-35
     num_units: 0
   openstack-dashboard:
     annotations:
       gui-x: '500'
       gui-y: '-250'
-    charm: cs:openstack-dashboard
+    charm: cs:openstack-dashboard-295
     num_units: 1
     options:
-      openstack-origin: *openstack-origin
+      openstack-origin: cloud:bionic-train
     to:
-    - 'lxd:3'
+    - lxd:3
+  placement:
+    annotations:
+      gui-x: '0'
+      gui-y: '500'
+    charm: cs:~openstack-charmers/bionic/placement
+    num_units: 1
+    options:
+      openstack-origin: cloud:bionic-train
+      worker-multiplier: 0.25
+    to:
+    - lxd:2
   rabbitmq-server:
     annotations:
       gui-x: '500'
       gui-y: '250'
-    charm: cs:rabbitmq-server
+    charm: cs:rabbitmq-server-97
     num_units: 1
     options:
-      source: *openstack-origin
+      source: cloud:bionic-train
     to:
-    - 'lxd:0'
-  gnocchi:
-    annotations:
-      gui-x: '1500'
-      gui-y: '250'
-    num_units: 1
-    charm: cs:gnocchi
-    options:
-      openstack-origin: *openstack-origin
-    to:
-    - 'lxd:1'
-  memcached:
-    annotations:
-      gui-x: '1500'
-      gui-y: '500'
-    num_units: 1
-    charm: cs:memcached
-    to:
-    - 'lxd:2'
+    - lxd:0
+variables:
+  data-port: br-ex:eno2
+  expected-mon-count: 3
+  expected-osd-count: 3
+  mysql-connections: 1000
+  openstack-origin: cloud:bionic-train
+  osd-devices: /dev/sdb /dev/vdb
+  worker-multiplier: 0.25
