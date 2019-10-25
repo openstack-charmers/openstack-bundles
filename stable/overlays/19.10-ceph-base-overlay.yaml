@@ -1,0 +1,14 @@
+series: bionic
+services:
+  ceph-mon:
+    charm: cs:ceph-mon-44
+    options:
+      source: cloud:bionic-train
+  ceph-osd:
+    charm: cs:ceph-osd-294
+    comment: SET osd-devices to match your environment
+    options:
+      osd-devices: /dev/sdb
+      source: cloud:bionic-train
+  ntp:
+    charm: cs:ntp-35

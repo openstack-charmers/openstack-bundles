@@ -37,10 +37,23 @@ All physical servers (not LXC containers) will also have NTP installed and confi
 
 ## Deployment
 
+### Deploy latest charms with OpenStack in Bionic main
+
 With a Juju controller bootstrapped on a MAAS cloud with no network spaces
 defined, a basic non-HA cloud can be deployed with the following command:
 
-    juju deploy bundle.yaml
+```
+juju deploy ./bundle.yaml
+```
+
+### Deploy with specific version of the charms and a specific OpenStack version
+
+```
+juju deploy ./bundle.yaml \
+  --overlay 19.10-bionic-train-openstack-base-overlay.yaml
+```
+
+### Deploy with specific version of the charms and a specific OpenStack version specifying MAAS spaces
 
 When network spaces exist in the MAAS cluster, it is necessary to clarify
 and define the network space(s) to which the charm applications will deploy.
@@ -49,7 +62,11 @@ provided, which most likely needs to be edited (before deployment) to
 represent the intended network spaces in the existing MAAS cluster.  Example
 usage:
 
-    juju deploy bundle.yaml --overlay openstack-base-spaces-overlay.yaml
+```
+juju deploy ./bundle.yaml \
+  --overlay 19.10-bionic-train-openstack-base-overlay.yaml \
+  --overlay openstack-base-spaces-overlay.yaml
+```
 
 ## Scaling
 
