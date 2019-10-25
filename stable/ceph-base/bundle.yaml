@@ -30,6 +30,7 @@ services:
       gui-x: '1000'
       gui-y: '500'
     charm: cs:ceph-osd-294
+    comment: SET osd-devices to match your environment
     num_units: 3
     options:
       osd-devices: /dev/sdb

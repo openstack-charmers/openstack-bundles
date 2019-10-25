@@ -111,6 +111,7 @@ services:
       gui-x: '1000'
       gui-y: '500'
     charm: cs:ceph-osd-294
+    comment: SET osd-devices to match your environment
     num_units: 3
     options:
       osd-devices: /dev/sdb /dev/vdb
@@ -200,6 +201,7 @@ services:
       gui-x: '0'
       gui-y: '0'
     charm: cs:neutron-gateway-275
+    comment: SET data-port to match your environment
     num_units: 1
     options:
       bridge-mappings: physnet1:br-ex
@@ -277,11 +279,3 @@ services:
     num_units: 1
     to:
     - lxd:0
-variables:
-  data-port: br-ex:eno2
-  expected-mon-count: 3
-  expected-osd-count: 3
-  mysql-connections: 1000
-  openstack-origin: cloud:bionic-train
-  osd-devices: /dev/sdb /dev/vdb
-  worker-multiplier: 0.25
