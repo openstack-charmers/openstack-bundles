@@ -1,11 +1,3 @@
-variables:
-  openstack-origin:    &openstack-origin     cloud:bionic-stein
-  data-port:           &data-port            br-ex:eno2
-  worker-multiplier:   &worker-multiplier    0.25
-  osd-devices:         &osd-devices          /dev/sdb /dev/vdb
-  expected-osd-count:  &expected-osd-count   3
-  expected-mon-count:  &expected-mon-count   3
-  mysql-connections:   &mysql-connections    1000
 machines:
   '0':
     series: bionic
@@ -101,9 +93,8 @@ services:
     charm: cs:ceph-mon
     num_units: 3
     options:
-      expected-osd-count: *expected-osd-count
-      monitor-count: *expected-mon-count
-      source: *openstack-origin
+      expected-osd-count: 3
+      monitor-count: 3
     to:
     - 'lxd:1'
     - 'lxd:2'
@@ -113,10 +104,10 @@ services:
       gui-x: '1000'
       gui-y: '500'
     charm: cs:ceph-osd
+    comment: SET osd-devices to match your environment
     num_units: 3
     options:
-      osd-devices: *osd-devices
-      source: *openstack-origin
+      osd-devices: /dev/sdb /dev/vdb
     to:
     - '1'
     - '2'
@@ -127,8 +118,6 @@ services:
       gui-y: '250'
     charm: cs:ceph-radosgw
     num_units: 1
-    options:
-      source: *openstack-origin
     to:
     - 'lxd:0'
   cinder:
@@ -140,8 +129,7 @@ services:
     options:
       block-device: None
       glance-api-version: 2
-      worker-multiplier: *worker-multiplier
-      openstack-origin: *openstack-origin
+      worker-multiplier: 0.25
     to:
     - 'lxd:1'
   cinder-ceph:
@@ -157,8 +145,7 @@ services:
     charm: cs:glance
     num_units: 1
     options:
-      worker-multiplier: *worker-multiplier
-      openstack-origin: *openstack-origin
+      worker-multiplier: 0.25
     to:
     - 'lxd:2'
   keystone:
@@ -168,8 +155,7 @@ services:
     charm: cs:keystone
     num_units: 1
     options:
-      worker-multiplier: *worker-multiplier
-      openstack-origin: *openstack-origin
+      worker-multiplier: 0.25
     to:
     - 'lxd:3'
   mysql:
@@ -179,9 +165,9 @@ services:
     charm: cs:percona-cluster
     num_units: 1
     options:
-      max-connections: *mysql-connections
       innodb-buffer-pool-size: 256M
-      performance-schema: True
+      max-connections: 1000
+      performance-schema: true
     to:
     - 'lxd:0'
   neutron-api:
@@ -193,8 +179,7 @@ services:
     options:
       neutron-security-groups: true
       flat-network-providers: physnet1
-      worker-multiplier: *worker-multiplier
-      openstack-origin: *openstack-origin
+      worker-multiplier: 0.25
     to:
     - 'lxd:1'
   neutron-gateway:
@@ -202,12 +187,12 @@ services:
       gui-x: '0'
       gui-y: '0'
     charm: cs:neutron-gateway
+    comment: SET data-port to match your environment
     num_units: 1
     options:
       bridge-mappings: physnet1:br-ex
-      data-port: *data-port
-      worker-multiplier: *worker-multiplier
-      openstack-origin: *openstack-origin
+      data-port: br-ex:eno2
+      worker-multiplier: 0.25
     to:
     - '0'
   neutron-openvswitch:
@@ -224,8 +209,7 @@ services:
     num_units: 1
     options:
       network-manager: Neutron
-      worker-multiplier: *worker-multiplier
-      openstack-origin: *openstack-origin
+      worker-multiplier: 0.25
     to:
     - 'lxd:2'
   nova-compute:
@@ -239,7 +223,6 @@ services:
       enable-live-migration: true
       enable-resize: true
       migration-auth-type: ssh
-      openstack-origin: *openstack-origin
     to:
     - '1'
     - '2'
@@ -256,8 +239,6 @@ services:
       gui-y: '-250'
     charm: cs:openstack-dashboard
     num_units: 1
-    options:
-      openstack-origin: *openstack-origin
     to:
     - 'lxd:3'
   rabbitmq-server:

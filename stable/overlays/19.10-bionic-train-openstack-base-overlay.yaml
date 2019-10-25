@@ -1,0 +1,85 @@
+machines:
+  '0':
+    comment: Noop place holder for containers
+  '1':
+    comment: Noop place holder for containers
+  '2':
+    comment: Noop place holder for containers
+  '3':
+    comment: Noop place holder for containers
+relations:
+- - placement
+  - mysql
+- - placement
+  - keystone
+- - placement
+  - nova-cloud-controller
+series: bionic
+services:
+  ceph-mon:
+    charm: cs:ceph-mon-44
+    options:
+      source: cloud:bionic-train
+  ceph-osd:
+    charm: cs:ceph-osd-294
+    comment: SET osd-devices to match your environment
+    options:
+      osd-devices: /dev/sdb /dev/vdb
+      source: cloud:bionic-train
+  ceph-radosgw:
+    charm: cs:ceph-radosgw-283
+    options:
+      source: cloud:bionic-train
+  cinder:
+    charm: cs:cinder-297
+    options:
+      openstack-origin: cloud:bionic-train
+  cinder-ceph:
+    charm: cs:cinder-ceph-251
+  glance:
+    charm: cs:glance-290
+    options:
+      openstack-origin: cloud:bionic-train
+  keystone:
+    charm: cs:keystone-309
+    options:
+      openstack-origin: cloud:bionic-train
+  mysql:
+    charm: cs:percona-cluster-281
+  neutron-api:
+    charm: cs:neutron-api-281
+    options:
+      openstack-origin: cloud:bionic-train
+  neutron-gateway:
+    charm: cs:neutron-gateway-275
+    num_units: 1
+    comment: SET data-port to match your environment
+    options:
+      data-port: br-ex:eno2
+      openstack-origin: cloud:bionic-train
+  neutron-openvswitch:
+    charm: cs:neutron-openvswitch-269
+  nova-cloud-controller:
+    charm: cs:nova-cloud-controller-338
+    options:
+      openstack-origin: cloud:bionic-train
+  nova-compute:
+    charm: cs:nova-compute-309
+    options:
+      openstack-origin: cloud:bionic-train
+  ntp:
+    charm: cs:ntp-35
+  openstack-dashboard:
+    charm: cs:openstack-dashboard-295
+    options:
+      openstack-origin: cloud:bionic-train
+  rabbitmq-server:
+    charm: cs:rabbitmq-server-97
+  placement:
+    charm: cs:~openstack-charmers/bionic/placement
+    num_units: 1
+    options:
+      openstack-origin: cloud:bionic-train
+      worker-multiplier: 0.25
+    to:
+    - 'lxd:0'

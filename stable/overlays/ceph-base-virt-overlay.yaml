@@ -1,4 +1,3 @@
-machines: {}
 applications:
   ceph-osd:
     to: []

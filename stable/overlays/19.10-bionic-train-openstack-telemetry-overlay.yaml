@@ -1,0 +1,15 @@
+services:
+  aodh:
+    charm: cs:aodh-35
+    options:
+      openstack-origin: cloud:bionic-train
+  ceilometer:
+    charm: cs:ceilometer-268
+    options:
+      openstack-origin: cloud:bionic-train
+  ceilometer-agent:
+    charm: cs:ceilometer-agent-258
+  gnocchi:
+    charm: cs:gnocchi-28
+    options:
+      openstack-origin: cloud:bionic-train

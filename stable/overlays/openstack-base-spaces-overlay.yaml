@@ -34,6 +34,9 @@ applications:
   openstack-dashboard:
     bindings:
       "": *public-space
+  placement:
+    bindings:
+      "": *public-space
   rabbitmq-server:
     bindings:
       "": *public-space
