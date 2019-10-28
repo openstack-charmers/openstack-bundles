@@ -10,13 +10,22 @@ Certain configuration options within the bundle may need to be adjusted prior to
 
 For example, a section similar to this exists in the bundle.yaml file.  The third "column" are the values to set.  Some servers may not have eno2, they may have something like eth2 or some other network device name.  This needs to be adjusted prior to deployment.  The same principle holds for osd-devices.  The third column is a whitelist of devices to use for Ceph OSDs.  Adjust accordingly by editing bundle.yaml before deployment.
 
-```
-variables:
-  openstack-origin:    &openstack-origin     cloud:bionic-train
-  data-port:           &data-port            br-ex:eno2
-  worker-multiplier:   &worker-multiplier    0.25
-  osd-devices:         &osd-devices          /dev/sdb /dev/vdb
-```
+In particular, set the following to the appropriate local values:
+
+  ceph-osd:
+    comment: SET osd-devices to match your environment
+    options:
+      osd-devices: /dev/sdb /dev/vdb
+
+  neutron-gateway:
+    comment: SET data-port to match your environment
+    options:
+      data-port: br-ex:eno2
+
+> **Note**: We distribute [overlays](https://github.com/openstack-charmers/openstack-bundles/tree/master/development/overlays)
+  for use in conjunction with the example bundle.  If you want to make use of
+  them, please review them for any configuration options that need tailoring to
+  match your environment prior to deployment.
 
 Servers should have:
 

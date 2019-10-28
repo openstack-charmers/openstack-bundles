@@ -85,6 +85,10 @@ applications:
     - 'lxd:2'
   ovn-chassis:
     charm: cs:~openstack-charmers/ovn-chassis
+    comment: |
+      Please update the `interface-bridge-mappings` to values suitable for the
+      hardware used in your deployment.  See the referenced documentation at
+      the top of this file.
     options:
       ovn-bridge-mappings: physnet1:br-provider
       interface-bridge-mappings: 00:00:5e:00:00:42:br-provider 00:00:5e:00:00:51:br-provider
