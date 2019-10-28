@@ -8,15 +8,18 @@ This example bundle is designed to run on bare metal using Juju 2.x with [MAAS][
 
 Certain configuration options within the bundle may need to be adjusted prior to deployment to fit your particular set of hardware. For example, network device names and block device names can vary, and passwords should be yours.
 
-For example, a section similar to this exists in the bundle.yaml file.  The third "column" are the values to set.  Some servers may not have eno2, they may have something like eth2 or some other network device name.  This needs to be adjusted prior to deployment.  The same principle holds for osd-devices.  The third column is a whitelist of devices to use for Ceph OSDs.  Adjust accordingly by editing bundle.yaml before deployment.
+In particular, set the following to the appropriate local values:
 
-```
-variables:
-  openstack-origin:    &openstack-origin     cloud:bionic-stein
-  data-port:           &data-port            br-ex:eno2
-  worker-multiplier:   &worker-multiplier    0.25
-  osd-devices:         &osd-devices          /dev/sdb /dev/vdb
-```
+  ceph-osd:
+    comment: SET osd-devices to match your environment
+    options:
+      osd-devices: /dev/sdb /dev/vdb
+
+  neutron-gateway:
+    comment: SET data-port to match your environment
+    options:
+      data-port: br-ex:eno2
+
 
 Servers should have:
 

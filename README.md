@@ -4,7 +4,10 @@ This repo contains development and stable bundles for deploying OpenStack with J
 
 ## Local customization
 
-Bundles configured with default values. These values may not apply in the environment being deployed. It may be necessary to update these settings for a successful deployment. In particular, set the following to the appropriate local values:
+Bundles are configured with default values. These values may not apply in the
+environment being deployed. It may be necessary to update these settings for a
+successful deployment. In particular, set the following to the appropriate
+local values:
 
   ceph-osd:
     comment: SET osd-devices to match your environment
