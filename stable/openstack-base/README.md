@@ -20,6 +20,10 @@ In particular, set the following to the appropriate local values:
     options:
       data-port: br-ex:eno2
 
+> **Note**: We distribute [overlays](https://github.com/openstack-charmers/openstack-bundles/tree/master/stable/overlays)
+  for use in conjunction with the example bundle.  If you want to make use of
+  them, please review them for any configuration options that need tailoring to
+  match your environment prior to deployment.
 
 Servers should have:
 
