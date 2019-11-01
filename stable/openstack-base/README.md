@@ -120,6 +120,26 @@ Images for other architectures can be obtained from [Ubuntu Cloud Images][].  Be
 
 ### Configure networking
 
+In order to help with configuring the networking, the bundle includes two helper Python scripts:
+
+* neutron-ext-net-ksv3
+* neutron-tenant-net-ksv3
+
+These are equivalent to running several `openstack` commands but wrap them up into a single script.  In order to actually run these scripts several python modules are needed and the easiest way to do this is to use a [pipenv](https://pipenv.readthedocs.io/en/latest/) environment to download the modules and made them available for the two scripts.
+
+Install `pipenv` in your `--user` python environment (if it is not already set up):
+
+    pip3 install --user pipenv
+
+Be sure to read the [installation instructions of Pipenv](https://pipenv.readthedocs.io/en/latest/install/#installing-pipenv) to ensure you get a working environment.
+
+After pipenv is installed, in the *same* directory as the `Pipfile`, run the following two commands:
+
+    pipenv install
+    pipenv shell
+
+This will provide an environment in which to run the two scripts.
+
 For the purposes of a quick test, we'll setup an 'external' network and shared router ('provider-router') which will be used by all tenants for public access to instances:
 
     ./neutron-ext-net-ksv3 --network-type flat \
