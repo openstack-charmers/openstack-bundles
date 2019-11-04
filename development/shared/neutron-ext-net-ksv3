@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 from keystoneclient.auth import identity
 from keystoneclient import session, v3
