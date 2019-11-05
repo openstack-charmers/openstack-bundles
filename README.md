@@ -1,6 +1,8 @@
-# OpenStack-Bundles
+# OpenStack bundles
 
-This repo contains development and stable bundles for deploying OpenStack with Juju and MaaS with [OpenStack Charms](https://docs.openstack.org/charm-guide/latest).
+This repository contains development and stable Juju [bundles][juju-bundles]
+that deploy OpenStack with MAAS as a backing cloud. The [OpenStack
+Charms][openstack-charms] are used within the bundles.
 
 ## Local customization
 
@@ -34,3 +36,9 @@ If there are deploy-time issues, or other system/tooling prep issues, please see
 For Q & A, please interact with the community on IRC or on the mailing list. More info can be found in the charm-guide:
  * https://docs.openstack.org/charm-guide/latest/find-us.html
 
+
+
+<!-- LINKS -->
+
+[juju-bundles]: https://jaas.ai/docs/charm-bundles
+[openstack-charms]: https://docs.openstack.org/charm-guide/
