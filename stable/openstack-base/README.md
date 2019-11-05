@@ -7,9 +7,6 @@ these foundational elements:
 - OpenStack Stein
 - Ceph Mimic
 
-Cloud services include: Compute, Network, Block storage, Object storage,
-Identity, Image, and Dashboard.
-
 ## Requirements
 
 The bundle is designed to work with [MAAS][maas] as a backing cloud for Juju.
@@ -32,19 +29,28 @@ and all external networks (North/South traffic).
 > **Important**: The four MAAS nodes are needed for the actual OpenStack cloud;
   they do not include the Juju controller. You actually need a minimum of five
   nodes. The controller node however can be a smaller system (1 CPU and 4 GiB
-  memory). Juju [constraints][juju-constraints-controller] can be used to
-  target this smaller system at controller-creation time.
+  memory). Juju [constraints][juju-constraints] can be used to target this smaller system
+  at controller-creation time.
 
 ## Cloud topology
 
 The cloud topology consists of:
 
-- 1 node for Neutron Gateway and Ceph, with RabbitMQ and MySQL under LXD
-  containers.
-- 3 nodes for Nova Compute and Ceph, with Keystone, Glance, Neutron, Nova Cloud
-  Controller, Ceph RADOS Gateway, Cinder, and Horizon under LXD containers.
+**machine 0:**
+Neutron Gateway (metal)
+Ceph RADOS Gateway, RabbitMQ, and MySQL (LXD)
 
-All physical servers (not LXD containers) will also have NTP installed.
+**machine 1:**
+Ceph OSD, Nova Compute, Neutron OpenvSwitch, and NTP (metal)
+Ceph MON, Cinder, and Neutron API (LXD)
+
+**machine 2:**
+Ceph OSD, Nova Compute, Neutron OpenvSwitch, and NTP (metal)
+Ceph MON, Glance, Nova Cloud Controller, and Placement (LXD)
+
+**machine 3:**
+Ceph OSD, Nova Compute, Neutron OpenvSwitch, and NTP (metal)
+Ceph MON, Keystone, and Horizon (LXD)
 
 ## Download the bundle
 
@@ -109,13 +115,17 @@ empty model 'default', change to that context:
 
 ## Deploy the cloud
 
+First move into the bundle directory:
+
+    cd ~/openstack-base
+
 To install OpenStack use this command if you're using the spaces overlay:
 
-    juju deploy bundle.yaml --overlay openstack-base-spaces-overlay.yaml
+    juju deploy ./bundle.yaml --overlay ./openstack-base-spaces-overlay.yaml
 
 Otherwise, simply do:
 
-    juju deploy bundle.yaml
+    juju deploy ./bundle.yaml
 
 ## Install the OpenStack clients
 
@@ -310,7 +320,7 @@ Configuring and managing services for an OpenStack cloud is complex. See the
 [overlays]: https://github.com/openstack-charmers/openstack-bundles/tree/master/stable/overlays
 [spaces-overlay]: https://github.com/openstack-charmers/openstack-bundles/blob/master/stable/overlays/openstack-base-spaces-overlay.yaml
 [juju-and-maas]: https://jaas.ai/docs/maas-cloud
-[juju-constraints-controller]: https://jaas.ai/docs/constraints#heading--setting-constraints-for-a-controller
+[juju-constraints]: https://jaas.ai/docs/constraints#heading--setting-constraints-for-a-controller
 [juju-overlays]: https://jaas.ai/docs/charm-bundles#heading--overlay-bundles
 [juju-spaces]: https://jaas.ai/docs/spaces
 [openstack-neutron]: https://docs.openstack.org/neutron/
