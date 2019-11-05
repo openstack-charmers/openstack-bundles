@@ -1,0 +1,36 @@
+applications:
+  # Remove percona-cluser
+  mysql:
+
+  keystone-mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
+  cinder-mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
+  nova-mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
+  glance-mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
+  neutron-mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
+  dashboard-mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
+  placement-mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
+  mysql-innodb-cluster:
+    charm: cs:~openstack-charmers-next/mysql-innodb-cluster
+    num_units: 3
+relations:
+- ["keystone:shared-db", "keystone-mysql-router:shared-db"]
+- ["cinder:shared-db", "cinder-mysql-router:shared-db"]
+- ["glance:shared-db", "glance-mysql-router:shared-db"]
+- ["nova-cloud-controller:shared-db", "nova-mysql-router:shared-db"]
+- ["neutron-api:shared-db", "neutron-mysql-router:shared-db"]
+- ["openstack-dashboard:shared-db", "dashboard-mysql-router:shared-db"]
+- ["keystone-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["cinder-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["nova-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["glance-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["neutron-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["dashboard-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["placement-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["placement-mysql-router:shared-db", "placement:shared-db"]
