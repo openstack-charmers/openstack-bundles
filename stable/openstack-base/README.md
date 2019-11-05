@@ -7,8 +7,8 @@ these foundational elements:
 - OpenStack Stein
 - Ceph Mimic
 
-Cloud services include: Compute, Network, Block storage, Object
-storage, Identity, Image, and Dashboard.
+Cloud services include: Compute, Network, Block storage, Object storage,
+Identity, Image, and Dashboard.
 
 ## Requirements
 
@@ -35,6 +35,17 @@ and all external networks (North/South traffic).
   memory). Juju [constraints][juju-constraints-controller] can be used to
   target this smaller system at controller-creation time.
 
+## Cloud topology
+
+The cloud topology consists of:
+
+- 1 node for Neutron Gateway and Ceph, with RabbitMQ and MySQL under LXD
+  containers.
+- 3 nodes for Nova Compute and Ceph, with Keystone, Glance, Neutron, Nova Cloud
+  Controller, Ceph RADOS Gateway, Cinder, and Horizon under LXD containers.
+
+All physical servers (not LXD containers) will also have NTP installed.
+
 ## Download the bundle
 
 Modifications will typically need to be made to this bundle for it to work in
@@ -51,8 +62,8 @@ Install them now and then download the bundle:
 The bundle file to modify is now located at `~/openstack-base/bundle.yaml` on
 your system.
 
-Common settings to confirm are for block devices and network devices. Look for
-these stanzas in the file and edit the values accordingly:
+Common settings to confirm are the names of block devices and network devices.
+Look for these stanzas in the file and edit the values accordingly:
 
 ```
   ceph-osd:
