@@ -29,27 +29,27 @@ and all external networks (North/South traffic).
 > **Important**: The four MAAS nodes are needed for the actual OpenStack cloud;
   they do not include the Juju controller. You actually need a minimum of five
   nodes. The controller node however can be a smaller system (1 CPU and 4 GiB
-  memory). Juju [constraints][juju-constraints] can be used to target this smaller system
-  at controller-creation time.
+  memory). Juju [constraints][juju-constraints] (e.g. 'tags') can be used to
+  target this smaller system at controller-creation time.
 
 ## Cloud topology
 
 The cloud topology consists of:
 
-**machine 0:**
-Neutron Gateway (metal)
+**machine 0:**  
+Neutron Gateway (metal)  
 Ceph RADOS Gateway, RabbitMQ, and MySQL (LXD)
 
-**machine 1:**
-Ceph OSD, Nova Compute, Neutron OpenvSwitch, and NTP (metal)
+**machine 1:**  
+Ceph OSD, Nova Compute, Neutron OpenvSwitch, and NTP (metal)  
 Ceph MON, Cinder, and Neutron API (LXD)
 
-**machine 2:**
-Ceph OSD, Nova Compute, Neutron OpenvSwitch, and NTP (metal)
+**machine 2:**  
+Ceph OSD, Nova Compute, Neutron OpenvSwitch, and NTP (metal)  
 Ceph MON, Glance, Nova Cloud Controller, and Placement (LXD)
 
-**machine 3:**
-Ceph OSD, Nova Compute, Neutron OpenvSwitch, and NTP (metal)
+**machine 3:**  
+Ceph OSD, Nova Compute, Neutron OpenvSwitch, and NTP (metal)  
 Ceph MON, Keystone, and Horizon (LXD)
 
 ## Download the bundle
@@ -167,8 +167,8 @@ boot in UEFI mode:
 Neutron networking will be configured with the aid of two scripts supplied by
 the bundle.
 
-> **Note**: These scripts are written for Python 2 and may not work on a
-  modern system.
+> **Note**: These scripts are written for Python 2 and may not work on a modern
+  system.
 
 For the "external" network a shared router ('provider-router') will be used by
 all tenants for public access to instances. The syntax is:
@@ -270,7 +270,7 @@ To log in to the new instance:
 
 The cloud dashboard (Horizon) can be accessed by going to:
 
-http://<openstack-dashboard-ip>/horizon
+`http://<openstack-dashboard-ip>/horizon`
 
 The IP address is taken from the output to:
 
