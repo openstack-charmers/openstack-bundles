@@ -1,217 +1,329 @@
-# Basic OpenStack Cloud
+# Basic OpenStack cloud
 
-This example bundle deploys a basic OpenStack Cloud (Stein with Ceph Mimic) on Ubuntu 18.04 LTS (Bionic), providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.
+The `openstack-base` bundle currently deploys a basic OpenStack cloud with
+these foundational elements:
+
+- Ubuntu 18.04 LTS (Bionic)
+- OpenStack Stein
+- Ceph Mimic
 
 ## Requirements
 
-This example bundle is designed to run on bare metal using Juju 2.x with [MAAS][] (Metal-as-a-Service); you will need to have setup a [MAAS][] deployment with a minimum of 4 physical servers prior to using this bundle.
+The bundle is designed to work with [MAAS][maas] as a backing cloud for Juju.
+The MAAS cluster must already be deployed with at least four (ideally
+identical) physical servers as nodes, where each has the following minimum
+resources:
 
-Certain configuration options within the bundle may need to be adjusted prior to deployment to fit your particular set of hardware. For example, network device names and block device names can vary, and passwords should be yours.
+- 8 GiB memory
+- Enough CPU cores to support your workload
+- Two disks
+- Two cabled network interfaces
 
-In particular, set the following to the appropriate local values:
+The first disk is used for the node's operating system, and the second is for
+Ceph storage.
 
+The first network interface is used for communication between cloud services
+(East/West traffic), and the second is for network traffic between the cloud
+and all external networks (North/South traffic).
+
+> **Important**: The four MAAS nodes are needed for the actual OpenStack cloud;
+  they do not include the Juju controller. You actually need a minimum of five
+  nodes. The controller node however can be a smaller system (1 CPU and 4 GiB
+  memory). Juju [constraints][juju-constraints] (e.g. 'tags') can be used to
+  target this smaller system at controller-creation time.
+
+## Cloud topology
+
+The cloud topology consists of:
+
+**machine 0:**  
+Neutron Gateway (metal)  
+Ceph RADOS Gateway, RabbitMQ, and MySQL (LXD)
+
+**machine 1:**  
+Ceph OSD, Nova Compute, Neutron OpenvSwitch, and NTP (metal)  
+Ceph MON, Cinder, and Neutron API (LXD)
+
+**machine 2:**  
+Ceph OSD, Nova Compute, Neutron OpenvSwitch, and NTP (metal)  
+Ceph MON, Glance, Nova Cloud Controller, and Placement (LXD)
+
+**machine 3:**  
+Ceph OSD, Nova Compute, Neutron OpenvSwitch, and NTP (metal)  
+Ceph MON, Keystone, and Horizon (LXD)
+
+## Download the bundle
+
+Modifications will typically need to be made to this bundle for it to work in
+your environment. You will also require access to a credentials/init file.
+
+The Charm Tools allow you to download charms and bundles from the Charm Store.
+Install them now and then download the bundle:
+
+    sudo snap install charm --classic
+    charm pull openstack-base ~/openstack-base
+
+## Modifications
+
+The bundle file to modify is now located at `~/openstack-base/bundle.yaml` on
+your system.
+
+Common settings to confirm are the names of block devices and network devices.
+Look for these stanzas in the file and edit the values accordingly:
+
+```
   ceph-osd:
-    comment: SET osd-devices to match your environment
     options:
       osd-devices: /dev/sdb /dev/vdb
 
   neutron-gateway:
-    comment: SET data-port to match your environment
     options:
       data-port: br-ex:eno2
+```
 
-> **Note**: We distribute [overlays](https://github.com/openstack-charmers/openstack-bundles/tree/master/stable/overlays)
-  for use in conjunction with the example bundle.  If you want to make use of
-  them, please review them for any configuration options that need tailoring to
-  match your environment prior to deployment.
+## Network spaces and overlays
 
-Servers should have:
+If the MAAS cluster contains network spaces you will need to bind them to the
+applications to be deployed. One way of doing this is with the
+`openstack-base-spaces-overlay.yaml` overlay bundle that ships with the bundle.
 
- - A minimum of 8GB of physical RAM.
- - Enough CPU cores to support your capacity requirements.
- - Two disks (identified by /dev/sda and /dev/sdb); the first is used by MAAS for the OS install, the second for Ceph storage.
- - Two cabled network ports on eno1 and eno2 (see below).
+Like the main bundle file, it will likely require tailoring. The file employs
+the variable method of assigning values. The actual space name should be the
+far-right value on this line:
 
-Servers should have two physical network ports cabled; the first is used for general communication between services in the Cloud, the second is used for 'public' network traffic to and from instances (North/South traffic) running within the Cloud.
+```
+variables:
+  public-space:        &public-space         public-space
+```
 
-## Components
+The [`openstack-bundles`][openstack-bundles] repository contains more example
+overlay bundles.
 
- - 1 Node for Neutron Gateway and Ceph with RabbitMQ and MySQL under LXC containers.
- - 3 Nodes for Nova Compute and Ceph, with Keystone, Glance, Neutron, Nova Cloud Controller, Ceph RADOS Gateway, Cinder and Horizon under LXC containers.
+See the Juju documentation on [network spaces][juju-spaces] and [overlay
+bundles][juju-overlays] for background information.
 
-All physical servers (not LXC containers) will also have NTP installed and configured to keep time in sync.
+## MAAS cloud and Juju controller
 
+Ensure that the MAAS cluster has been added to Juju as a cloud and that a Juju
+controller has been created for that cloud. See the Juju documentation for
+guidance: [Using MAAS with Juju][juju-and-maas].
 
-## Deployment
+Assuming the controller is called 'maas-controller' and you want to use the
+empty model 'default', change to that context:
 
-With a Juju controller bootstrapped on a MAAS cloud with no network spaces
-defined, a basic non-HA cloud can be deployed with the following command:
+    juju switch maas-controller:default
 
-    juju deploy bundle.yaml
+## Deploy the cloud
 
-When network spaces exist in the MAAS cluster, it is necessary to clarify
-and define the network space(s) to which the charm applications will deploy.
-This can be done with an overlay bundle.  An example overlay yaml file is
-provided, which most likely needs to be edited (before deployment) to
-represent the intended network spaces in the existing MAAS cluster.  Example
-usage:
+First move into the bundle directory:
 
-    juju deploy bundle.yaml --overlay openstack-base-spaces-overlay.yaml
+    cd ~/openstack-base
 
-## Scaling
+To install OpenStack use this command if you're using the spaces overlay:
 
-Neutron Gateway, Nova Compute and Ceph services are designed to be horizontally scalable.
+    juju deploy ./bundle.yaml --overlay ./openstack-base-spaces-overlay.yaml
 
-To horizontally scale Nova Compute:
+Otherwise, simply do:
 
-    juju add-unit nova-compute # Add one more unit
-    juju add-unit -n5 nova-compute # Add 5 more units
+    juju deploy ./bundle.yaml
 
-To horizontally scale Neutron Gateway:
+## Install the OpenStack clients
 
-    juju add-unit neutron-gateway # Add one more unit
-    juju add-unit -n2 neutron-gateway # Add 2 more unitsa
+You'll need the OpenStack clients in order to manage your cloud from the
+command line. Install them now:
 
-To horizontally scale Ceph:
+    sudo snap install openstackclients --classic
 
-    juju add-unit ceph-osd # Add one more unit
-    juju add-unit -n50 ceph-osd # add 50 more units
+## Access the cloud
 
-**Note:** Ceph can be scaled alongside Nova Compute or Neutron Gateway by adding units using the --to option:
+Confirm that you can access your cloud from the command line:
 
-    juju add-unit --to <machine-id-of-compute-service> ceph-osd
+    source ~/openstack-base/openrc
+    openstack service list
 
-**Note:** Other services in this bundle can be scaled in-conjunction with the hacluster charm to produce scalable, highly avaliable services - that will be covered in a different bundle.
+You should get a listing of all registered cloud services.
 
-## Ensuring it's working
+## Import an image
 
-To ensure your cloud is functioning correctly, download this bundle and then run through the following sections.
-
-All commands are executed from within the expanded bundle.
-
-### Install OpenStack client tools
-
-In order to configure and use your cloud, you'll need to install the appropriate client tools:
-
-    sudo snap install openstackclients
-
-### Accessing the cloud
-
-Check that you can access your cloud from the command line:
-
-    source openrc
-    openstack catalog list
-
-You should get a full listing of all services registered in the cloud which should include identity, compute, image and network.
-
-### Configuring an image
-
-In order to run instances on your cloud, you'll need to upload an image to boot instances:
+You'll need to import a boot image in order to create instances. Here we
+import a Bionic amd64 image and call it 'bionic':
 
     curl http://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.img | \
-        openstack image create --public --container-format=bare --disk-format=qcow2 bionic
+        openstack image create --public --container-format=bare --disk-format=qcow2 \
+        bionic
 
-Images for other architectures can be obtained from [Ubuntu Cloud Images][].  Be sure to use the appropriate image for the cpu architecture.
+Images for other Ubuntu releases and architectures can be obtained in a similar
+way.
 
-**Note:** for ARM 64-bit (arm64) guests, you will also need to configure the image to boot in UEFI mode:
+For the ARM 64-bit (arm64) architecture you will need to configure the image to
+boot in UEFI mode:
 
     curl http://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-arm64.img | \
-        openstack image create --public --container-format=bare --disk-format=qcow2 --property hw_firmware_type=uefi bionic
+        openstack image create --public --container-format=bare --disk-format=qcow2 \
+        --property hw_firmware_type=uefi bionic
 
-### Configure networking
+## Configure networking
 
-For the purposes of a quick test, we'll setup an 'external' network and shared router ('provider-router') which will be used by all tenants for public access to instances:
+Neutron networking will be configured with the aid of two scripts supplied by
+the bundle.
+
+> **Note**: These scripts are written for Python 2 and may not work on a modern
+  system.
+
+For the "external" network a shared router ('provider-router') will be used by
+all tenants for public access to instances. The syntax is:
 
     ./neutron-ext-net-ksv3 --network-type flat \
         -g <gateway-ip> -c <network-cidr> \
-        -f <pool-start>:<pool-end> ext_net
+        -f <pool-start>:<pool-end> <network-name>
 
-for example (for a private cloud):
+In a public cloud the values would correspond to a publicly addressable part of
+the internet. Here, we'll configure for a private cloud. The actual values will
+depend on the environment that the second network interface (on all the nodes)
+is connected to. For example:
 
     ./neutron-ext-net-ksv3 --network-type flat \
         -g 10.230.168.1 -c 10.230.168.0/21 \
         -f 10.230.168.10:10.230.175.254 ext_net
 
-You'll need to adapt the parameters for the network configuration that eno2 on all the servers is connected to; in a public cloud deployment these ports would be connected to a publicly addressable part of the Internet.
+For the "internal" tenant network, to which the instances are actually
+connected, the syntax is:
 
-We'll also need an 'internal' network for the admin user which instances are actually connected to:
+    ./neutron-tenant-net-ksv3 -p <project> -r <router> \
+        [-N <dns-nameservers>] <network-name> <network-cidr>
 
-    ./neutron-tenant-net-ksv3 -p admin -r provider-router \
-        [-N <dns-server>] internal 10.5.5.0/24
+For example:
 
-Neutron provides a wide range of configuration options; see the [OpenStack Neutron][] documentation for more details.
+    ./neutron-tenant-net-ksv3 -p admin -r provider-router internal 10.5.5.0/24
 
-### Configuring a flavor
+See the [Neutron documentation][openstack-neutron] for more information.
 
-Starting with the OpenStack Newton release, default flavors are no longer created at install time. You therefore need to create at least one machine type before you can boot an instance:
+## Create a flavor
 
-    openstack flavor create --ram 2048 --disk 20 --ephemeral 20 m1.small
+Create at least one flavor to define a hardware profile for new instances. Here
+we create one called 'm1.tiny':
 
-### Booting an instance
+    openstack flavor create --ram 2048 --disk 10 m1.tiny
 
-First generate a SSH keypair so that you can access your instances once you've booted them:
+Make sure that your MAAS nodes can accommodate the flavor's resources.
 
-    mkdir -p ~/.ssh
-    touch ~/.ssh/id_rsa_cloud
-    chmod 600 ~/.ssh/id_rsa_cloud
-    openstack keypair create mykey > ~/.ssh/id_rsa_cloud
+## Import an SSH keypair
 
-**Note:** you can also upload an existing public key to the cloud rather than generating a new one:
+An SSH keypair needs to be imported into the cloud in order to access your
+instances.
 
-    openstack keypair create --public-key ~/.ssh/id_rsa.pub mykey
+Generate one first if you do not yet have one. This command creates a
+passphraseless keypair (remove the `-N` option to avoid that):
 
-You can now boot an instance on your cloud:
+    ssh-keygen -q -N '' -f ~/.ssh/id_mykey
+
+To import a keypair:
+
+    openstack keypair create --public-key ~/.ssh/id_mykey.pub mykey
+
+## Configure security groups
+
+To allow ICMP (ping) and SSH traffic to flow to cloud instances create
+corresponding rules for each security group:
+
+    for i in $(openstack security group list | awk '/default/{ print $2 }'); do
+        openstack security group rule create $i --protocol icmp --remote-ip 0.0.0.0/0;
+        openstack security group rule create $i --protocol tcp --remote-ip 0.0.0.0/0 --dst-port 22;
+	done
+
+You only need to perform this step once.
+
+## Create an instance
+
+To create a Bionic instance called 'bionic-1':
 
     openstack server create --image bionic --flavor m1.small --key-name mykey \
         --nic net-id=$(openstack network list | grep internal | awk '{ print $2 }') \
-        bionic-test
+        bionic-1
 
-### Attaching a volume
+## Attach a volume
 
-First, create a 10G volume in cinder:
+This step is optional.
 
-    openstack volume create --size=10 <name-of-volume>
+To create a 10GiB volume in Cinder and attach it to the new instance:
 
-then attach it to the instance we just booted:
+    openstack volume create --size=10 <volume-name>
+    openstack server add volume bionic-1 <volume-name>
 
-    openstack server add volume bionic-test <name-of-volume>
+The volume becomes immediately available to the instance. It will however need
+to be formatted and mounted before usage.
 
-The attached volume will be accessible once you login to the instance (see below).  It will need to be formatted and mounted!
+## Assign a floating IP address
 
-### Accessing your instance
+To request and assign a floating IP address:
 
-In order to access the instance you just booted on the cloud, you'll need to assign a floating IP address to the instance:
+    FLOATING_IP=$(openstack floating ip create -f value -c floating_ip_address ext_net)
+    openstack server add floating ip bionic-1 $FLOATING_IP
 
-    openstack floating ip create ext_net
-    openstack server add floating ip bionic-test <new-floating-ip>
+## Log in to an instance
 
-and then allow access via SSH (and ping) - you only need to do these steps once:
+To log in to the new instance:
 
-    openstack security group list
+    ssh -i ~/.ssh/id_mykey ubuntu@$FLOATING_IP
 
-For each security group in the list, identify the UUID and run:
+## Access the cloud dashboard
 
+The cloud dashboard (Horizon) can be accessed by going to:
 
-    openstack security group rule create <uuid> \
-        --protocol icmp --remote-ip 0.0.0.0/0
+`http://<openstack-dashboard-ip>/horizon`
 
-    openstack security group rule create <uuid> \
-        --protocol tcp --remote-ip 0.0.0.0/0 --dst-port 22
+The IP address is taken from the output to:
 
-After running these commands you should be able to access the instance:
+    juju status openstack-dashboard
 
-    ssh ubuntu@<new-floating-ip>
+And the credentials can be discovered from the `openrc` file.
 
-## What next?
+## Scale the cloud
 
-Configuring and managing services on an OpenStack cloud is complex; take a look a the [OpenStack Admin Guide][] for a complete reference on how to configure an OpenStack cloud for your requirements.
+The neutron-gateway, nova-compute, and ceph-osd applications are designed to be
+horizontally scalable.
 
-## Useful Cloud URLs
+To scale nova-compute:
 
- - OpenStack Dashboard: http://openstack-dashboard_ip/horizon
+    juju add-unit nova-compute # Add one more unit
+    juju add-unit -n5 nova-compute # Add 5 more units
 
-[MAAS]: http://maas.ubuntu.com/docs
-[Simplestreams]: https://launchpad.net/simplestreams
-[OpenStack Neutron]: http://docs.openstack.org/admin-guide-cloud/content/ch_networking.html
-[OpenStack Admin Guide]: http://docs.openstack.org/user-guide-admin/content
-[Ubuntu Cloud Images]: http://cloud-images.ubuntu.com/bionic/current/
+To scale neutron-gateway:
+
+    juju add-unit neutron-gateway # Add one more unit
+    juju add-unit -n2 neutron-gateway # Add 2 more units
+
+To scale ceph-osd:
+
+    juju add-unit ceph-osd # Add one more unit
+    juju add-unit -n50 ceph-osd # add 50 more units
+
+The ceph-osd application can also be scaled by placing units on the same
+machine where either the nova-compute or neutron-gateway units currently
+reside. This can be done via a "placement directive" (the `--to` option):
+
+    juju add-unit --to <machine-id> ceph-osd
+
+Other applications in this bundle can be used in conjunction with the
+[`hacluster`][hacluster-charm] subordinate charm to produce scalable, highly
+available cloud services.
+
+## Next steps
+
+Configuring and managing services for an OpenStack cloud is complex. See the
+[OpenStack Administrator Guides][openstack-admin-guides] for help.
+
+<!-- LINKS -->
+
+[hacluster-charm]: https://jaas.ai/hacluster
+[maas]: https://maas.io/
+[overlays]: https://github.com/openstack-charmers/openstack-bundles/tree/master/stable/overlays
+[spaces-overlay]: https://github.com/openstack-charmers/openstack-bundles/blob/master/stable/overlays/openstack-base-spaces-overlay.yaml
+[juju-and-maas]: https://jaas.ai/docs/maas-cloud
+[juju-constraints]: https://jaas.ai/docs/constraints#heading--setting-constraints-for-a-controller
+[juju-overlays]: https://jaas.ai/docs/charm-bundles#heading--overlay-bundles
+[juju-spaces]: https://jaas.ai/docs/spaces
+[openstack-neutron]: https://docs.openstack.org/neutron/
+[openstack-admin-guides]: http://docs.openstack.org/admin
+[openstack-bundles]: https://github.com/openstack-charmers/openstack-bundles/tree/master/stable/overlays
+[ubuntu-cloud-images]: http://cloud-images.ubuntu.com
