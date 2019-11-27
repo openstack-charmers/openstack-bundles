@@ -36,7 +36,7 @@ Exercise [Refstack][].
 
  - OpenStack Dashboard: http://openstack-dashboard_ip/horizon
 
-[MAAS]: http://maas.ubuntu.com/docs
+[MAAS]: https://maas.io/
 [Simplestreams]: https://launchpad.net/simplestreams
 [OpenStack Neutron]: http://docs.openstack.org/admin-guide-cloud/content/ch_networking.html
 [OpenStack Admin Guide]: http://docs.openstack.org/user-guide-admin/content
