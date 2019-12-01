@@ -168,7 +168,8 @@ Neutron networking will be configured with the aid of two scripts supplied by
 the bundle.
 
 > **Note**: These scripts are written for Python 2 and may not work on a modern
-  system.
+  system without first installing the ``python-keystoneclient`` and
+  ``python-neutronclient`` deb packages.
 
 For the "external" network a shared router ('provider-router') will be used by
 all tenants for public access to instances. The syntax is:
@@ -203,9 +204,10 @@ See the [Neutron documentation][openstack-neutron] for more information.
 Create at least one flavor to define a hardware profile for new instances. Here
 we create one called 'm1.tiny':
 
-    openstack flavor create --ram 2048 --disk 10 m1.tiny
+    openstack flavor create --ram 1024 --disk 6 m1.tiny
 
-Make sure that your MAAS nodes can accommodate the flavor's resources.
+The above flavor is defined with minimum specifications. If you use larger
+values ensure that your compute nodes have the resources to accommodate them.
 
 ## Import an SSH keypair
 
@@ -237,7 +239,7 @@ You only need to perform this step once.
 
 To create a Bionic instance called 'bionic-1':
 
-    openstack server create --image bionic --flavor m1.small --key-name mykey \
+    openstack server create --image bionic --flavor m1.tiny --key-name mykey \
         --nic net-id=$(openstack network list | grep internal | awk '{ print $2 }') \
         bionic-1
 
@@ -276,7 +278,13 @@ The IP address is taken from the output to:
 
     juju status openstack-dashboard
 
-And the credentials can be discovered from the `openrc` file.
+Print the credentials in this way:
+
+    echo -e "Domain: $OS_USER_DOMAIN_NAME\nUser Name: $OS_USERNAME\nPassword: $OS_PASSWORD"
+
+If that does not work then source the `openrc` file and try again:
+
+    source ~/openstack-base/openrc
 
 ## Scale the cloud
 
