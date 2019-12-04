@@ -37,3 +37,4 @@ Check that the cluster is healthy:
 
     sudo ceph -s
 
+[MAAS]: https://maas.io/
