@@ -173,4 +173,4 @@ if __name__ == '__main__':
                             )
         logging.info('Router connected to %s', net_name)
     else:
-        logging.warning('Router already connect to %s', net_name)
+        logging.warning('Router already connected to %s', net_name)
