@@ -4,7 +4,7 @@ The `openstack-base` bundle currently deploys a basic OpenStack cloud with
 these foundational elements:
 
 - Ubuntu 18.04 LTS (Bionic)
-- OpenStack Stein
+- OpenStack Train
 - Ceph Mimic
 
 ## Requirements
@@ -71,15 +71,13 @@ your system.
 Common settings to confirm are the names of block devices and network devices.
 Look for these stanzas in the file and edit the values accordingly:
 
-```
-  ceph-osd:
-    options:
-      osd-devices: /dev/sdb /dev/vdb
+    ceph-osd:
+      options:
+        osd-devices: /dev/sdb /dev/vdb
 
-  neutron-gateway:
-    options:
-      data-port: br-ex:eno2
-```
+    neutron-gateway:
+      options:
+        data-port: br-ex:eno2
 
 ## Network spaces and overlays
 
@@ -91,10 +89,8 @@ Like the main bundle file, it will likely require tailoring. The file employs
 the variable method of assigning values. The actual space name should be the
 far-right value on this line:
 
-```
-variables:
-  public-space:        &public-space         public-space
-```
+    variables:
+      public-space:        &public-space         public-space
 
 The [`openstack-bundles`][openstack-bundles] repository contains more example
 overlay bundles.
