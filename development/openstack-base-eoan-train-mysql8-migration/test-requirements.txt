@@ -1,0 +1,4 @@
+# zaza
+git+https://github.com/openstack-charmers/zaza.git#egg=zaza;python_version>='3.0'
+#git+https://github.com/openstack-charmers/zaza-openstack-tests.git#egg=zaza.openstack
+git+file:///home/ubuntu/dev/zaza-openstack-tests#egg=zaza.openstack
