@@ -92,12 +92,12 @@ relations:
   - ceph-mon:radosgw
 - - ceph-radosgw:identity-service
   - keystone:identity-service
-- - placement
-  - mysql
-- - placement
-  - keystone
-- - placement
-  - nova-cloud-controller
+- - placement:shared-db
+  - mysql:shared-db
+- - placement:identity-service
+  - keystone:identity-service
+- - placement:placement
+  - nova-cloud-controller:placement
 series: eoan
 services:
   ceph-mon:
@@ -205,7 +205,7 @@ services:
     - 'lxd:1'
   placement:
     annotations:
-      gui-x: '0'
+      gui-x: '-250'
       gui-y: '500'
     charm: cs:~openstack-charmers-next/eoan/placement
     num_units: 1
