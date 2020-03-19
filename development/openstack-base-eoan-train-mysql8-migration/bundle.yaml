@@ -79,20 +79,20 @@ relations:
   - keystone
 - - placement
   - nova-cloud-controller
-- ["keystone:shared-db", "keystone-mysql-router:shared-db"]
-- ["cinder:shared-db", "cinder-mysql-router:shared-db"]
-- ["glance:shared-db", "glance-mysql-router:shared-db"]
-- ["nova-cloud-controller:shared-db", "nova-mysql-router:shared-db"]
-- ["neutron-api:shared-db", "neutron-mysql-router:shared-db"]
-- ["openstack-dashboard:shared-db", "dashboard-mysql-router:shared-db"]
-- ["placement:shared-db", "placement-mysql-router:shared-db"]
-- ["vault:shared-db", "vault-mysql-router:shared-db"]
+- ["keystone:shared-db", "percona-cluster:shared-db"]
+- ["cinder:shared-db", "percona-cluster:shared-db"]
+- ["glance:shared-db", "percona-cluster:shared-db"]
+- ["nova-cloud-controller:shared-db", "percona-cluster:shared-db"]
+- ["neutron-api:shared-db", "percona-cluster:shared-db"]
+- ["openstack-dashboard:shared-db", "percona-cluster:shared-db"]
+- ["placement:shared-db", "percona-cluster:shared-db"]
+- ["vault:shared-db", "percona-cluster:shared-db"]
 - ["keystone-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
 - ["cinder-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
-- ["nova-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["nova-cloud-controller-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
 - ["glance-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
-- ["neutron-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
-- ["dashboard-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["neutron-api-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["openstack-dashboard-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
 - ["placement-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
 - ["vault-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
 - - neutron-api-plugin-ovn:neutron-plugin
@@ -284,13 +284,13 @@ applications:
     charm: cs:~openstack-charmers-next/mysql-router
   cinder-mysql-router:
     charm: cs:~openstack-charmers-next/mysql-router
-  nova-mysql-router:
+  nova-cloud-controller-mysql-router:
     charm: cs:~openstack-charmers-next/mysql-router
   glance-mysql-router:
     charm: cs:~openstack-charmers-next/mysql-router
-  neutron-mysql-router:
+  neutron-api-mysql-router:
     charm: cs:~openstack-charmers-next/mysql-router
-  dashboard-mysql-router:
+  openstack-dashboard-mysql-router:
     charm: cs:~openstack-charmers-next/mysql-router
   placement-mysql-router:
     charm: cs:~openstack-charmers-next/mysql-router
@@ -326,3 +326,8 @@ applications:
     num_units: 1
     to:
     - 'lxd:0'
+  percona-cluster:
+    charm: cs:~openstack-charmers/percona-cluster
+    num_units: 1
+    to:
+    - 'lxd:1'

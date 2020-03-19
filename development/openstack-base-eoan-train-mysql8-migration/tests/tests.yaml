@@ -6,6 +6,7 @@ configure:
  - zaza.openstack.charm_tests.neutron.setup.basic_overcloud_network
  - zaza.openstack.charm_tests.glance.setup.add_lts_image
 tests:
+  - zaza.openstack.charm_tests.mysql.tests.MySQL8MigrationTests
   - zaza.openstack.charm_tests.nova.tests.LTSGuestCreateTest
 target_deploy_status:
   neutron-api-plugin-ovn:
@@ -23,11 +24,7 @@ target_deploy_status:
   vault:
     workload-status: blocked
     workload-status-message: Vault needs to be initialized
-  ntp:
-    workload-status: active
-    workload-status-message: "chrony: Ready"
 gate_bundles:
   - bundle
 smoke_bundles:
   - bundle
-
