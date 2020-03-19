@@ -20,8 +20,6 @@ relations:
   - rabbitmq-server:amqp
 - - neutron-gateway:amqp
   - rabbitmq-server:amqp
-- - keystone:shared-db
-  - mysql:shared-db
 - - nova-cloud-controller:identity-service
   - keystone:identity-service
 - - glance:identity-service
@@ -30,14 +28,10 @@ relations:
   - keystone:identity-service
 - - neutron-openvswitch:neutron-plugin-api
   - neutron-api:neutron-plugin-api
-- - neutron-api:shared-db
-  - mysql:shared-db
 - - neutron-api:amqp
   - rabbitmq-server:amqp
 - - neutron-gateway:neutron-plugin-api
   - neutron-api:neutron-plugin-api
-- - glance:shared-db
-  - mysql:shared-db
 - - glance:amqp
   - rabbitmq-server:amqp
 - - nova-cloud-controller:image-service
@@ -56,10 +50,6 @@ relations:
   - rabbitmq-server:amqp
 - - openstack-dashboard:identity-service
   - keystone:identity-service
-- - openstack-dashboard:shared-db
-  - mysql:shared-db
-- - nova-cloud-controller:shared-db
-  - mysql:shared-db
 - - nova-cloud-controller:neutron-api
   - neutron-api:neutron-api
 - - cinder:image-service
@@ -76,8 +66,6 @@ relations:
   - nova-compute:ceph
 - - nova-compute:ceph-access
   - cinder-ceph:ceph-access
-- - cinder:shared-db
-  - mysql:shared-db
 - - ceph-mon:client
   - cinder-ceph:ceph
 - - ceph-mon:client
@@ -93,11 +81,23 @@ relations:
 - - ceph-radosgw:identity-service
   - keystone:identity-service
 - - placement
-  - mysql
-- - placement
   - keystone
 - - placement
   - nova-cloud-controller
+- ["keystone:shared-db", "keystone-mysql-router:shared-db"]
+- ["cinder:shared-db", "cinder-mysql-router:shared-db"]
+- ["glance:shared-db", "glance-mysql-router:shared-db"]
+- ["nova-cloud-controller:shared-db", "nova-mysql-router:shared-db"]
+- ["neutron-api:shared-db", "neutron-mysql-router:shared-db"]
+- ["openstack-dashboard:shared-db", "dashboard-mysql-router:shared-db"]
+- ["placement:shared-db", "placement-mysql-router:shared-db"]
+- ["keystone-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["cinder-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["nova-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["glance-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["neutron-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["dashboard-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["placement-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
 series: focal
 services:
   ceph-mon:
@@ -178,6 +178,27 @@ services:
       openstack-origin: *openstack-origin
     to:
     - 'lxd:3'
+  keystone-mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
+  cinder-mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
+  nova-mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
+  glance-mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
+  neutron-mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
+  dashboard-mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
+  placement-mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
+  mysql-innodb-cluster:
+    charm: cs:~openstack-charmers-next/mysql-innodb-cluster
+    num_units: 3
+    to:
+    - 'lxd:0'
+    - 'lxd:1'
+    - 'lxd:2'
   mysql:
     annotations:
       gui-x: '0'
