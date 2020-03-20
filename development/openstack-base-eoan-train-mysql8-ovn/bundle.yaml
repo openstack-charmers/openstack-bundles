@@ -22,8 +22,6 @@ machines:
     series: eoan
   '2':
     series: eoan
-  '3':
-    series: eoan
 relations:
 - - nova-compute:amqp
   - rabbitmq-server:amqp
@@ -135,9 +133,9 @@ applications:
       monitor-count: *expected-mon-count
       source: *openstack-origin
     to:
+    - 'lxd:0'
     - 'lxd:1'
     - 'lxd:2'
-    - 'lxd:3'
   ceph-osd:
     annotations:
       gui-x: '1000'
@@ -148,9 +146,9 @@ applications:
       osd-devices: *osd-devices
       source: *openstack-origin
     to:
+    - '0'
     - '1'
     - '2'
-    - '3'
   ceph-radosgw:
     annotations:
       gui-x: '1000'
@@ -201,7 +199,7 @@ applications:
       worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
-    - 'lxd:3'
+    - 'lxd:0'
   neutron-api:
     annotations:
       gui-x: '500'
@@ -226,7 +224,7 @@ applications:
       worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
-    - 'lxd:3'
+    - 'lxd:2'
   nova-cloud-controller:
     annotations:
       gui-x: '0'
@@ -238,7 +236,7 @@ applications:
       worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
-    - 'lxd:2'
+    - 'lxd:0'
   nova-compute:
     annotations:
       gui-x: '250'
@@ -252,9 +250,9 @@ applications:
       migration-auth-type: ssh
       openstack-origin: *openstack-origin
     to:
+    - '0'
     - '1'
     - '2'
-    - '3'
   ntp:
     series: bionic
     annotations:
@@ -271,7 +269,7 @@ applications:
     options:
       openstack-origin: *openstack-origin
     to:
-    - 'lxd:3'
+    - 'lxd:1'
   rabbitmq-server:
     annotations:
       gui-x: '500'
@@ -279,7 +277,7 @@ applications:
     charm: cs:~openstack-charmers-next/eoan/rabbitmq-server
     num_units: 1
     to:
-    - 'lxd:0'
+    - 'lxd:2'
   keystone-mysql-router:
     charm: cs:~openstack-charmers-next/mysql-router
   cinder-mysql-router:
@@ -304,23 +302,25 @@ applications:
     - 'lxd:1'
     - 'lxd:2'
   neutron-api-plugin-ovn:
-    charm: cs:~openstack-charmers/neutron-api-plugin-ovn
+    charm: cs:~openstack-charmers-next/neutron-api-plugin-ovn
   ovn-central:
-    charm: cs:~openstack-charmers/ovn-central
+    charm: cs:~openstack-charmers-next/ovn-central
     num_units: 3
+    options:
+      source: *openstack-origin
     to:
     - 'lxd:0'
     - 'lxd:1'
     - 'lxd:2'
   ovn-chassis:
-    charm: cs:~openstack-charmers/ovn-chassis
+    charm: cs:~openstack-charmers-next/ovn-chassis
     comment: |
       Please update the `bridge-interface-mappings` to values suitable for the
       hardware used in your deployment.  See the referenced documentation at
       the top of this file.
     options:
-      ovn-bridge-mappings: physnet1:br-provider
-      bridge-interface-mappings: br-provider:00:00:5e:00:00:42 br-provider:00:00:5e:00:00:51
+      ovn-bridge-mappings: physnet1:br-ex
+      bridge-interface-mappings: *data-port
   vault:
     charm: cs:vault
     num_units: 1
