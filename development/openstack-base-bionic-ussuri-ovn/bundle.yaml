@@ -1,0 +1,321 @@
+# Open Virtual Network (OVN) - requires Train or later
+#
+# NOTE: Please review the value for the configuration option
+#       `bridge-interface-mappings` for the `ovn-chassis` charm.
+#       Refer to the [Open Virtual Network (OVN)](https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/app-ovn.html)
+#       section of the [OpenStack Charms Deployment Guide](https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/)
+#       for more information.
+---
+local_overlay_enabled: true
+series: bionic
+variables:
+  openstack-origin:    &openstack-origin     cloud:bionic-ussuri
+  data-port:           &data-port            br-ex:eno2
+  worker-multiplier:   &worker-multiplier    0.25
+  osd-devices:         &osd-devices          /dev/sdb /dev/vdb
+  expected-osd-count:  &expected-osd-count   3
+  expected-mon-count:  &expected-mon-count   3
+  mysql-connections:   &mysql-connections    1000
+machines:
+  '0':
+    series: bionic
+  '1':
+    series: bionic
+  '2':
+    series: bionic
+relations:
+- - nova-compute:amqp
+  - rabbitmq-server:amqp
+- - nova-cloud-controller:identity-service
+  - keystone:identity-service
+- - glance:identity-service
+  - keystone:identity-service
+- - neutron-api:identity-service
+  - keystone:identity-service
+- - neutron-api:amqp
+  - rabbitmq-server:amqp
+- - glance:amqp
+  - rabbitmq-server:amqp
+- - nova-cloud-controller:image-service
+  - glance:image-service
+- - nova-compute:image-service
+  - glance:image-service
+- - nova-cloud-controller:cloud-compute
+  - nova-compute:cloud-compute
+- - nova-cloud-controller:amqp
+  - rabbitmq-server:amqp
+- - openstack-dashboard:identity-service
+  - keystone:identity-service
+- - nova-cloud-controller:neutron-api
+  - neutron-api:neutron-api
+- - cinder:image-service
+  - glance:image-service
+- - cinder:amqp
+  - rabbitmq-server:amqp
+- - cinder:identity-service
+  - keystone:identity-service
+- - cinder:cinder-volume-service
+  - nova-cloud-controller:cinder-volume-service
+- - cinder-ceph:storage-backend
+  - cinder:storage-backend
+- - ceph-mon:client
+  - nova-compute:ceph
+- - nova-compute:ceph-access
+  - cinder-ceph:ceph-access
+- - ceph-mon:client
+  - cinder-ceph:ceph
+- - ceph-mon:client
+  - glance:ceph
+- - ceph-osd:mon
+  - ceph-mon:osd
+- - ntp:juju-info
+  - nova-compute:juju-info
+- - ceph-radosgw:mon
+  - ceph-mon:radosgw
+- - ceph-radosgw:identity-service
+  - keystone:identity-service
+- - placement
+  - keystone
+- - placement
+  - nova-cloud-controller
+- - keystone:shared-db
+  - mysql:shared-db
+- - cinder:shared-db
+  - mysql:shared-db
+- - glance:shared-db
+  - mysql:shared-db
+- - nova-cloud-controller:shared-db
+  - mysql:shared-db
+- - neutron-api:shared-db
+  - mysql:shared-db
+- - openstack-dashboard:shared-db
+  - mysql:shared-db
+- - placement:shared-db
+  - mysql:shared-db
+- - vault:shared-db
+  - mysql:shared-db
+- - neutron-api-plugin-ovn:neutron-plugin
+  - neutron-api:neutron-plugin-api-subordinate
+- - ovn-central:certificates
+  - vault:certificates
+- - ovn-central:ovsdb-cms
+  - neutron-api-plugin-ovn:ovsdb-cms
+- - neutron-api:certificates
+  - vault:certificates
+- - ovn-chassis:nova-compute
+  - nova-compute:neutron-plugin
+- - ovn-chassis:certificates
+  - vault:certificates
+- - ovn-chassis:ovsdb
+  - ovn-central:ovsdb
+- - vault:certificates
+  - neutron-api-plugin-ovn:certificates
+- - vault:certificates
+  - cinder:certificates
+- - vault:certificates
+  - glance:certificates
+- - vault:certificates
+  - keystone:certificates
+- - vault:certificates
+  - nova-cloud-controller:certificates
+- - vault:certificates
+  - openstack-dashboard:certificates
+- - vault:certificates
+  - placement:certificates
+applications:
+  ceph-mon:
+    annotations:
+      gui-x: '750'
+      gui-y: '500'
+    charm: cs:~openstack-charmers-next/ceph-mon
+    num_units: 3
+    options:
+      expected-osd-count: *expected-osd-count
+      monitor-count: *expected-mon-count
+      source: *openstack-origin
+    to:
+    - 'lxd:0'
+    - 'lxd:1'
+    - 'lxd:2'
+  ceph-osd:
+    annotations:
+      gui-x: '1000'
+      gui-y: '500'
+    charm: cs:~openstack-charmers-next/ceph-osd
+    num_units: 3
+    options:
+      osd-devices: *osd-devices
+      source: *openstack-origin
+    to:
+    - '0'
+    - '1'
+    - '2'
+  ceph-radosgw:
+    annotations:
+      gui-x: '1000'
+      gui-y: '250'
+    charm: cs:~openstack-charmers-next/ceph-radosgw
+    num_units: 1
+    options:
+      source: *openstack-origin
+    to:
+    - 'lxd:0'
+  cinder:
+    annotations:
+      gui-x: '750'
+      gui-y: '0'
+    charm: cs:~openstack-charmers-next/cinder
+    num_units: 1
+    options:
+      block-device: None
+      glance-api-version: 2
+      worker-multiplier: *worker-multiplier
+      openstack-origin: *openstack-origin
+    to:
+    - 'lxd:1'
+  cinder-ceph:
+    annotations:
+      gui-x: '750'
+      gui-y: '250'
+    charm: cs:~openstack-charmers-next/cinder-ceph
+    num_units: 0
+  glance:
+    annotations:
+      gui-x: '250'
+      gui-y: '0'
+    charm: cs:~openstack-charmers-next/glance
+    num_units: 1
+    options:
+      worker-multiplier: *worker-multiplier
+      openstack-origin: *openstack-origin
+    to:
+    - 'lxd:2'
+  keystone:
+    annotations:
+      gui-x: '500'
+      gui-y: '0'
+    charm: cs:~openstack-charmers-next/keystone
+    num_units: 1
+    options:
+      worker-multiplier: *worker-multiplier
+      openstack-origin: *openstack-origin
+    to:
+    - 'lxd:0'
+  neutron-api:
+    annotations:
+      gui-x: '500'
+      gui-y: '500'
+    charm: cs:~openstack-charmers-next/neutron-api
+    num_units: 1
+    options:
+      # NOTE(fnordahl): At current state of upstream Neutron development this
+      # is a requirement.  Remove once fixed upstream.
+      enable-ml2-port-security: true
+      neutron-security-groups: true
+      flat-network-providers: physnet1
+      worker-multiplier: *worker-multiplier
+      openstack-origin: *openstack-origin
+      manage-neutron-plugin-legacy-mode: false
+    to:
+    - 'lxd:1'
+  placement:
+    annotations:
+      gui-x: '0'
+      gui-y: '500'
+    charm: cs:~openstack-charmers-next/placement
+    num_units: 1
+    options:
+      worker-multiplier: *worker-multiplier
+      openstack-origin: *openstack-origin
+    to:
+    - 'lxd:2'
+  nova-cloud-controller:
+    annotations:
+      gui-x: '0'
+      gui-y: '500'
+    charm: cs:~openstack-charmers-next/nova-cloud-controller
+    num_units: 1
+    options:
+      network-manager: Neutron
+      worker-multiplier: *worker-multiplier
+      openstack-origin: *openstack-origin
+    to:
+    - 'lxd:0'
+  nova-compute:
+    annotations:
+      gui-x: '250'
+      gui-y: '250'
+    charm: cs:~openstack-charmers-next/nova-compute
+    num_units: 3
+    options:
+      config-flags: default_ephemeral_format=ext4
+      enable-live-migration: true
+      enable-resize: true
+      migration-auth-type: ssh
+      openstack-origin: *openstack-origin
+    to:
+    - '0'
+    - '1'
+    - '2'
+  ntp:
+    series: bionic
+    annotations:
+      gui-x: '1000'
+      gui-y: '0'
+    charm: cs:ntp
+    num_units: 0
+  openstack-dashboard:
+    annotations:
+      gui-x: '500'
+      gui-y: '-250'
+    charm: cs:~openstack-charmers-next/openstack-dashboard
+    num_units: 1
+    options:
+      openstack-origin: *openstack-origin
+    to:
+    - 'lxd:1'
+  rabbitmq-server:
+    annotations:
+      gui-x: '500'
+      gui-y: '250'
+    charm: cs:~openstack-charmers-next/rabbitmq-server
+    num_units: 1
+    to:
+    - 'lxd:2'
+  mysql:
+    annotations:
+      gui-x: '0'
+      gui-y: '250'
+    charm: cs:~openstack-charmers-next/percona-cluster
+    num_units: 1
+    options:
+      max-connections: *mysql-connections
+      innodb-buffer-pool-size: 256M
+      performance-schema: True
+    to:
+    - 'lxd:0'
+  neutron-api-plugin-ovn:
+    charm: cs:~openstack-charmers-next/neutron-api-plugin-ovn
+  ovn-central:
+    charm: cs:~openstack-charmers-next/ovn-central
+    num_units: 3
+    options:
+      source: *openstack-origin
+    to:
+    - 'lxd:0'
+    - 'lxd:1'
+    - 'lxd:2'
+  ovn-chassis:
+    charm: cs:~openstack-charmers-next/ovn-chassis
+    comment: |
+      Please update the `bridge-interface-mappings` to values suitable for the
+      hardware used in your deployment.  See the referenced documentation at
+      the top of this file.
+    options:
+      ovn-bridge-mappings: physnet1:br-ex
+      bridge-interface-mappings: *data-port
+  vault:
+    charm: cs:~openstack-charmers-next/vault
+    num_units: 1
+    to:
+    - 'lxd:0'
