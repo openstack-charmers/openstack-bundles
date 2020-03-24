@@ -22,6 +22,8 @@ machines:
     series: eoan
   '2':
     series: eoan
+  '3':
+    series: eoan
 relations:
 - - nova-compute:amqp
   - rabbitmq-server:amqp
@@ -77,38 +79,22 @@ relations:
   - keystone
 - - placement
   - nova-cloud-controller
-- - keystone:shared-db
-  - keystone-mysql-router:shared-db
-- - cinder:shared-db
-  - cinder-mysql-router:shared-db
-- - glance:shared-db
-  - glance-mysql-router:shared-db
-- - nova-cloud-controller:shared-db
-  - nova-mysql-router:shared-db
-- - neutron-api:shared-db
-  - neutron-mysql-router:shared-db
-- - openstack-dashboard:shared-db
-  - dashboard-mysql-router:shared-db
-- - placement:shared-db
-  - placement-mysql-router:shared-db
-- - vault:shared-db
-  - vault-mysql-router:shared-db
-- - keystone-mysql-router:db-router
-  - mysql-innodb-cluster:db-router
-- - cinder-mysql-router:db-router
-  - mysql-innodb-cluster:db-router
-- - nova-mysql-router:db-router
-  - mysql-innodb-cluster:db-router
-- - glance-mysql-router:db-router
-  - mysql-innodb-cluster:db-router
-- - neutron-mysql-router:db-router
-  - mysql-innodb-cluster:db-router
-- - dashboard-mysql-router:db-router
-  - mysql-innodb-cluster:db-router
-- - placement-mysql-router:db-router
-  - mysql-innodb-cluster:db-router
-- - vault-mysql-router:db-router
-  - mysql-innodb-cluster:db-router
+- ["keystone:shared-db", "percona-cluster:shared-db"]
+- ["cinder:shared-db", "percona-cluster:shared-db"]
+- ["glance:shared-db", "percona-cluster:shared-db"]
+- ["nova-cloud-controller:shared-db", "percona-cluster:shared-db"]
+- ["neutron-api:shared-db", "percona-cluster:shared-db"]
+- ["openstack-dashboard:shared-db", "percona-cluster:shared-db"]
+- ["placement:shared-db", "percona-cluster:shared-db"]
+- ["vault:shared-db", "percona-cluster:shared-db"]
+- ["keystone-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["cinder-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["nova-cloud-controller-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["glance-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["neutron-api-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["openstack-dashboard-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["placement-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+- ["vault-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
 - - neutron-api-plugin-ovn:neutron-plugin
   - neutron-api:neutron-plugin-api-subordinate
 - - ovn-central:certificates
@@ -149,9 +135,9 @@ applications:
       monitor-count: *expected-mon-count
       source: *openstack-origin
     to:
-    - 'lxd:0'
     - 'lxd:1'
     - 'lxd:2'
+    - 'lxd:3'
   ceph-osd:
     annotations:
       gui-x: '1000'
@@ -162,9 +148,9 @@ applications:
       osd-devices: *osd-devices
       source: *openstack-origin
     to:
-    - '0'
     - '1'
     - '2'
+    - '3'
   ceph-radosgw:
     annotations:
       gui-x: '1000'
@@ -175,8 +161,6 @@ applications:
       source: *openstack-origin
     to:
     - 'lxd:0'
-  cinder-mysql-router:
-    charm: cs:~openstack-charmers-next/mysql-router
   cinder:
     annotations:
       gui-x: '750'
@@ -196,8 +180,6 @@ applications:
       gui-y: '250'
     charm: cs:~openstack-charmers-next/eoan/cinder-ceph
     num_units: 0
-  glance-mysql-router:
-    charm: cs:~openstack-charmers-next/mysql-router
   glance:
     annotations:
       gui-x: '250'
@@ -209,8 +191,6 @@ applications:
       openstack-origin: *openstack-origin
     to:
     - 'lxd:2'
-  keystone-mysql-router:
-    charm: cs:~openstack-charmers-next/mysql-router
   keystone:
     annotations:
       gui-x: '500'
@@ -221,9 +201,7 @@ applications:
       worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
-    - 'lxd:0'
-  neutron-mysql-router:
-    charm: cs:~openstack-charmers-next/mysql-router
+    - 'lxd:3'
   neutron-api:
     annotations:
       gui-x: '500'
@@ -238,8 +216,6 @@ applications:
       manage-neutron-plugin-legacy-mode: false
     to:
     - 'lxd:1'
-  placement-mysql-router:
-    charm: cs:~openstack-charmers-next/mysql-router
   placement:
     annotations:
       gui-x: '0'
@@ -250,9 +226,7 @@ applications:
       worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
-    - 'lxd:2'
-  nova-mysql-router:
-    charm: cs:~openstack-charmers-next/mysql-router
+    - 'lxd:3'
   nova-cloud-controller:
     annotations:
       gui-x: '0'
@@ -264,7 +238,7 @@ applications:
       worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
-    - 'lxd:0'
+    - 'lxd:2'
   nova-compute:
     annotations:
       gui-x: '250'
@@ -278,9 +252,9 @@ applications:
       migration-auth-type: ssh
       openstack-origin: *openstack-origin
     to:
-    - '0'
     - '1'
     - '2'
+    - '3'
   ntp:
     series: bionic
     annotations:
@@ -288,8 +262,6 @@ applications:
       gui-y: '0'
     charm: cs:ntp
     num_units: 0
-  dashboard-mysql-router:
-    charm: cs:~openstack-charmers-next/mysql-router
   openstack-dashboard:
     annotations:
       gui-x: '500'
@@ -299,7 +271,7 @@ applications:
     options:
       openstack-origin: *openstack-origin
     to:
-    - 'lxd:1'
+    - 'lxd:3'
   rabbitmq-server:
     annotations:
       gui-x: '500'
@@ -307,7 +279,23 @@ applications:
     charm: cs:~openstack-charmers-next/eoan/rabbitmq-server
     num_units: 1
     to:
-    - 'lxd:2'
+    - 'lxd:0'
+  keystone-mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
+  cinder-mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
+  nova-cloud-controller-mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
+  glance-mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
+  neutron-api-mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
+  openstack-dashboard-mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
+  placement-mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
+  vault-mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
   mysql-innodb-cluster:
     charm: cs:~openstack-charmers-next/mysql-innodb-cluster
     num_units: 3
@@ -316,29 +304,30 @@ applications:
     - 'lxd:1'
     - 'lxd:2'
   neutron-api-plugin-ovn:
-    charm: cs:~openstack-charmers-next/neutron-api-plugin-ovn
+    charm: cs:~openstack-charmers/neutron-api-plugin-ovn
   ovn-central:
-    charm: cs:~openstack-charmers-next/ovn-central
+    charm: cs:~openstack-charmers/ovn-central
     num_units: 3
-    options:
-      source: *openstack-origin
     to:
     - 'lxd:0'
     - 'lxd:1'
     - 'lxd:2'
   ovn-chassis:
-    charm: cs:~openstack-charmers-next/ovn-chassis
+    charm: cs:~openstack-charmers/ovn-chassis
     comment: |
       Please update the `bridge-interface-mappings` to values suitable for the
       hardware used in your deployment.  See the referenced documentation at
       the top of this file.
     options:
-      ovn-bridge-mappings: physnet1:br-ex
-      bridge-interface-mappings: *data-port
-  vault-mysql-router:
-    charm: cs:~openstack-charmers-next/mysql-router
+      ovn-bridge-mappings: physnet1:br-provider
+      bridge-interface-mappings: br-provider:00:00:5e:00:00:42 br-provider:00:00:5e:00:00:51
   vault:
-    charm: cs:~openstack-charmers-next/vault
+    charm: cs:vault
     num_units: 1
     to:
     - 'lxd:0'
+  percona-cluster:
+    charm: cs:~openstack-charmers/percona-cluster
+    num_units: 1
+    to:
+    - 'lxd:1'
