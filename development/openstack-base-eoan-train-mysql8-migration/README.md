@@ -1,6 +1,6 @@
 # Basic OpenStack Cloud
 
-*DEV/TEST ONLY*: This unstable, development example bundle deploys a basic OpenStack Cloud (Train with Ceph Nautilus) on Ubuntu 19.10 (Eoan), providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.  See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
+*DEV/TEST ONLY*: This unstable, development example bundle deploys a basic OpenStack Cloud (Train with Ceph Mimic) on Ubuntu 18.04 LTS (Eoan), providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.  See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
 
 ## Requirements
 
@@ -29,7 +29,8 @@ Servers should have two physical network ports cabled; the first is used for gen
 
 ## Components
 
- - 3 Nodes for Nova Compute and Ceph, with RabbitMQ, MySQL, Keystone, Glance, Neutron, OVN, Nova Cloud Controller, Ceph RADOS Gateway, Cinder and Horizon under LXC containers.
+ - 1 Node for Neutron Gateway and Ceph with RabbitMQ and MySQL under LXC containers.
+ - 3 Nodes for Nova Compute and Ceph, with Keystone, Glance, Neutron, Nova Cloud Controller, Ceph RADOS Gateway, Cinder and Horizon under LXC containers.
 
 All physical servers (not LXC containers) will also have NTP installed and configured to keep time in sync.
 
@@ -51,19 +52,24 @@ usage:
 
 ## Scaling
 
-Nova Compute and Ceph services are designed to be horizontally scalable.
+Neutron Gateway, Nova Compute and Ceph services are designed to be horizontally scalable.
 
 To horizontally scale Nova Compute:
 
     juju add-unit nova-compute # Add one more unit
     juju add-unit -n5 nova-compute # Add 5 more units
 
+To horizontally scale Neutron Gateway:
+
+    juju add-unit neutron-gateway # Add one more unit
+    juju add-unit -n2 neutron-gateway # Add 2 more unitsa
+
 To horizontally scale Ceph:
 
     juju add-unit ceph-osd # Add one more unit
     juju add-unit -n50 ceph-osd # add 50 more units
 
-**Note:** Ceph can be scaled alongside Nova Compute by adding units using the --to option:
+**Note:** Ceph can be scaled alongside Nova Compute or Neutron Gateway by adding units using the --to option:
 
     juju add-unit --to <machine-id-of-compute-service> ceph-osd
 

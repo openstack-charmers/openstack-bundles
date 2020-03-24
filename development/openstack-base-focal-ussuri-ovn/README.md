@@ -1,6 +1,6 @@
 # Basic OpenStack Cloud
 
-*DEV/TEST ONLY*: This unstable, development example bundle deploys a basic OpenStack Cloud (Train with Ceph Nautilus) on Ubuntu 19.10 (Eoan), providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.  See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
+*DEV/TEST ONLY*: This unstable, development example bundle deploys a basic OpenStack Cloud (Ussuri with Ceph Octopus) on Ubuntu 20.04 LTS (Focal), providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.  See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
 
 ## Requirements
 
