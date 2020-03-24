@@ -6,7 +6,7 @@
 #       section of the [OpenStack Charms Deployment Guide](https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/)
 #       for more information.
 ---
-local_overlay_enabled: true
+local_overlay_enabled: False
 series: eoan
 variables:
   openstack-origin:    &openstack-origin     distro
