@@ -261,6 +261,7 @@ services:
     charm: cs:~openstack-charmers-next/neutron-api
     num_units: 1
     options:
+      manage-neutron-plugin-legacy-mode: true
       openstack-origin: *openstack-origin
       flat-network-providers: physnet1
       neutron-security-groups: true
