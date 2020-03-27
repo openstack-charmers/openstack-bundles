@@ -7,7 +7,7 @@
 #       for more information.
 ---
 local_overlay_enabled: true
-series: eoan
+series: focal
 variables:
   openstack-origin:    &openstack-origin     distro
   data-port:           &data-port            br-ex:eno2
@@ -17,11 +17,11 @@ variables:
   expected-mon-count:  &expected-mon-count   3
 machines:
   '0':
-    series: eoan
+    series: focal
   '1':
-    series: eoan
+    series: focal
   '2':
-    series: eoan
+    series: focal
 relations:
 - - nova-compute:amqp
   - rabbitmq-server:amqp
@@ -73,10 +73,10 @@ relations:
   - ceph-mon:radosgw
 - - ceph-radosgw:identity-service
   - keystone:identity-service
-- - placement:identity-service
-  - keystone:identity-service
-- - placement:placement
-  - nova-cloud-controller:placement
+- - placement
+  - keystone
+- - placement
+  - nova-cloud-controller
 - - keystone:shared-db
   - keystone-mysql-router:shared-db
 - - cinder:shared-db
@@ -142,7 +142,7 @@ applications:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: cs:~openstack-charmers-next/eoan/ceph-mon
+    charm: cs:~openstack-charmers-next/ceph-mon
     num_units: 3
     options:
       expected-osd-count: *expected-osd-count
@@ -156,7 +156,7 @@ applications:
     annotations:
       gui-x: '1000'
       gui-y: '500'
-    charm: cs:~openstack-charmers-next/eoan/ceph-osd
+    charm: cs:~openstack-charmers-next/ceph-osd
     num_units: 3
     options:
       osd-devices: *osd-devices
@@ -169,7 +169,7 @@ applications:
     annotations:
       gui-x: '1000'
       gui-y: '250'
-    charm: cs:~openstack-charmers-next/eoan/ceph-radosgw
+    charm: cs:~openstack-charmers-next/ceph-radosgw
     num_units: 1
     options:
       source: *openstack-origin
@@ -181,7 +181,7 @@ applications:
     annotations:
       gui-x: '750'
       gui-y: '0'
-    charm: cs:~openstack-charmers-next/eoan/cinder
+    charm: cs:~openstack-charmers-next/cinder
     num_units: 1
     options:
       block-device: None
@@ -194,7 +194,7 @@ applications:
     annotations:
       gui-x: '750'
       gui-y: '250'
-    charm: cs:~openstack-charmers-next/eoan/cinder-ceph
+    charm: cs:~openstack-charmers-next/cinder-ceph
     num_units: 0
   glance-mysql-router:
     charm: cs:~openstack-charmers-next/mysql-router
@@ -202,7 +202,7 @@ applications:
     annotations:
       gui-x: '250'
       gui-y: '0'
-    charm: cs:~openstack-charmers-next/eoan/glance
+    charm: cs:~openstack-charmers-next/glance
     num_units: 1
     options:
       worker-multiplier: *worker-multiplier
@@ -215,7 +215,7 @@ applications:
     annotations:
       gui-x: '500'
       gui-y: '0'
-    charm: cs:~openstack-charmers-next/eoan/keystone
+    charm: cs:~openstack-charmers-next/keystone
     num_units: 1
     options:
       worker-multiplier: *worker-multiplier
@@ -228,9 +228,12 @@ applications:
     annotations:
       gui-x: '500'
       gui-y: '500'
-    charm: cs:~openstack-charmers-next/eoan/neutron-api
+    charm: cs:~openstack-charmers-next/neutron-api
     num_units: 1
     options:
+      # NOTE(fnordahl): At current state of upstream Neutron development this
+      # is a requirement.  Remove once fixed upstream.
+      enable-ml2-port-security: true
       neutron-security-groups: true
       flat-network-providers: physnet1
       worker-multiplier: *worker-multiplier
@@ -242,9 +245,9 @@ applications:
     charm: cs:~openstack-charmers-next/mysql-router
   placement:
     annotations:
-      gui-x: '-250'
+      gui-x: '0'
       gui-y: '500'
-    charm: cs:~openstack-charmers-next/eoan/placement
+    charm: cs:~openstack-charmers-next/placement
     num_units: 1
     options:
       worker-multiplier: *worker-multiplier
@@ -257,7 +260,7 @@ applications:
     annotations:
       gui-x: '0'
       gui-y: '500'
-    charm: cs:~openstack-charmers-next/eoan/nova-cloud-controller
+    charm: cs:~openstack-charmers-next/nova-cloud-controller
     num_units: 1
     options:
       network-manager: Neutron
@@ -269,7 +272,7 @@ applications:
     annotations:
       gui-x: '250'
       gui-y: '250'
-    charm: cs:~openstack-charmers-next/eoan/nova-compute
+    charm: cs:~openstack-charmers-next/nova-compute
     num_units: 3
     options:
       config-flags: default_ephemeral_format=ext4
@@ -294,7 +297,7 @@ applications:
     annotations:
       gui-x: '500'
       gui-y: '-250'
-    charm: cs:~openstack-charmers-next/eoan/openstack-dashboard
+    charm: cs:~openstack-charmers-next/openstack-dashboard
     num_units: 1
     options:
       openstack-origin: *openstack-origin
@@ -304,7 +307,7 @@ applications:
     annotations:
       gui-x: '500'
       gui-y: '250'
-    charm: cs:~openstack-charmers-next/eoan/rabbitmq-server
+    charm: cs:~openstack-charmers-next/rabbitmq-server
     num_units: 1
     to:
     - 'lxd:2'
@@ -338,7 +341,7 @@ applications:
   vault-mysql-router:
     charm: cs:~openstack-charmers-next/mysql-router
   vault:
-    charm: cs:~openstack-charmers-next/vault
+    charm: cs:vault
     num_units: 1
     to:
     - 'lxd:0'

@@ -1,6 +1,6 @@
 # Basic OpenStack Cloud
 
-*DEV/TEST ONLY*: This unstable, development example bundle deploys a basic OpenStack Cloud (Train with Ceph Nautilus) on Ubuntu 19.10 (Eoan), providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.  See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
+*DEV/TEST ONLY*: This unstable, development example bundle deploys a basic OpenStack Cloud (Ussuri with Ceph Mimic) on Ubuntu 18.04 LTS (Bionic), providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.  See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
 
 ## Requirements
 
@@ -10,13 +10,22 @@ Certain configuration options within the bundle may need to be adjusted prior to
 
 For example, a section similar to this exists in the bundle.yaml file.  The third "column" are the values to set.  Some servers may not have eno2, they may have something like eth2 or some other network device name.  This needs to be adjusted prior to deployment.  The same principle holds for osd-devices.  The third column is a whitelist of devices to use for Ceph OSDs.  Adjust accordingly by editing bundle.yaml before deployment.
 
-```
-variables:
-  openstack-origin:    &openstack-origin     cloud:eoan-train
-  data-port:           &data-port            br-ex:eno2
-  worker-multiplier:   &worker-multiplier    0.25
-  osd-devices:         &osd-devices          /dev/sdb /dev/vdb
-```
+In particular, set the following to the appropriate local values:
+
+  ceph-osd:
+    comment: SET osd-devices to match your environment
+    options:
+      osd-devices: /dev/sdb /dev/vdb
+
+  neutron-gateway:
+    comment: SET data-port to match your environment
+    options:
+      data-port: br-ex:eno2
+
+> **Note**: We distribute [overlays](https://github.com/openstack-charmers/openstack-bundles/tree/master/development/overlays)
+  for use in conjunction with the example bundle.  If you want to make use of
+  them, please review them for any configuration options that need tailoring to
+  match your environment prior to deployment.
 
 Servers should have:
 
@@ -29,7 +38,8 @@ Servers should have two physical network ports cabled; the first is used for gen
 
 ## Components
 
- - 3 Nodes for Nova Compute and Ceph, with RabbitMQ, MySQL, Keystone, Glance, Neutron, OVN, Nova Cloud Controller, Ceph RADOS Gateway, Cinder and Horizon under LXC containers.
+ - 1 Node for Neutron Gateway and Ceph with RabbitMQ and MySQL under LXC containers.
+ - 3 Nodes for Nova Compute and Ceph, with Keystone, Glance, Neutron, Nova Cloud Controller, Ceph RADOS Gateway, Cinder and Horizon under LXC containers.
 
 All physical servers (not LXC containers) will also have NTP installed and configured to keep time in sync.
 
@@ -51,19 +61,24 @@ usage:
 
 ## Scaling
 
-Nova Compute and Ceph services are designed to be horizontally scalable.
+Neutron Gateway, Nova Compute and Ceph services are designed to be horizontally scalable.
 
 To horizontally scale Nova Compute:
 
     juju add-unit nova-compute # Add one more unit
     juju add-unit -n5 nova-compute # Add 5 more units
 
+To horizontally scale Neutron Gateway:
+
+    juju add-unit neutron-gateway # Add one more unit
+    juju add-unit -n2 neutron-gateway # Add 2 more unitsa
+
 To horizontally scale Ceph:
 
     juju add-unit ceph-osd # Add one more unit
     juju add-unit -n50 ceph-osd # add 50 more units
 
-**Note:** Ceph can be scaled alongside Nova Compute by adding units using the --to option:
+**Note:** Ceph can be scaled alongside Nova Compute or Neutron Gateway by adding units using the --to option:
 
     juju add-unit --to <machine-id-of-compute-service> ceph-osd
 
@@ -94,15 +109,15 @@ You should get a full listing of all services registered in the cloud which shou
 
 In order to run instances on your cloud, you'll need to upload an image to boot instances:
 
-    curl http://cloud-images.ubuntu.com/eoan/current/eoan-server-cloudimg-amd64.img | \
-        openstack image create --public --container-format=bare --disk-format=qcow2 eoan
+    curl http://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.img | \
+        openstack image create --public --container-format=bare --disk-format=qcow2 bionic
 
 Images for other architectures can be obtained from [Ubuntu Cloud Images][].  Be sure to use the appropriate image for the cpu architecture.
 
 **Note:** for ARM 64-bit (arm64) guests, you will also need to configure the image to boot in UEFI mode:
 
-    curl http://cloud-images.ubuntu.com/eoan/current/eoan-server-cloudimg-arm64.img | \
-        openstack image create --public --container-format=bare --disk-format=qcow2 --property hw_firmware_type=uefi eoan
+    curl http://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-arm64.img | \
+        openstack image create --public --container-format=bare --disk-format=qcow2 --property hw_firmware_type=uefi bionic
 
 ### Configure networking
 
@@ -148,9 +163,9 @@ First generate a SSH keypair so that you can access your instances once you've b
 
 You can now boot an instance on your cloud:
 
-    openstack server create --image eoan --flavor m1.small --key-name mykey \
+    openstack server create --image bionic --flavor m1.small --key-name mykey \
         --nic net-id=$(openstack network list | grep internal | awk '{ print $2 }') \
-        eoan-test
+        bionic-test
 
 ### Attaching a volume
 
@@ -160,7 +175,7 @@ First, create a 10G volume in cinder:
 
 then attach it to the instance we just booted:
 
-    openstack server add volume eoan-test <name-of-volume>
+    openstack server add volume bionic-test <name-of-volume>
 
 The attached volume will be accessible once you login to the instance (see below).  It will need to be formatted and mounted!
 
@@ -169,7 +184,7 @@ The attached volume will be accessible once you login to the instance (see below
 In order to access the instance you just booted on the cloud, you'll need to assign a floating IP address to the instance:
 
     openstack floating ip create ext_net
-    openstack server add floating ip eoan-test <new-floating-ip>
+    openstack server add floating ip bionic-test <new-floating-ip>
 
 and then allow access via SSH (and ping) - you only need to do these steps once:
 
@@ -196,8 +211,8 @@ Configuring and managing services on an OpenStack cloud is complex; take a look 
 
  - OpenStack Dashboard: http://openstack-dashboard_ip/horizon
 
-[MAAS]: http://maas.ubuntu.com/docs
+[MAAS]: https://maas.io/
 [Simplestreams]: https://launchpad.net/simplestreams
 [OpenStack Neutron]: http://docs.openstack.org/admin-guide-cloud/content/ch_networking.html
 [OpenStack Admin Guide]: http://docs.openstack.org/user-guide-admin/content
-[Ubuntu Cloud Images]: http://cloud-images.ubuntu.com/eoan/current/
+[Ubuntu Cloud Images]: http://cloud-images.ubuntu.com/bionic/current/
