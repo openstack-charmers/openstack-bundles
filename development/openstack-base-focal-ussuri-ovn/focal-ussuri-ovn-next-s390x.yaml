@@ -12,7 +12,7 @@ variables:
   openstack-origin:    &openstack-origin     distro
   data-port:           &data-port            br-ex:encc003
   worker-multiplier:   &worker-multiplier    0.25
-  osd-devices:         &osd-devices          /dev/disk/by-label/ceph
+  osd-devices:         &osd-devices          /dev/disk/by-id/ccw-CEPH-part1
   expected-osd-count:  &expected-osd-count   3
   expected-mon-count:  &expected-mon-count   3
 machines:
@@ -166,7 +166,7 @@ applications:
       gui-x: '1000'
       gui-y: '500'
     charm: cs:~openstack-charmers-next/ceph-osd
-    num_units: 3
+    num_units: 5
     options:
       osd-devices: *osd-devices
       source: *openstack-origin
@@ -284,7 +284,7 @@ applications:
       gui-x: '250'
       gui-y: '250'
     charm: cs:~openstack-charmers-next/nova-compute
-    num_units: 3
+    num_units: 5 
     options:
       config-flags: default_ephemeral_format=ext4
       enable-live-migration: true
@@ -327,8 +327,8 @@ applications:
   mysql-innodb-cluster:
     charm: cs:~openstack-charmers-next/mysql-innodb-cluster
     num_units: 3
-    resource:
-        mysql-shell: /home/ubuntu/mysql-shell_8.0.19_s390x.snap
+    resources:
+        mysql-shell: /home/jenkins/mysql-shell_8.0.19_s390x.snap
     to:
     - 'lxd:0'
     - 'lxd:1'
