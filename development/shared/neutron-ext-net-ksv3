@@ -38,10 +38,10 @@ if __name__ == '__main__':
     parser.add_option("--network-type",
                       help="Network type.",
                       dest="network_type", action="store", default='gre')
-    parser.add_option("--physical-network",
-                      help="Physical network if network type is 'vlan' or 'flat'.",
-                      dest="physical_network", action="store",
-                      default='physnet1')
+    parser.add_option(
+        "--physical-network",
+        help="Physical network if network type is 'vlan' or 'flat'.",
+        dest="physical_network", action="store", default='physnet1')
     parser.add_option("--vlan-id",
                       help="Vlan_id",
                       dest="vlan_id", action="store", default='2')
