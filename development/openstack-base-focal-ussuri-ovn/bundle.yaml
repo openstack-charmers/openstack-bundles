@@ -13,7 +13,7 @@ variables:
   data-port:           &data-port            br-ex:eno2
   worker-multiplier:   &worker-multiplier    0.25
   osd-devices:         &osd-devices          /dev/sdb /dev/vdb
-  expected-osd-count:  &expected-osd-count   3
+  expected-osd-count:  &expected-osd-count   4
   expected-mon-count:  &expected-mon-count   3
 machines:
   '0':
