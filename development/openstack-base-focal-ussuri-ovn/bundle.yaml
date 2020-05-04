@@ -22,8 +22,6 @@ machines:
     series: focal
   '2':
     series: focal
-  '3':
-    series: focal
 relations:
 - - nova-compute:amqp
   - rabbitmq-server:amqp
@@ -159,7 +157,7 @@ applications:
       gui-x: '1000'
       gui-y: '500'
     charm: cs:~openstack-charmers-next/ceph-osd
-    num_units: 4
+    num_units: 3
     options:
       osd-devices: *osd-devices
       source: *openstack-origin
@@ -167,7 +165,6 @@ applications:
     - '0'
     - '1'
     - '2'
-    - '3'
   ceph-radosgw:
     annotations:
       gui-x: '1000'
