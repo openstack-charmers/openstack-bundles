@@ -10,7 +10,7 @@ local_overlay_enabled: true
 series: focal
 # *** openstack-origin should be changed back to distro once this PPA is made redundant ***
 variables:
-  openstack-origin:    &openstack-origin     ppa:openstack-ubuntu-testing/ussuri 
+  openstack-origin:    &openstack-origin     ppa:openstack-ubuntu-testing/ussuri-staging
   data-port:           &data-port            br-ex:eno2
   worker-multiplier:   &worker-multiplier    0.25
   osd-devices:         &osd-devices          /dev/sdb /dev/vdb
