@@ -148,16 +148,16 @@ relations:
   - nova-compute:nova-ceilometer
 - - ceilometer-agent:amqp
   - rabbitmq-server:amqp
-- - aodh:shared-db
-  - mysql:shared-db
+- - aodh-mysql-router:db-router
+  - mysql-innodb-cluster:db-router
 - - aodh:identity-service
   - keystone:identity-service
 - - aodh:amqp
   - rabbitmq-server:amqp
 - - gnocchi:storage-ceph
   - ceph-mon:client
-- - gnocchi:shared-db
-  - mysql:shared-db
+- - gnocchi-mysql-router:db-router
+  - mysql-innodb-cluster:db-router
 - - gnocchi:amqp
   - rabbitmq-server:amqp
 - - gnocchi:coordinator-memcached
@@ -177,6 +177,8 @@ applications:
       openstack-origin: *openstack-origin
     to:
     - 'lxd:0'
+  aodh-mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
   ceilometer:
     annotations:
       gui-x: '1250'
@@ -410,6 +412,8 @@ applications:
       openstack-origin: *openstack-origin
     to:
     - 'lxd:1'
+  gnocchi-mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
   memcached:
     series: bionic
     annotations:
