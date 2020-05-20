@@ -1,4 +1,1 @@
-# zaza
-git+https://github.com/openstack-charmers/zaza.git#egg=zaza
-# zaza.openstack
-git+https://github.com/openstack-charmers/zaza-openstack-tests.git@focal-parallel-series-upgrade-ubuntu-lite#egg=zaza.openstack  # https://github.com/openstack-charmers/zaza-openstack-tests/issues/284
+../shared/test-requirements.txt
