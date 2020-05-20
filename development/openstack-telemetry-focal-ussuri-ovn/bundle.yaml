@@ -10,7 +10,7 @@ local_overlay_enabled: true
 series: focal
 # *** openstack-origin should be changed back to distro once this PPA is made redundant ***
 variables:
-  openstack-origin:    &openstack-origin     ppa:openstack-ubuntu-testing/ussuri 
+  openstack-origin:    &openstack-origin     ppa:openstack-ubuntu-testing/ussuri-staging
   data-port:           &data-port            br-ex:eno2
   worker-multiplier:   &worker-multiplier    0.25
   osd-devices:         &osd-devices          /dev/sdb /dev/vdb
@@ -148,16 +148,20 @@ relations:
   - nova-compute:nova-ceilometer
 - - ceilometer-agent:amqp
   - rabbitmq-server:amqp
+- - aodh-mysql-router:db-router
+  - mysql-innodb-cluster:db-router
 - - aodh:shared-db
-  - mysql:shared-db
+  - aodh-mysql-router:shared-db
 - - aodh:identity-service
   - keystone:identity-service
 - - aodh:amqp
   - rabbitmq-server:amqp
 - - gnocchi:storage-ceph
   - ceph-mon:client
+- - gnocchi-mysql-router:db-router
+  - mysql-innodb-cluster:db-router
 - - gnocchi:shared-db
-  - mysql:shared-db
+  - gnocchi-mysql-router:shared-db
 - - gnocchi:amqp
   - rabbitmq-server:amqp
 - - gnocchi:coordinator-memcached
@@ -177,6 +181,8 @@ applications:
       openstack-origin: *openstack-origin
     to:
     - 'lxd:0'
+  aodh-mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
   ceilometer:
     annotations:
       gui-x: '1250'
@@ -410,6 +416,8 @@ applications:
       openstack-origin: *openstack-origin
     to:
     - 'lxd:1'
+  gnocchi-mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
   memcached:
     series: bionic
     annotations:
