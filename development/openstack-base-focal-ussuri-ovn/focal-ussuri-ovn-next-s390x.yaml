@@ -10,7 +10,7 @@ local_overlay_enabled: true
 series: focal
 # *** openstack-origin should be changed back to distro once this PPA is made redundant ***
 variables:
-  openstack-origin:    &openstack-origin     ppa:openstack-ubuntu-testing/ussuri-staging
+  openstack-origin:    &openstack-origin     distro-proposed
   data-port:           &data-port            br-ex:encc003
   worker-multiplier:   &worker-multiplier    0.25
   osd-devices:         &osd-devices          /dev/disk/by-id/ccw-CEPH-part1
