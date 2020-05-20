@@ -150,6 +150,8 @@ relations:
   - rabbitmq-server:amqp
 - - aodh-mysql-router:db-router
   - mysql-innodb-cluster:db-router
+- - aodh:shared-db
+  - aodh-mysql-router:shared-db
 - - aodh:identity-service
   - keystone:identity-service
 - - aodh:amqp
@@ -158,6 +160,8 @@ relations:
   - ceph-mon:client
 - - gnocchi-mysql-router:db-router
   - mysql-innodb-cluster:db-router
+- - gnocchi:shared-db
+  - gnocchi-mysql-router:shared-db
 - - gnocchi:amqp
   - rabbitmq-server:amqp
 - - gnocchi:coordinator-memcached
