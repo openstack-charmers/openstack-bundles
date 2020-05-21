@@ -342,7 +342,7 @@ applications:
   vault-mysql-router:
     charm: cs:~openstack-charmers-next/mysql-router
   vault:
-    charm: cs:vault
+    charm: cs:~openstack-charmers-next/vault
     num_units: 1
     to:
     - 'lxd:0'
