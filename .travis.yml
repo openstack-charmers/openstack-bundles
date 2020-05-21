@@ -1,7 +1,8 @@
 sudo: false
 language: python
 python:
-    - "2.7"
-    - "3.4"
+    # Align with the latest two LTS versions of Ubuntu
+    - "3.5"
+    - "3.8"
 install: pip install tox-travis
 script: tox -e lint-light
