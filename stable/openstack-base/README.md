@@ -150,10 +150,13 @@ the bundle.
   system without first installing the ``python-keystoneclient`` and
   ``python-neutronclient`` deb packages.
 
+> **NOTE**: The network type required for OVN is geneve - the default for the 
+  neutron-ext-net scripts is currently gre.
+
 For the "external" network a shared router ('provider-router') will be used by
 all tenants for public access to instances. The syntax is:
 
-    ./neutron-ext-net-ksv3 --network-type flat \
+    ./neutron-ext-net-ksv3 --network-type geneve \
         -g <gateway-ip> -c <network-cidr> \
         -f <pool-start>:<pool-end> <network-name>
 
@@ -162,7 +165,7 @@ the internet. Here, we'll configure for a private cloud. The actual values will
 depend on the environment that the second network interface (on all the nodes)
 is connected to. For example:
 
-    ./neutron-ext-net-ksv3 --network-type flat \
+    ./neutron-ext-net-ksv3 --network-type geneve \
         -g 10.230.168.1 -c 10.230.168.0/21 \
         -f 10.230.168.10:10.230.175.254 ext_net
 
