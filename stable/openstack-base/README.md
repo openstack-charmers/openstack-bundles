@@ -3,54 +3,46 @@
 The `openstack-base` bundle currently deploys a basic OpenStack cloud with
 these foundational elements:
 
-- Ubuntu 18.04 LTS (Bionic)
-- OpenStack Train
-- Ceph Mimic
+- Ubuntu 20.04 LTS (Focal)
+- OpenStack Ussuri
+- Ceph Octopus
 
 ## Requirements
+This example bundle is designed to run on bare metal using Juju 2.x with [MAAS][] (Metal-as-a-Service); you will need to have setup a [MAAS][] deployment with a minimum of 4 physical servers prior to using this bundle.
 
-The bundle is designed to work with [MAAS][maas] as a backing cloud for Juju.
-The MAAS cluster must already be deployed with at least four (ideally
-identical) physical servers as nodes, where each has the following minimum
-resources:
+Certain configuration options within the bundle may need to be adjusted prior to deployment to fit your particular set of hardware. For example, network device names and block device names can vary, and passwords should be yours.
 
-- 8 GiB memory
-- Enough CPU cores to support your workload
-- Two disks
-- Two cabled network interfaces
+For example, a section similar to this exists in the bundle.yaml file.  The third "column" are the values to set.  Some servers may not have eno2, they may have something like eth2 or some other network device name.  This needs to be adjusted prior to deployment.  The same principle holds for osd-devices.  The third column is a whitelist of devices to use for Ceph OSDs.  Adjust accordingly by editing bundle.yaml before deployment.
 
-The first disk is used for the node's operating system, and the second is for
-Ceph storage.
+```
+variables:
+  openstack-origin:    &openstack-origin     distro
+  data-port:           &data-port            br-ex:eno2
+  worker-multiplier:   &worker-multiplier    0.25
+  osd-devices:         &osd-devices          /dev/sdb /dev/vdb
+```
 
-The first network interface is used for communication between cloud services
-(East/West traffic), and the second is for network traffic between the cloud
-and all external networks (North/South traffic).
+Servers should have:
 
-> **Important**: The four MAAS nodes are needed for the actual OpenStack cloud;
-  they do not include the Juju controller. You actually need a minimum of five
+ - A minimum of 8GB of physical RAM.
+ - Enough CPU cores to support your capacity requirements.
+ - Two disks (identified by /dev/sda and /dev/sdb); the first is used by MAAS for the OS install, the second for Ceph storage.
+ - Two cabled network ports on eno1 and eno2 (see below).
+
+Servers should have two physical network ports cabled; the first is used for general communication between services in the Cloud, the second is used for 'public' network traffic to and from instances (North/South traffic) running within the Cloud.
+
+
+> **Important**: The three MAAS nodes are needed for the actual OpenStack cloud;
+  they do not include the Juju controller. You actually need a minimum of four 
   nodes. The controller node however can be a smaller system (1 CPU and 4 GiB
   memory). Juju [constraints][juju-constraints] (e.g. 'tags') can be used to
   target this smaller system at controller-creation time.
 
-## Cloud topology
+## Components
 
-The cloud topology consists of:
+ - 3 Nodes for Nova Compute and Ceph, with RabbitMQ, MySQL, Keystone, Glance, Neutron, OVN, Nova Cloud Controller, Ceph RADOS Gateway, Cinder and Horizon under LXC containers.
 
-**machine 0:**  
-Neutron Gateway (metal)  
-Ceph RADOS Gateway, RabbitMQ, and MySQL (LXD)
-
-**machine 1:**  
-Ceph OSD, Nova Compute, Neutron OpenvSwitch, and NTP (metal)  
-Ceph MON, Cinder, and Neutron API (LXD)
-
-**machine 2:**  
-Ceph OSD, Nova Compute, Neutron OpenvSwitch, and NTP (metal)  
-Ceph MON, Glance, Nova Cloud Controller, and Placement (LXD)
-
-**machine 3:**  
-Ceph OSD, Nova Compute, Neutron OpenvSwitch, and NTP (metal)  
-Ceph MON, Keystone, and Horizon (LXD)
+All physical servers (not LXC containers) will also have NTP installed and configured to keep time in sync.
 
 ## Download the bundle
 
@@ -62,22 +54,6 @@ Install them now and then download the bundle:
 
     sudo snap install charm --classic
     charm pull openstack-base ~/openstack-base
-
-## Modifications
-
-The bundle file to modify is now located at `~/openstack-base/bundle.yaml` on
-your system.
-
-Common settings to confirm are the names of block devices and network devices.
-Look for these stanzas in the file and edit the values accordingly:
-
-    ceph-osd:
-      options:
-        osd-devices: /dev/sdb /dev/vdb
-
-    neutron-gateway:
-      options:
-        data-port: br-ex:eno2
 
 ## Network spaces and overlays
 
@@ -128,7 +104,14 @@ Otherwise, simply do:
 You'll need the OpenStack clients in order to manage your cloud from the
 command line. Install them now:
 
-    sudo snap install openstackclients --classic
+    sudo snap install openstackclients
+
+## Unlock vault
+
+This release uses vault to secure keystone - vault needs to be unlocked before the configuration
+can be finalised and the cloud used. See the following documentation for unlock steps:
+
+[Unlocking vault][vault appendix]
 
 ## Access the cloud
 
@@ -160,7 +143,7 @@ boot in UEFI mode:
 
 ## Configure networking
 
-Neutron networking will be configured with the aid of two scripts supplied by
+Networking will be configured with the aid of two scripts supplied by
 the bundle.
 
 > **Note**: These scripts are written for Python 2 and may not work on a modern
@@ -292,19 +275,14 @@ To scale nova-compute:
     juju add-unit nova-compute # Add one more unit
     juju add-unit -n5 nova-compute # Add 5 more units
 
-To scale neutron-gateway:
-
-    juju add-unit neutron-gateway # Add one more unit
-    juju add-unit -n2 neutron-gateway # Add 2 more units
-
 To scale ceph-osd:
 
     juju add-unit ceph-osd # Add one more unit
     juju add-unit -n50 ceph-osd # add 50 more units
 
 The ceph-osd application can also be scaled by placing units on the same
-machine where either the nova-compute or neutron-gateway units currently
-reside. This can be done via a "placement directive" (the `--to` option):
+machine where either the nova-compute units currently reside. This can be done
+via a "placement directive" (the `--to` option):
 
     juju add-unit --to <machine-id> ceph-osd
 
@@ -331,3 +309,5 @@ Configuring and managing services for an OpenStack cloud is complex. See the
 [openstack-admin-guides]: http://docs.openstack.org/admin
 [openstack-bundles]: https://github.com/openstack-charmers/openstack-bundles/tree/master/stable/overlays
 [ubuntu-cloud-images]: http://cloud-images.ubuntu.com
+[Vault Unlock]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/app-vault.html
+
