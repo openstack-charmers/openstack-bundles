@@ -106,12 +106,12 @@ command line. Install them now:
 
     sudo snap install openstackclients
 
-## Unlock vault
+## Unseal vault
 
-This release uses vault to secure keystone - vault needs to be unlocked before the configuration
-can be finalised and the cloud used. See the following documentation for unlock steps:
+This release uses vault to secure keystone - vault needs to be unsealed before the configuration
+can be finalised and the cloud used. See the following documentation for unseal steps:
 
-[Unlocking vault][vault-appendix]
+[Unsealing vault][vault-appendix]
 
 ## Access the cloud
 

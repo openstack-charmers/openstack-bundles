@@ -37,7 +37,7 @@ if __name__ == '__main__':
                       dest="floating_range", action="store", default=None)
     parser.add_option("--network-type",
                       help="Network type.",
-                      dest="network_type", action="store", default='gre')
+                      dest="network_type", action="store", default='geneve')
     parser.add_option(
         "--physical-network",
         help="Physical network if network type is 'vlan' or 'flat'.",
