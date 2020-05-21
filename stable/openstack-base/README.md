@@ -14,14 +14,6 @@ Certain configuration options within the bundle may need to be adjusted prior to
 
 For example, a section similar to this exists in the bundle.yaml file.  The third "column" are the values to set.  Some servers may not have eno2, they may have something like eth2 or some other network device name.  This needs to be adjusted prior to deployment.  The same principle holds for osd-devices.  The third column is a whitelist of devices to use for Ceph OSDs.  Adjust accordingly by editing bundle.yaml before deployment.
 
-```
-variables:
-  openstack-origin:    &openstack-origin     distro
-  data-port:           &data-port            br-ex:eno2
-  worker-multiplier:   &worker-multiplier    0.25
-  osd-devices:         &osd-devices          /dev/sdb /dev/vdb
-```
-
 Servers should have:
 
  - A minimum of 8GB of physical RAM.
