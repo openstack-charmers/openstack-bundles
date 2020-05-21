@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import optparse
 import yaml
@@ -31,8 +31,8 @@ if __name__ == "__main__":
 
     http = urllib3.PoolManager()
 
-    for service in data['services']:
-        charm = data['services'][service]['charm']
+    for service in data['applications']:
+        charm = data['applications'][service]['charm']
         # Remove any version
         charm = charm.rstrip('-0123456789')
         charm = charm.split('/')[-1]
@@ -42,7 +42,7 @@ if __name__ == "__main__":
         revision = http.request('GET', url)
         if revision.status == 200:
            revision = yaml.load(revision.data)['Revision']
-           data['services'][service]['charm'] = "cs:{}-{}".format(charm, revision)
+           data['applications'][service]['charm'] = "cs:{}-{}".format(charm, revision)
     if opts.in_place:
         with open(bundle, 'w') as bundle_file:
             bundle_file.write(yaml.dump(data, default_flow_style=False))
