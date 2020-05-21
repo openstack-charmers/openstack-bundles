@@ -11,7 +11,7 @@ relations:
 - - ntp:juju-info
   - ceph-osd:juju-info
 series: bionic
-services:
+applications:
   ceph-mon:
     annotations:
       gui-x: '750'

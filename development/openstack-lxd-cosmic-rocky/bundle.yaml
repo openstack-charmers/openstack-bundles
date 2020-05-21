@@ -69,7 +69,7 @@ relations:
 - - nova-compute:lxd
   - lxd:lxd
 series: cosmic
-services:
+applications:
   ceph-mon:
     annotations:
       gui-x: '750'

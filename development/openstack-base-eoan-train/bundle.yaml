@@ -99,7 +99,7 @@ relations:
 - - placement
   - nova-cloud-controller
 series: eoan
-services:
+applications:
   ceph-mon:
     annotations:
       gui-x: '750'

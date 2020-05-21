@@ -103,7 +103,7 @@ relations:
 - - aodh:amqp
   - rabbitmq-server:amqp
 series: xenial
-services:
+applications:
   aodh:
     annotations:
       gui-x: '1500'

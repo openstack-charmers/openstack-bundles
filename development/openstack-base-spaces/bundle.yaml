@@ -81,7 +81,7 @@ relations:
 - - ceph-radosgw:identity-service
   - keystone:identity-service
 series: xenial
-services:
+applications:
   ceph-mon:
     annotations:
       gui-x: '750'

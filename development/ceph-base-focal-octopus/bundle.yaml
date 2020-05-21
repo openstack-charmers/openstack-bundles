@@ -9,7 +9,7 @@ relations:
 - - ceph-osd:mon
   - ceph-mon:osd
 series: focal
-services:
+applications:
   ceph-mon:
     annotations:
       gui-x: '750'

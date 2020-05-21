@@ -69,7 +69,7 @@ relations:
 - - nova-compute:lxd
   - lxd:lxd
 series: disco
-services:
+applications:
   ceph-mon:
     annotations:
       gui-x: '750'

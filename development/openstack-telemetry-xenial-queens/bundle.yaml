@@ -113,7 +113,7 @@ relations:
 - - ceilometer:identity-credentials
   - keystone:identity-credentials
 series: xenial
-services:
+applications:
   aodh:
     annotations:
       gui-x: '1500'
