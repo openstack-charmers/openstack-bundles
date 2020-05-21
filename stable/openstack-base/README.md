@@ -111,7 +111,7 @@ command line. Install them now:
 This release uses vault to secure keystone - vault needs to be unlocked before the configuration
 can be finalised and the cloud used. See the following documentation for unlock steps:
 
-[Unlocking vault][vault appendix]
+[Unlocking vault][vault-appendix]
 
 ## Access the cloud
 
@@ -309,5 +309,5 @@ Configuring and managing services for an OpenStack cloud is complex. See the
 [openstack-admin-guides]: http://docs.openstack.org/admin
 [openstack-bundles]: https://github.com/openstack-charmers/openstack-bundles/tree/master/stable/overlays
 [ubuntu-cloud-images]: http://cloud-images.ubuntu.com
-[Vault Unlock]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/app-vault.html
+[vault-appendix]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/app-vault.html
 

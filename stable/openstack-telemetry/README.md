@@ -1,6 +1,6 @@
 # Basic OpenStack cloud
 
-The `openstack-base` bundle currently deploys a basic OpenStack cloud with
+The `openstack-telemetry` bundle currently deploys a basic OpenStack cloud with
 these foundational elements:
 
 - Ubuntu 20.04 LTS (Focal)
@@ -40,7 +40,7 @@ Servers should have two physical network ports cabled; the first is used for gen
 
 ## Components
 
- - 3 Nodes for Nova Compute and Ceph, with RabbitMQ, MySQL, Keystone, Glance, Neutron, OVN, Nova Cloud Controller, Ceph RADOS Gateway, Cinder and Horizon under LXC containers.
+ - 3 Nodes for Nova Compute and Ceph, with RabbitMQ, MySQL, Keystone, Glance, Neutron, OVN, Nova Cloud Controller, Ceph RADOS Gateway, Aodh, Gnocchi, Ceilometer, Memcached, Cinder and Horizon under LXC containers.
 
 All physical servers (not LXC containers) will also have NTP installed and configured to keep time in sync.
 
@@ -53,13 +53,13 @@ The Charm Tools allow you to download charms and bundles from the Charm Store.
 Install them now and then download the bundle:
 
     sudo snap install charm --classic
-    charm pull openstack-base ~/openstack-base
+    charm pull openstack-telemetry ~/openstack-telemetry
 
 ## Network spaces and overlays
 
 If the MAAS cluster contains network spaces you will need to bind them to the
 applications to be deployed. One way of doing this is with the
-`openstack-base-spaces-overlay.yaml` overlay bundle that ships with the bundle.
+`openstack-telemetry-spaces-overlay.yaml` overlay bundle that ships with the bundle.
 
 Like the main bundle file, it will likely require tailoring. The file employs
 the variable method of assigning values. The actual space name should be the
@@ -89,11 +89,11 @@ empty model 'default', change to that context:
 
 First move into the bundle directory:
 
-    cd ~/openstack-base
+    cd ~/openstack-telemetry
 
 To install OpenStack use this command if you're using the spaces overlay:
 
-    juju deploy ./bundle.yaml --overlay ./openstack-base-spaces-overlay.yaml
+    juju deploy ./bundle.yaml --overlay ./openstack-telemetry-spaces-overlay.yaml
 
 Otherwise, simply do:
 
@@ -117,7 +117,7 @@ can be finalised and the cloud used. See the following documentation for unlock 
 
 Confirm that you can access your cloud from the command line:
 
-    source ~/openstack-base/openrc
+    source ~/openstack-telemetry/openrc
     openstack service list
 
 You should get a listing of all registered cloud services.
@@ -263,7 +263,7 @@ Print the credentials in this way:
 
 If that does not work then source the `openrc` file and try again:
 
-    source ~/openstack-base/openrc
+    source ~/openstack-telemetry/openrc
 
 ## Scale the cloud
 
@@ -300,7 +300,7 @@ Configuring and managing services for an OpenStack cloud is complex. See the
 [hacluster-charm]: https://jaas.ai/hacluster
 [maas]: https://maas.io/
 [overlays]: https://github.com/openstack-charmers/openstack-bundles/tree/master/stable/overlays
-[spaces-overlay]: https://github.com/openstack-charmers/openstack-bundles/blob/master/stable/overlays/openstack-base-spaces-overlay.yaml
+[spaces-overlay]: https://github.com/openstack-charmers/openstack-bundles/blob/master/stable/overlays/openstack-telemetry-spaces-overlay.yaml
 [juju-and-maas]: https://jaas.ai/docs/maas-cloud
 [juju-constraints]: https://jaas.ai/docs/constraints#heading--setting-constraints-for-a-controller
 [juju-overlays]: https://jaas.ai/docs/charm-bundles#heading--overlay-bundles
