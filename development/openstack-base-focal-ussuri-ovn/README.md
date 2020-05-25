@@ -12,7 +12,7 @@ For example, a section similar to this exists in the bundle.yaml file.  The thir
 
 ```
 variables:
-  openstack-origin:    &openstack-origin     distro
+  openstack-origin:    &openstack-origin     distro-proposed
   data-port:           &data-port            br-ex:eno2
   worker-multiplier:   &worker-multiplier    0.25
   osd-devices:         &osd-devices          /dev/sdb /dev/vdb
