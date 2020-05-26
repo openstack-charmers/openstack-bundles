@@ -1,2 +1,3 @@
 juju-deployer
 flake8
+pyaml
