@@ -1,13 +1,14 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import optparse
-import yaml
-import urllib3
 import os
 import sys
+import urllib3
+
+from ruamel.yaml import YAML
 
 
-API_URL = "https://api.jujucharms.com/v4/xenial/{}/meta/id-revision"
+API_URL = "https://api.jujucharms.com/v4/{}/meta/id-revision"
 
 if __name__ == "__main__":
     usage = 'usage: %prog [options] bundle.yaml'
@@ -27,12 +28,23 @@ if __name__ == "__main__":
         sys.exit(1)
 
     with open(bundle) as data_file:
+        # use ruamel round-trip-mode YAML parsing for human readable result
+        # and preservation of YAML variables
+        yaml = YAML(typ='rt')
         data = yaml.load(data_file)
 
     http = urllib3.PoolManager()
 
-    for service in data['services']:
-        charm = data['services'][service]['charm']
+    for k in ('applications', 'services'):
+        if k in data:
+            app_key = k
+            break
+    else:
+        raise RuntimeError('unable to determine key for applications in '
+                           'bundle, is this a valid bundle?')
+
+    for app in data[app_key]:
+        charm = data[app_key][app]['charm']
         # Remove any version
         charm = charm.rstrip('-0123456789')
         charm = charm.split('/')[-1]
@@ -41,10 +53,10 @@ if __name__ == "__main__":
         url = API_URL.format(charm)
         revision = http.request('GET', url)
         if revision.status == 200:
-           revision = yaml.load(revision.data)['Revision']
-           data['services'][service]['charm'] = "cs:{}-{}".format(charm, revision)
+            revision = yaml.load(revision.data)['Revision']
+            data[app_key][app]['charm'] = "cs:{}-{}".format(charm, revision)
     if opts.in_place:
         with open(bundle, 'w') as bundle_file:
-            bundle_file.write(yaml.dump(data, default_flow_style=False))
+            yaml.dump(data, bundle_file)
     else:
-        print(yaml.dump(data, default_flow_style=False))
+        yaml.dump(data, sys.stdout)
