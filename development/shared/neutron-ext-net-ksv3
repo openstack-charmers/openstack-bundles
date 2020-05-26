@@ -37,7 +37,7 @@ if __name__ == '__main__':
                       dest="floating_range", action="store", default=None)
     parser.add_option("--network-type",
                       help="Network type.",
-                      dest="network_type", action="store", default='gre')
+                      dest="network_type", action="store", default=None)
     parser.add_option(
         "--physical-network",
         help="Physical network if network type is 'vlan' or 'flat'.",
@@ -92,21 +92,27 @@ if __name__ == '__main__':
                 'name': net_name,
                 'router:external': True,
                 'tenant_id': project_id,
-                'provider:network_type': opts.network_type,
             }
         }
 
         if opts.network_type == 'vxlan':
             network_msg['network']['provider:segmentation_id'] = 1234
+            network_msg['network']['provider:network_type'] = opts.network_type
         elif opts.network_type == 'vlan':
             network_msg['network']['provider:segmentation_id'] = opts.vlan_id
             network_msg['network']['provider:physical_network'] = \
                 opts.physical_network
+            network_msg['network']['provider:network_type'] = opts.network_type
         elif opts.network_type == 'flat':
             network_msg['network']['provider:physical_network'] = \
                 opts.physical_network
+            network_msg['network']['provider:network_type'] = opts.network_type
         else:
-            network_msg['network']['provider:segmentation_id'] = 2
+            if opts.network_type:
+                network_msg['network'][
+                    'provider:network_type'] = opts.network_type
+                network_msg['network']['provider:segmentation_id'] = 2
+            # If no network type specified let neutron determine defaults
 
         logging.info('Creating new external network definition: %s', net_name)
         network = quantum.create_network(network_msg)['network']
