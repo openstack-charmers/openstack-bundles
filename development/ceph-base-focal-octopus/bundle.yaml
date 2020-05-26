@@ -20,9 +20,9 @@ services:
       expected-osd-count: 3
       source: distro
     to:
-    - 'lxd:0'
-    - 'lxd:1'
-    - 'lxd:2'
+    - lxd:0
+    - lxd:1
+    - lxd:2
   ceph-osd:
     annotations:
       gui-x: '1000'
