@@ -1,9 +1,6 @@
 variables:
   public-space:        &public-space         public-space
 applications:
-  neutron-gateway:
-    bindings:
-      "": *public-space
   ceph-mon:
     bindings:
       "": *public-space
@@ -19,10 +16,13 @@ applications:
   keystone:
     bindings:
       "": *public-space
-  mysql:
+  mysql-innodb-cluster:
     bindings:
       "": *public-space
   neutron-api:
+    bindings:
+      "": *public-space
+  placement:
     bindings:
       "": *public-space
   nova-cloud-controller:
@@ -35,6 +35,12 @@ applications:
     bindings:
       "": *public-space
   rabbitmq-server:
+    bindings:
+      "": *public-space
+  ovn-central:
+    bindings:
+      "": *public-space
+  vault:
     bindings:
       "": *public-space
   ntp:

@@ -4,7 +4,7 @@
 
 ## Requirements
 
-This example bundle is designed to run on bare metal using Juju 2.x with [MAAS][] (Metal-as-a-Service); you will need to have setup a [MAAS][] deployment with a minimum of 4 physical servers prior to using this bundle.
+This example bundle is designed to run on bare metal using Juju 2.x with [MAAS][] (Metal-as-a-Service); you will need to have setup a [MAAS][] deployment with a minimum of 3 physical servers prior to using this bundle.
 
 Certain configuration options within the bundle may need to be adjusted prior to deployment to fit your particular set of hardware. For example, network device names and block device names can vary, and passwords should be yours.
 
@@ -63,11 +63,14 @@ To horizontally scale Ceph:
     juju add-unit ceph-osd # Add one more unit
     juju add-unit -n50 ceph-osd # add 50 more units
 
-**Note:** Ceph can be scaled alongside Nova Compute by adding units using the --to option:
+> **Note**: Ceph can be scaled alongside Nova Compute by adding units using the
+  --to option:
 
     juju add-unit --to <machine-id-of-compute-service> ceph-osd
 
-**Note:** Other services in this bundle can be scaled in-conjunction with the hacluster charm to produce scalable, highly avaliable services - that will be covered in a different bundle.
+> **Note**: Other services in this bundle can be scaled in-conjunction with the
+  hacluster charm to produce scalable, highly available services - that will be
+  covered in a different bundle.
 
 ## Ensuring it's working
 
@@ -80,6 +83,15 @@ All commands are executed from within the expanded bundle.
 In order to configure and use your cloud, you'll need to install the appropriate client tools:
 
     sudo snap install openstackclients
+
+### Unseal Vault
+
+This release uses vault to provide certificates to supported services. This
+allows secure communications between the end user and the cloud services, as
+well as securing communication between the services in the cloud. Vault needs
+to be unsealed before the configuration can be finalised and the cloud used.
+Please refer to the  [Vault Appendix][vault-cdg] in the
+[OpenStack Charms Deployment Guide][cdg] for details.
 
 ### Accessing the cloud
 
@@ -100,7 +112,8 @@ In order to run instances on your cloud, you'll need to upload an image to boot 
 
 Images for other architectures can be obtained from [Ubuntu Cloud Images][].  Be sure to use the appropriate image for the cpu architecture.
 
-**Note:** for ARM 64-bit (arm64) guests, you will also need to configure the image to boot in UEFI mode:
+> **Note**: for ARM 64-bit (arm64) guests, you will also need to configure the
+  image to boot in UEFI mode:
 
     curl http://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-arm64.img | \
         openstack image create --public --container-format=bare \
@@ -151,14 +164,16 @@ Starting with the OpenStack Newton release, default flavors are no longer create
 
 ### Booting an instance
 
-First generate a SSH keypair so that you can access your instances once you've booted them:
+First generate an SSH keypair so that you can access your instances once you've
+booted them:
 
     mkdir -p ~/.ssh
     touch ~/.ssh/id_rsa_cloud
     chmod 600 ~/.ssh/id_rsa_cloud
     openstack keypair create mykey > ~/.ssh/id_rsa_cloud
 
-**Note:** you can also upload an existing public key to the cloud rather than generating a new one:
+> **Note**: you can also upload an existing public key to the cloud rather than
+  generating a new one:
 
     openstack keypair create --public-key ~/.ssh/id_rsa.pub mykey
 
@@ -212,16 +227,27 @@ After running these commands you should be able to access the instance:
 
     ssh ubuntu@$FIP
 
+### Logging in to the OpenStack Dashboard
+
+First determine the IP address of the OpenStack Dashboard:
+
+    juju status openstack-dashboard
+
+Type in the following URL in your web browser: https://DASHBOARD-IP/horizon/
+
+To print your credentials:
+
+    source openrc
+    env | grep OS_
+
 ## What next?
 
 Configuring and managing services on an OpenStack cloud is complex; take a look a the [OpenStack Admin Guide][] for a complete reference on how to configure an OpenStack cloud for your requirements.
-
-## Useful Cloud URLs
-
- - OpenStack Dashboard: http://openstack-dashboard_ip/horizon
 
 [MAAS]: http://maas.ubuntu.com/docs
 [Simplestreams]: https://launchpad.net/simplestreams
 [OpenStack Neutron]: http://docs.openstack.org/admin-guide-cloud/content/ch_networking.html
 [OpenStack Admin Guide]: http://docs.openstack.org/user-guide-admin/content
 [Ubuntu Cloud Images]: http://cloud-images.ubuntu.com/focal/current/
+[cdg]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/ussuri/
+[vault-cdg]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/ussuri/app-vault.html
