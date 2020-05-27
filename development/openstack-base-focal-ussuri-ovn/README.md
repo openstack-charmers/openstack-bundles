@@ -63,11 +63,14 @@ To horizontally scale Ceph:
     juju add-unit ceph-osd # Add one more unit
     juju add-unit -n50 ceph-osd # add 50 more units
 
-**Note:** Ceph can be scaled alongside Nova Compute by adding units using the --to option:
+> **Note**: Ceph can be scaled alongside Nova Compute by adding units using the
+  --to option:
 
     juju add-unit --to <machine-id-of-compute-service> ceph-osd
 
-**Note:** Other services in this bundle can be scaled in-conjunction with the hacluster charm to produce scalable, highly avaliable services - that will be covered in a different bundle.
+> **Note**: Other services in this bundle can be scaled in-conjunction with the
+  hacluster charm to produce scalable, highly avaliable services - that will be
+  covered in a different bundle.
 
 ## Ensuring it's working
 
@@ -100,7 +103,8 @@ In order to run instances on your cloud, you'll need to upload an image to boot 
 
 Images for other architectures can be obtained from [Ubuntu Cloud Images][].  Be sure to use the appropriate image for the cpu architecture.
 
-**Note:** for ARM 64-bit (arm64) guests, you will also need to configure the image to boot in UEFI mode:
+> **Note**: for ARM 64-bit (arm64) guests, you will also need to configure the
+  image to boot in UEFI mode:
 
     curl http://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-arm64.img | \
         openstack image create --public --container-format=bare \
@@ -158,7 +162,8 @@ First generate a SSH keypair so that you can access your instances once you've b
     chmod 600 ~/.ssh/id_rsa_cloud
     openstack keypair create mykey > ~/.ssh/id_rsa_cloud
 
-**Note:** you can also upload an existing public key to the cloud rather than generating a new one:
+> **Note**: you can also upload an existing public key to the cloud rather than
+  generating a new one:
 
     openstack keypair create --public-key ~/.ssh/id_rsa.pub mykey
 
