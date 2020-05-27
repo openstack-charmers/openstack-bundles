@@ -69,7 +69,7 @@ To horizontally scale Ceph:
     juju add-unit --to <machine-id-of-compute-service> ceph-osd
 
 > **Note**: Other services in this bundle can be scaled in-conjunction with the
-  hacluster charm to produce scalable, highly avaliable services - that will be
+  hacluster charm to produce scalable, highly available services - that will be
   covered in a different bundle.
 
 ## Ensuring it's working
@@ -155,7 +155,8 @@ Starting with the OpenStack Newton release, default flavors are no longer create
 
 ### Booting an instance
 
-First generate a SSH keypair so that you can access your instances once you've booted them:
+First generate an SSH keypair so that you can access your instances once you've
+booted them:
 
     mkdir -p ~/.ssh
     touch ~/.ssh/id_rsa_cloud
@@ -217,13 +218,22 @@ After running these commands you should be able to access the instance:
 
     ssh ubuntu@$FIP
 
+### Logging in to the OpenStack Dashboard
+
+First determine the IP address of the OpenStack Dashboard:
+
+    juju status openstack-dashboard
+
+Type in the following URL in your web browser: https://DASHBOARD-IP/horizon/
+
+To print your credentials:
+
+    source openrc
+    env | grep OS_
+
 ## What next?
 
 Configuring and managing services on an OpenStack cloud is complex; take a look a the [OpenStack Admin Guide][] for a complete reference on how to configure an OpenStack cloud for your requirements.
-
-## Useful Cloud URLs
-
- - OpenStack Dashboard: http://openstack-dashboard_ip/horizon
 
 [MAAS]: http://maas.ubuntu.com/docs
 [Simplestreams]: https://launchpad.net/simplestreams
