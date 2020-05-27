@@ -4,7 +4,7 @@
 
 ## Requirements
 
-This example bundle is designed to run on bare metal using Juju 2.x with [MAAS][] (Metal-as-a-Service); you will need to have setup a [MAAS][] deployment with a minimum of 4 physical servers prior to using this bundle.
+This example bundle is designed to run on bare metal using Juju 2.x with [MAAS][] (Metal-as-a-Service); you will need to have setup a [MAAS][] deployment with a minimum of 3 physical servers prior to using this bundle.
 
 Certain configuration options within the bundle may need to be adjusted prior to deployment to fit your particular set of hardware. For example, network device names and block device names can vary, and passwords should be yours.
 
@@ -83,6 +83,15 @@ All commands are executed from within the expanded bundle.
 In order to configure and use your cloud, you'll need to install the appropriate client tools:
 
     sudo snap install openstackclients
+
+### Unseal Vault
+
+This release uses vault to provide certificates to supported services. This
+allows secure communications between the end user and the cloud services, as
+well as securing communication between the services in the cloud. Vault needs
+to be unsealed before the configuration can be finalised and the cloud used.
+Please refer to the  [Vault Appendix][vault-cdg] in the
+[OpenStack Charms Deployment Guide][cdg] for details.
 
 ### Accessing the cloud
 
@@ -240,3 +249,5 @@ Configuring and managing services on an OpenStack cloud is complex; take a look 
 [OpenStack Neutron]: http://docs.openstack.org/admin-guide-cloud/content/ch_networking.html
 [OpenStack Admin Guide]: http://docs.openstack.org/user-guide-admin/content
 [Ubuntu Cloud Images]: http://cloud-images.ubuntu.com/focal/current/
+[cdg]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/ussuri/
+[vault-cdg]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/ussuri/app-vault.html
