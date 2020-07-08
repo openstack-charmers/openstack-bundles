@@ -104,8 +104,16 @@ relations:
   - neutron-hacluster:ha
 - - mysql:ha
   - mysql-hacluster:ha
+- - nova-cloud-controller:memcache
+  - memcached:cache
 series: bionic
 services:
+  memcached:
+    series: bionic
+    charm: cs:~memcached-team/memcached
+    num_units: 1
+    to:
+    - 'lxd:0'
   ceph-mon:
     annotations:
       gui-x: '750'
