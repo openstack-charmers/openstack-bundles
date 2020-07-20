@@ -39,7 +39,7 @@ applications:
   masakari-monitors:
     charm: cs:~openstack-charmers-next/masakari-monitors
   hacluster:
-    charm: cs:hacluster
+    charm: cs:~openstack-charmers-next/hacluster
   pacemaker-remote:
     charm: cs:~openstack-charmers-next/pacemaker-remote
     options:
