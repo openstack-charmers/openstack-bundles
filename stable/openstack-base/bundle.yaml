@@ -132,6 +132,8 @@ relations:
   - openstack-dashboard:certificates
 - - vault:certificates
   - placement:certificates
+- - vault:certificates
+  - ceph-radosgw:certificates
 applications:
   ceph-mon:
     annotations:
@@ -164,7 +166,7 @@ applications:
     annotations:
       gui-x: '850'
       gui-y: '900'
-    charm: cs:ceph-radosgw-288
+    charm: cs:ceph-radosgw-289
     num_units: 1
     options:
       source: *openstack-origin

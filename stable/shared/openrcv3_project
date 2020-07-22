@@ -4,7 +4,12 @@ for param in $_OS_PARAMS; do
 done
 unset _OS_PARAMS
 
-_keystone_ip=$(juju run $_juju_model_arg --unit keystone/leader 'unit-get private-address')
+_keystone_vip=$(juju config $_juju_model_arg keystone vip)
+if [ -n "$_keystone_vip" ]; then
+    _keystone_ip=$(echo $_keystone_vip | awk '{print $1}')
+else
+    _keystone_ip=$(juju run $_juju_model_arg --unit keystone/leader -- 'network-get --bind-address public')
+fi
 _password=$(juju run $_juju_model_arg --unit keystone/leader 'leader-get admin_passwd')
 
 if [ -s $_root_ca ]; then
