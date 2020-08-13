@@ -132,6 +132,8 @@ relations:
   - openstack-dashboard:certificates
 - - vault:certificates
   - placement:certificates
+- - vault:certificates
+  - ceph-radosgw:certificates
 - - ceilometer-agent:ceilometer-service
   - ceilometer:ceilometer-service
 - - ceilometer:identity-notifications
