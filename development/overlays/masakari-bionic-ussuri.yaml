@@ -50,7 +50,7 @@ applications:
     series: bionic
     num_units: 3
     options:
-      openstack-origin: cloud:bionic-stein
+      openstack-origin: cloud:bionic-ussuri
     to:
     - 'lxd:1'
     - 'lxd:2'
