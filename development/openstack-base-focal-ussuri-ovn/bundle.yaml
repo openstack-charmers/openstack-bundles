@@ -135,6 +135,8 @@ relations:
   - placement:certificates
 - - vault:certificates
   - ceph-radosgw:certificates
+- - vault:certificates
+  - mysql-innodb-cluster:certificates
 applications:
   ceph-mon:
     annotations:
