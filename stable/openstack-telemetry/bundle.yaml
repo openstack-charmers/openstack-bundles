@@ -446,7 +446,6 @@ applications:
   gnocchi-mysql-router:
     charm: cs:mysql-router-3
   memcached:
-    series: bionic
     annotations:
       gui-x: '1500'
       gui-y: '500'
