@@ -78,7 +78,5 @@ relations:
   - glance-simplestreams-sync:identity-service
 - - glance-simplestreams-sync:certificates
   - vault:certificates
-- - rabbitmq-server:amqp
-  - glance-simplestreams-sync:amqp
 - - keystone:identity-credentials
   - octavia-diskimage-retrofit:identity-credentials
