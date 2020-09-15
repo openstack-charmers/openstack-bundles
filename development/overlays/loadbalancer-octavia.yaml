@@ -1,4 +1,7 @@
 # Loadbalancer (LBAASv2) with Octavia - requires Rocky or later
+#
+# WARNING: before using this overlay, make sure `openstack-origin` here and in
+# your deployment bundle match.
 ---
 applications:
   barbican:
