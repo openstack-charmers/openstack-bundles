@@ -7,6 +7,9 @@
 #  masakari:
 #    options:
 #      vip: <INSERT VIP(S)>
+#
+# WARNING: before using this overlay, make sure `openstack-origin` here and in
+# your deployment bundle match.
 ---
 machines:
   '0':
