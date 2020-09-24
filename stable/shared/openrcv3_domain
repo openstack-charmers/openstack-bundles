@@ -12,7 +12,7 @@ else
 fi
 _password=$(juju run $_juju_model_arg --unit keystone/leader 'leader-get admin_passwd')
 
-if [ -s $_root_ca ]; then
+if [ ! -z "$_root_ca" -a -s "$_root_ca" ]; then
     export OS_AUTH_PROTOCOL=https
     export OS_CACERT=${_root_ca}
 fi
