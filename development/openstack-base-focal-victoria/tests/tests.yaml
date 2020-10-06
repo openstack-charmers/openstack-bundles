@@ -1,0 +1,35 @@
+configure:
+ - zaza.openstack.charm_tests.vault.setup.auto_initialize_no_validation
+ - zaza.openstack.charm_tests.keystone.setup.add_demo_user
+ - zaza.openstack.charm_tests.nova.setup.create_flavors
+ - zaza.openstack.charm_tests.nova.setup.manage_ssh_key
+ - zaza.openstack.charm_tests.neutron.setup.basic_overcloud_network
+ - zaza.openstack.charm_tests.glance.setup.add_lts_image
+tests:
+  - zaza.openstack.charm_tests.nova.tests.LTSGuestCreateTest
+target_deploy_status:
+  neutron-api-plugin-ovn:
+    workload-status: waiting
+    workload-status-message: "'ovsdb-cms' incomplete"
+  ovn-central:
+    workload-status: blocked
+    workload-status-message: "'certificates' missing"
+  ovn-chassis:
+    workload-status: blocked
+    workload-status-message: "'certificates' missing"
+  vault:
+    workload-status: blocked
+    workload-status-message: Vault needs to be initialized
+  vault:
+    workload-status: blocked
+    workload-status-message: Vault needs to be initialized
+  ntp:
+    workload-status: active
+    workload-status-message: "chrony: Ready"
+gate_bundles:
+  - bundle
+smoke_bundles:
+  - bundle
+tests_options:
+  force_deploy:
+    - bundle
