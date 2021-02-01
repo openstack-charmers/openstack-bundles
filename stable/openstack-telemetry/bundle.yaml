@@ -168,6 +168,7 @@ relations:
   - ceilometer:metric-service
 - - gnocchi:identity-service
   - keystone:identity-service
+applications:
   aodh:
     annotations:
       gui-x: '1500'

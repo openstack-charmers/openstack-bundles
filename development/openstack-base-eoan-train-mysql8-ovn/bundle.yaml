@@ -242,7 +242,7 @@ applications:
     charm: cs:~openstack-charmers-next/mysql-router
   placement:
     annotations:
-      gui-x: '-250'
+      gui-x: '0'
       gui-y: '500'
     charm: cs:~openstack-charmers-next/eoan/placement
     num_units: 1

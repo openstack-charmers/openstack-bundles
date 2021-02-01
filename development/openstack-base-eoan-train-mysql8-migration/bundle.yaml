@@ -218,7 +218,7 @@ applications:
     - 'lxd:1'
   placement:
     annotations:
-      gui-x: '-250'
+      gui-x: '0'
       gui-y: '500'
     charm: cs:~openstack-charmers-next/eoan/placement
     num_units: 1
