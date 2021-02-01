@@ -1,0 +1,60 @@
+# Masakari
+# Please customise and add the following options:
+#  hacluster:
+#    options:
+#      maas_url: <INSERT MAAS URL>
+#      maas_credentials: <INSERT MAAS API KEY>
+#  masakari:
+#    options:
+#      vip: <INSERT VIP(S)>
+#
+# WARNING: before using this overlay, make sure `openstack-origin` here and in
+# your deployment bundle match.
+---
+machines:
+  '0':
+    series: bionic
+  '1':
+    series: bionic
+  '2':
+    series: bionic
+  '3':
+    series: bionic
+relations:
+- - nova-compute:juju-info
+  - masakari-monitors:container
+- - masakari:ha
+  - hacluster:ha
+- - keystone:identity-credentials
+  - masakari-monitors:identity-credentials
+- - nova-compute:juju-info
+  - pacemaker-remote:juju-info
+- - hacluster:pacemaker-remote
+  - pacemaker-remote:pacemaker-remote
+- - masakari:identity-service
+  - keystone:identity-service
+- - masakari:shared-db
+  - mysql:shared-db
+- - masakari:amqp
+  - rabbitmq-server:amqp
+series: bionic
+applications:
+  masakari-monitors:
+    charm: cs:~openstack-charmers-next/masakari-monitors
+  hacluster:
+    charm: cs:~openstack-charmers-next/hacluster
+  pacemaker-remote:
+    charm: cs:~openstack-charmers-next/pacemaker-remote
+    options:
+      enable-stonith: True
+      enable-resources: False
+  masakari:
+    charm: cs:~openstack-charmers-next/masakari
+    series: bionic
+    num_units: 3
+    options:
+      openstack-origin: cloud:bionic-ussuri
+    to:
+    - 'lxd:1'
+    - 'lxd:2'
+    - 'lxd:3'

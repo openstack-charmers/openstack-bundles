@@ -1,30 +1,29 @@
-# Loadbalancer (LBAASv2) with Octavia - requires Rocky or later
 ---
 applications:
+  barbican-mysql-router:
+    charm: cs:mysql-router
   barbican:
     charm: cs:barbican
     num_units: 1
     options:
-      openstack-origin: cloud:bionic-stein
+      openstack-origin: distro
     to:
     - lxd:1
   barbican-vault:
     charm: cs:barbican-vault
+  octavia-ovn-chassis:
+    charm: cs:ovn-chassis
+  octavia-mysql-router:
+    charm: cs:mysql-router
   octavia:
-    series: bionic
     charm: cs:octavia
     num_units: 1
     options:
-      openstack-origin: cloud:bionic-stein
+      openstack-origin: distro
     to:
     - lxd:2
   octavia-dashboard:
     charm: cs:octavia-dashboard
-  vault:
-    charm: cs:vault
-    num_units: 1
-    to:
-    - lxd:3
   glance-simplestreams-sync:
     charm: cs:glance-simplestreams-sync
     num_units: 1
@@ -36,14 +35,19 @@ applications:
     charm: cs:octavia-diskimage-retrofit
     options:
       amp-image-tag: 'octavia-amphora'
-      retrofit-uca-pocket: stein
 relations:
-- - mysql:shared-db
+- - octavia-mysql-router:db-router
+  - mysql-innodb-cluster:db-router
+- - octavia-mysql-router:shared-db
   - octavia:shared-db
-- - mysql:shared-db
+- - octavia:certificates
+  - vault:certificates
+- - barbican-mysql-router:db-router
+  - mysql-innodb-cluster:db-router
+- - barbican-mysql-router:shared-db
   - barbican:shared-db
-- - mysql:shared-db
-  - vault:shared-db
+- - barbican:certificates
+  - vault:certificates
 - - keystone:identity-service
   - octavia:identity-service
 - - keystone:identity-service
@@ -54,8 +58,14 @@ relations:
   - barbican:amqp
 - - neutron-api:neutron-load-balancer
   - octavia:neutron-api
-- - neutron-openvswitch:neutron-plugin
-  - octavia:neutron-openvswitch
+- - octavia-ovn-chassis:ovsdb-subordinate
+  - octavia:ovsdb-subordinate
+- - octavia-ovn-chassis:certificates
+  - vault:certificates
+- - octavia-ovn-chassis:ovsdb
+  - ovn-central:ovsdb
+- - octavia:ovsdb-cms
+  - ovn-central:ovsdb-cms
 - - openstack-dashboard:dashboard-plugin
   - octavia-dashboard:dashboard
 - - barbican-vault:secrets
@@ -66,7 +76,7 @@ relations:
   - octavia-diskimage-retrofit:juju-info
 - - keystone:identity-service
   - glance-simplestreams-sync:identity-service
-- - rabbitmq-server:amqp
-  - glance-simplestreams-sync:amqp
+- - glance-simplestreams-sync:certificates
+  - vault:certificates
 - - keystone:identity-credentials
   - octavia-diskimage-retrofit:identity-credentials

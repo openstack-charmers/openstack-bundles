@@ -1,0 +1,6 @@
+series: trusty
+
+applications:
+  ubuntu-lite:
+    charm: cs:~chris.macnaughton/test-ubuntu
+    num_units: 3
