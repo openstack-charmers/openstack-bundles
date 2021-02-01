@@ -384,15 +384,9 @@ relations:
     - lxd:1
   rabbitmq-server:
     annotations:
-<<<<<<< HEAD
-      gui-x: '-250'
-      gui-y: '500'
-    charm: cs:placement-4
-=======
       gui-x: '300'
       gui-y: '1550'
     charm: cs:rabbitmq-server-106
->>>>>>> master
     num_units: 1
     to:
     - lxd:2
