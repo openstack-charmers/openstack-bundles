@@ -1,0 +1,333 @@
+variables:
+  openstack-origin:    &openstack-origin     cloud:bionic-ussuri
+  data-port:           &data-port            br-ex:eno2
+  worker-multiplier:   &worker-multiplier    0.25
+  osd-devices:         &osd-devices          /dev/sdb /dev/vdb
+  expected-osd-count:  &expected-osd-count   3
+  expected-mon-count:  &expected-mon-count   3
+  mysql-connections:   &mysql-connections    1000
+machines:
+  '0':
+    series: bionic
+  '1':
+    series: bionic
+  '2':
+    series: bionic
+  '3':
+    series: bionic
+relations:
+- - nova-compute:amqp
+  - rabbitmq-server:amqp
+- - neutron-gateway:amqp
+  - rabbitmq-server:amqp
+- - keystone:shared-db
+  - mysql:shared-db
+- - nova-cloud-controller:identity-service
+  - keystone:identity-service
+- - glance:identity-service
+  - keystone:identity-service
+- - neutron-api:identity-service
+  - keystone:identity-service
+- - neutron-openvswitch:neutron-plugin-api
+  - neutron-api:neutron-plugin-api
+- - neutron-api:shared-db
+  - mysql:shared-db
+- - neutron-api:amqp
+  - rabbitmq-server:amqp
+- - neutron-gateway:neutron-plugin-api
+  - neutron-api:neutron-plugin-api
+- - glance:shared-db
+  - mysql:shared-db
+- - glance:amqp
+  - rabbitmq-server:amqp
+- - nova-cloud-controller:image-service
+  - glance:image-service
+- - nova-compute:image-service
+  - glance:image-service
+- - nova-cloud-controller:cloud-compute
+  - nova-compute:cloud-compute
+- - nova-cloud-controller:amqp
+  - rabbitmq-server:amqp
+- - nova-cloud-controller:quantum-network-service
+  - neutron-gateway:quantum-network-service
+- - nova-compute:neutron-plugin
+  - neutron-openvswitch:neutron-plugin
+- - neutron-openvswitch:amqp
+  - rabbitmq-server:amqp
+- - nova-cloud-controller:shared-db
+  - mysql:shared-db
+- - nova-cloud-controller:neutron-api
+  - neutron-api:neutron-api
+- - cinder:image-service
+  - glance:image-service
+- - cinder:amqp
+  - rabbitmq-server:amqp
+- - cinder:identity-service
+  - keystone:identity-service
+- - cinder:cinder-volume-service
+  - nova-cloud-controller:cinder-volume-service
+- - cinder-ceph:storage-backend
+  - cinder:storage-backend
+- - ceph-mon:client
+  - nova-compute:ceph
+- - nova-compute:ceph-access
+  - cinder-ceph:ceph-access
+- - cinder:shared-db
+  - mysql:shared-db
+- - ceph-mon:client
+  - cinder-ceph:ceph
+- - ceph-mon:client
+  - glance:ceph
+- - ceph-osd:mon
+  - ceph-mon:osd
+- - ntp:juju-info
+  - nova-compute:juju-info
+- - ntp:juju-info
+  - neutron-gateway:juju-info
+- - placement
+  - mysql
+- - placement
+  - keystone
+- - placement
+  - nova-cloud-controller
+- - placement:ha
+  - placement-hacluster:ha
+- - keystone:ha
+  - keystone-hacluster:ha
+- - nova-cloud-controller:ha
+  - nova-cc-hacluster:ha
+- - cinder:ha
+  - cinder-hacluster:ha
+- - glance:ha
+  - glance-hacluster:ha
+- - neutron-api:ha
+  - neutron-hacluster:ha
+- - mysql:ha
+  - mysql-hacluster:ha
+- - nova-cloud-controller:memcache
+  - memcached:cache
+series: bionic
+services:
+  memcached:
+    series: bionic
+    charm: cs:~memcached-team/memcached
+    num_units: 1
+    to:
+    - 'lxd:0'
+  ceph-mon:
+    annotations:
+      gui-x: '750'
+      gui-y: '500'
+    charm: cs:~openstack-charmers-next/ceph-mon
+    num_units: 3
+    options:
+      expected-osd-count: *expected-osd-count
+      monitor-count: *expected-mon-count
+      source: *openstack-origin
+    to:
+    - 'lxd:1'
+    - 'lxd:2'
+    - 'lxd:3'
+  ceph-osd:
+    annotations:
+      gui-x: '1000'
+      gui-y: '500'
+    charm: cs:~openstack-charmers-next/ceph-osd
+    num_units: 3
+    options:
+      osd-devices: *osd-devices
+      source: *openstack-origin
+    to:
+    - '1'
+    - '2'
+    - '3'
+  cinder:
+    annotations:
+      gui-x: '750'
+      gui-y: '0'
+    charm: cs:~openstack-charmers-next/cinder
+    num_units: 3
+    options:
+      worker-multiplier: *worker-multiplier
+      openstack-origin: *openstack-origin
+      block-device: None
+      glance-api-version: 2
+    to:
+    - 'lxd:1'
+    - 'lxd:2'
+    - 'lxd:3'
+  cinder-ceph:
+    annotations:
+      gui-x: '750'
+      gui-y: '250'
+    charm: cs:~openstack-charmers-next/cinder-ceph
+    num_units: 0
+  cinder-hacluster:
+    charm: cs:~openstack-charmers-next/hacluster
+    options:
+      cluster_count: 3
+      corosync_transport: unicast
+  glance:
+    annotations:
+      gui-x: '250'
+      gui-y: '0'
+    charm: cs:~openstack-charmers-next/glance
+    num_units: 3
+    options:
+      openstack-origin: *openstack-origin
+      worker-multiplier: *worker-multiplier
+    to:
+    - 'lxd:1'
+    - 'lxd:2'
+    - 'lxd:3'
+  glance-hacluster:
+    charm: cs:~openstack-charmers-next/hacluster
+    options:
+      cluster_count: 3
+      corosync_transport: unicast
+  keystone:
+    annotations:
+      gui-x: '500'
+      gui-y: '0'
+    charm: cs:~openstack-charmers-next/keystone
+    num_units: 3
+    options:
+      openstack-origin: *openstack-origin
+      worker-multiplier: *worker-multiplier
+    to:
+    - 'lxd:1'
+    - 'lxd:2'
+    - 'lxd:3'
+  keystone-hacluster:
+    charm: cs:~openstack-charmers-next/hacluster
+    options:
+      cluster_count: 3
+      corosync_transport: unicast
+  mysql:
+    annotations:
+      gui-x: '0'
+      gui-y: '250'
+    charm: cs:~openstack-charmers-next/percona-cluster
+    num_units: 3
+    options:
+      max-connections: *mysql-connections
+      innodb-buffer-pool-size: 256M
+      min-cluster-size: 3
+    to:
+    - 'lxd:1'
+    - 'lxd:2'
+    - 'lxd:3'
+  mysql-hacluster:
+    charm: cs:~openstack-charmers-next/hacluster
+    options:
+      corosync_transport: unicast
+      cluster_count: 3
+  placement:
+    annotations:
+      gui-x: '0'
+      gui-y: '500'
+    charm: cs:~openstack-charmers-next/bionic/placement
+    num_units: 3
+    options:
+      worker-multiplier: *worker-multiplier
+      openstack-origin: *openstack-origin
+    to:
+    - 'lxd:1'
+    - 'lxd:2'
+    - 'lxd:3'
+  placement-hacluster:
+    charm: cs:~openstack-charmers-next/hacluster
+    options:
+      cluster_count: 3
+      corosync_transport: unicast
+  neutron-api:
+    annotations:
+      gui-x: '500'
+      gui-y: '500'
+    charm: cs:~openstack-charmers-next/neutron-api
+    num_units: 3
+    options:
+      manage-neutron-plugin-legacy-mode: true
+      openstack-origin: *openstack-origin
+      flat-network-providers: physnet1
+      neutron-security-groups: true
+      worker-multiplier: *worker-multiplier
+    to:
+    - 'lxd:1'
+    - 'lxd:2'
+    - 'lxd:3'
+  neutron-hacluster:
+    charm: cs:~openstack-charmers-next/hacluster
+    options:
+      cluster_count: 3
+      corosync_transport: unicast
+  neutron-gateway:
+    annotations:
+      gui-x: '0'
+      gui-y: '0'
+    charm: cs:~openstack-charmers-next/neutron-gateway
+    num_units: 1
+    options:
+      openstack-origin: *openstack-origin
+      bridge-mappings: physnet1:br-ex
+      data-port: *data-port
+      worker-multiplier: *worker-multiplier
+    to:
+    - '0'
+  neutron-openvswitch:
+    annotations:
+      gui-x: '250'
+      gui-y: '500'
+    charm: cs:~openstack-charmers-next/neutron-openvswitch
+    num_units: 0
+  nova-cloud-controller:
+    annotations:
+      gui-x: '0'
+      gui-y: '500'
+    charm: cs:~openstack-charmers-next/nova-cloud-controller
+    num_units: 3
+    options:
+      openstack-origin: *openstack-origin
+      network-manager: Neutron
+      worker-multiplier: *worker-multiplier
+    to:
+    - 'lxd:1'
+    - 'lxd:2'
+    - 'lxd:3'
+  nova-cc-hacluster:
+    charm: cs:~openstack-charmers-next/hacluster
+    options:
+      cluster_count: 3
+      corosync_transport: unicast
+  nova-compute:
+    annotations:
+      gui-x: '250'
+      gui-y: '250'
+    charm: cs:~openstack-charmers-next/nova-compute
+    num_units: 3
+    options:
+      config-flags: default_ephemeral_format=ext4
+      openstack-origin: *openstack-origin
+      enable-live-migration: true
+      enable-resize: true
+      migration-auth-type: ssh
+    to:
+    - '1'
+    - '2'
+    - '3'
+  ntp:
+    annotations:
+      gui-x: '1000'
+      gui-y: '0'
+    charm: cs:ntp
+    num_units: 0
+  rabbitmq-server:
+    annotations:
+      gui-x: '500'
+      gui-y: '250'
+    charm: cs:~openstack-charmers-next/rabbitmq-server
+    num_units: 1
+    options:
+      source: *openstack-origin
+    to:
+    - 'lxd:0'

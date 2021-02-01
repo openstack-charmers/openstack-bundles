@@ -5,8 +5,17 @@ _keystone_major_version=$(juju status $_juju_model_arg keystone --format yaml| \
     awk '/^    version:/ {print $2; exit}' | cut -f1 -d\.)
 _keystone_preferred_api_version=$(juju config $_juju_model_arg keystone preferred-api-version)
 
-_root_ca=/tmp/root-ca.crt
-juju run $_juju_model_arg --unit vault/leader 'leader-get root-ca' > /tmp/root-ca.crt 2>/dev/null
+# The per user snap data directory is not created until first execution of snap
+openstack --version 2>&1 > /dev/null || true
+
+if [ -d ~/snap/openstackclients/common/ ]; then
+  # When using the openstackclients confined snap the certificate has to be
+  # placed in a location reachable by the clients in the snap.
+  _root_ca=~/snap/openstackclients/common/root-ca.crt
+else
+  _root_ca=/tmp/root-ca.crt
+fi
+juju run $_juju_model_arg --unit vault/leader 'leader-get root-ca' > $_root_ca 2>/dev/null
 
 if [ $_keystone_major_version -ge 13 -o \
      "$_keystone_preferred_api_version" = '3' ]; then
