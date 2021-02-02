@@ -6,9 +6,9 @@
 
 variables:
   openstack-origin:    &openstack-origin     cloud:bionic-ussuri
-  data-port:           &data-port            to-be-set
+  data-port:           &data-port            br-ex:encc003
   worker-multiplier:   &worker-multiplier    0.25
-  osd-devices:         &osd-devices          /dev/sdb /dev/vdb
+  osd-devices:         &osd-devices          manual  # we're using actions to set this up
   expected-osd-count:  &expected-osd-count   3
   expected-mon-count:  &expected-mon-count   3
   mysql-connections:   &mysql-connections    1000

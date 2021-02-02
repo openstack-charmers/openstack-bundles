@@ -18,6 +18,7 @@ services:
     num_units: 3
     options:
       expected-osd-count: 3
+      monitor-count: 3
       source: distro
     to:
     - lxd:0
@@ -30,7 +31,8 @@ services:
     charm: cs:~openstack-charmers-next/ceph-osd
     num_units: 3
     options:
-      osd-devices: /dev/sdb
+      # we are using actions to set this up:
+      osd-devices: manual
       source: distro
     to:
     - '0'

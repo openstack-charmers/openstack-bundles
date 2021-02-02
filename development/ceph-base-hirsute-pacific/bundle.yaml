@@ -18,7 +18,8 @@ services:
     num_units: 3
     options:
       expected-osd-count: 3
-      source: distro
+      monitor-count: 3
+      source: distro-proposed  # LA_TEMP work around lp:1925347
     to:
     - lxd:0
     - lxd:1
@@ -30,8 +31,9 @@ services:
     charm: cs:~openstack-charmers-next/ceph-osd
     num_units: 3
     options:
-      osd-devices: /dev/sdb
-      source: distro
+      # we are using actions to set this up:
+      osd-devices: manual
+      source: distro-proposed  # LA_TEMP work around lp:1925347
     to:
     - '0'
     - '1'

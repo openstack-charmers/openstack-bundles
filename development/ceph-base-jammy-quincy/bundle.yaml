@@ -30,7 +30,8 @@ services:
     charm: cs:~openstack-charmers-next/ceph-osd
     num_units: 3
     options:
-      osd-devices: /dev/sdb
+      # we are using actions to set this up:
+      osd-devices: manual
       source: distro
     to:
     - '0'
