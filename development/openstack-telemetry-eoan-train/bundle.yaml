@@ -120,12 +120,12 @@ relations:
   - keystone:identity-service
 - - ceilometer:identity-credentials
   - keystone:identity-credentials
-- - placement
-  - mysql
-- - placement
-  - keystone
-- - placement
-  - nova-cloud-controller
+- - placement:shared-db
+  - mysql:shared-db
+- - placement:identity-service
+  - keystone:identity-service
+- - placement:placement
+  - nova-cloud-controller:placement
 series: eoan
 services:
   aodh:

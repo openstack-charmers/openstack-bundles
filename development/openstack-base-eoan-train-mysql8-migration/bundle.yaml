@@ -75,10 +75,10 @@ relations:
   - ceph-mon:radosgw
 - - ceph-radosgw:identity-service
   - keystone:identity-service
-- - placement
-  - keystone
-- - placement
-  - nova-cloud-controller
+- - placement:identity-service
+  - keystone:identity-service
+- - placement:placement
+  - nova-cloud-controller:placement
 - ["keystone:shared-db", "percona-cluster:shared-db"]
 - ["cinder:shared-db", "percona-cluster:shared-db"]
 - ["glance:shared-db", "percona-cluster:shared-db"]
