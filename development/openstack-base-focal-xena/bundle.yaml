@@ -10,15 +10,18 @@
 series: focal
 variables:
   openstack-origin: &openstack-origin cloud:focal-xena
-  data-port: &data-port null
+  data-port: &data-port br-ex:enP2p1s0f2
   worker-multiplier: &worker-multiplier 0.25
   osd-devices: &osd-devices /dev/sdb /dev/vdb
   expected-osd-count: &expected-osd-count 3
   expected-mon-count: &expected-mon-count 3
 machines:
   '0':
+    constraints: arch=arm64
   '1':
+    constraints: arch=arm64
   '2':
+    constraints: arch=arm64
 relations:
 - - nova-compute:amqp
   - rabbitmq-server:amqp
@@ -299,7 +302,7 @@ applications:
       enable-live-migration: true
       enable-resize: true
       migration-auth-type: ssh
-      openstack-origin: *openstack-origin
+      openstack-origin: ppa:corey.bryant/focal-xena  # LA_TEMP Workaround for lp:1947003
     to:
     - '0'
     - '1'
@@ -350,7 +353,7 @@ applications:
     charm: cs:~openstack-charmers-next/ovn-central
     num_units: 3
     options:
-      source: *openstack-origin
+      source: ppa:corey.bryant/focal-xena  # LA_TEMP Workaround for lp:1947003
     to:
     - lxd:0
     - lxd:1

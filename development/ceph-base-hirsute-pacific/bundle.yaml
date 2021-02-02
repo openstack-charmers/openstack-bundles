@@ -1,10 +1,13 @@
 machines:
   '0':
     series: hirsute
+    constraints: arch=arm64
   '1':
     series: hirsute
+    constraints: arch=arm64
   '2':
     series: hirsute
+    constraints: arch=arm64
 relations:
 - - ceph-osd:mon
   - ceph-mon:osd

@@ -1,10 +1,13 @@
 machines:
   '0':
     series: focal
+    constraints: arch=arm64
   '1':
     series: focal
+    constraints: arch=arm64
   '2':
     series: focal
+    constraints: arch=arm64
 relations:
 - - ceph-osd:mon
   - ceph-mon:osd
@@ -18,7 +21,7 @@ services:
     num_units: 3
     options:
       expected-osd-count: 3
-      source: distro
+      source: distro-proposed  # LA_TEMP for lp:1917414
     to:
     - lxd:0
     - lxd:1
@@ -31,7 +34,7 @@ services:
     num_units: 3
     options:
       osd-devices: /dev/sdb
-      source: distro
+      source: distro-proposed  # LA_TEMP for lp:1917414
     to:
     - '0'
     - '1'

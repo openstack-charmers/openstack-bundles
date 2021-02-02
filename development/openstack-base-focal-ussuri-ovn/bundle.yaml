@@ -10,8 +10,8 @@
 local_overlay_enabled: true
 series: focal
 variables:
-  openstack-origin: &openstack-origin distro
-  data-port: &data-port null
+  openstack-origin: &openstack-origin distro-proposed  # LA_TEMP for lp:1917414
+  data-port: &data-port br-ex:enP2p1s0f2
   worker-multiplier: &worker-multiplier 0.25
   osd-devices: &osd-devices /dev/sdb /dev/vdb
   expected-osd-count: &expected-osd-count 3
@@ -19,10 +19,13 @@ variables:
 machines:
   '0':
     series: focal
+    constraints: arch=arm64
   '1':
     series: focal
+    constraints: arch=arm64
   '2':
     series: focal
+    constraints: arch=arm64
 relations:
 - - nova-compute:amqp
   - rabbitmq-server:amqp
