@@ -27,6 +27,3 @@ gate_bundles:
   - bundle
 smoke_bundles:
   - bundle
-tests_options:
-  force_deploy:
-    - bundle
