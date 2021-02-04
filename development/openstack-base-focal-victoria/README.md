@@ -58,7 +58,7 @@ to be unsealed and equipped with a CA certificate before the configuration can
 be finalised and the cloud used. Failure to do so will leave the deployment
 with the following message (in `juju status`):
 
-    'certificates' missing, 'ovsdb' incomplete
+    'ovsdb-*' incomplete, 'certificates' awaiting server certificate data
 
 Refer to the [Vault][cdg-vault] and [Certificate lifecycle
 management][cdg-certs] sections of the [OpenStack Charms Deployment Guide][cdg]
