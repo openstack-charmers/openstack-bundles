@@ -4,4 +4,5 @@ gate_bundles:
   - bundle
 smoke_bundles: []
 tests:
-  - zaza.charm_tests.security.tests.FileOwnershipTest
+  - zaza.openstack.charm_tests.ceph.osd.tests.SecurityTest
+  - zaza.openstack.charm_tests.ceph.osd.tests.ServiceTest

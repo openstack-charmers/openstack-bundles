@@ -3,10 +3,17 @@ dev_bundles: []
 gate_bundles:
   - bundle
 smoke_bundles: []
-configure: []
+configure:
+  - zaza.openstack.charm_tests.glance.setup.add_lts_image
+  - zaza.openstack.charm_tests.keystone.setup.add_demo_user
 tests:
-  - zaza.charm_tests.security.tests.FileOwnershipTest
+  - zaza.openstack.charm_tests.keystone.tests.AuthenticationAuthorizationTest
+  - zaza.openstack.charm_tests.keystone.tests.SecurityTests
+  - zaza.openstack.charm_tests.policyd.tests.KeystoneTests
 target_deploy_status:
   ntp:
     workload-status: active
     workload-status-message: "chrony: Ready"
+tests_options:
+  policyd:
+    service: keystone
