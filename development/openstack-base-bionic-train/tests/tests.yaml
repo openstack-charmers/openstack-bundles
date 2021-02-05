@@ -6,3 +6,7 @@ smoke_bundles: []
 configure: []
 tests:
   - zaza.charm_tests.security.tests.FileOwnershipTest
+target_deploy_status:
+  ntp:
+    workload-status: active
+    workload-status-message: "chrony: Ready"
