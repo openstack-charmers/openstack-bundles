@@ -21,6 +21,9 @@ target_deploy_status:
   vault:
     workload-status: blocked
     workload-status-message: Vault needs to be initialized
+  ntp:
+    workload-status: active
+    workload-status-message: "chrony: Ready"
 gate_bundles:
   - bundle
 smoke_bundles:
