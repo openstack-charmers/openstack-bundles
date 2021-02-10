@@ -4,11 +4,8 @@ series: focal
 # *** Please refer to the OpenStack Charms Deployment Guide for more        ***
 # *** information.
 # *** https://docs.openstack.org/project-deploy-guide/charm-deployment-guide **
-# ***                                                                       ***
-# *** openstack-origin should be changed back to distro once this PPA is    ***
-# *** made redundant.                                                       ***
 variables:
-  openstack-origin: &openstack-origin distro-proposed
+  openstack-origin: &openstack-origin distro
   data-port: &data-port br-ex:eno2
   worker-multiplier: &worker-multiplier 0.25
   osd-devices: &osd-devices /dev/sdb /dev/vdb
@@ -136,6 +133,10 @@ relations:
   - openstack-dashboard:certificates
 - - vault:certificates
   - placement:certificates
+- - vault:certificates
+  - ceph-radosgw:certificates
+- - vault:certificates
+  - mysql-innodb-cluster:certificates
 applications:
   ceph-mon:
     annotations:

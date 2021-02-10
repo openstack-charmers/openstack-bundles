@@ -1,0 +1,88 @@
+---
+machines:
+  '0':
+    series: focal
+    constraints: cores=6 mem=8G
+  '1':
+    series: focal
+    constraints: cores=6 mem=8G
+  '2':
+    series: focal
+    constraints: cores=6 mem=8G
+  '3':
+    series: focal
+applications:
+  prometheus:
+    charm: 'cs:prometheus2-19'
+    num_units: 1
+    to:
+    - '3'
+  prometheus-ceph-exporter:
+    charm: 'cs:prometheus-ceph-exporter-8'
+    num_units: 1
+    to:
+    - lxd:1
+  prometheus-openstack-exporter:
+    charm: 'cs:prometheus-openstack-exporter-15'
+    num_units: 1
+    to:
+    - lxd:2
+  telegraf:
+    charm: 'cs:telegraf-38'
+    series: focal
+  grafana:
+    charm: 'cs:grafana-37'
+    num_units: 1
+    to:
+    - lxd:3
+relations:
+- - 'prometheus-ceph-exporter:ceph'
+  - 'ceph-mon:client'
+- - 'prometheus-ceph-exporter:ceph-exporter'
+  - 'prometheus:target'
+- - 'telegraf:juju-info'
+  - 'prometheus-openstack-exporter:juju-info'
+- - 'telegraf:juju-info'
+  - 'prometheus-ceph-exporter:juju-info'
+- - 'telegraf:dashboards'
+  - 'grafana:dashboards'
+- - 'telegraf:juju-info'
+  - 'grafana:juju-info'
+- - 'prometheus:grafana-source'
+  - 'grafana:grafana-source'
+- - 'telegraf:juju-info'
+  - 'ceph-mon:juju-info'
+- - 'telegraf:juju-info'
+  - 'ceph-radosgw:juju-info'
+- - 'telegraf:juju-info'
+  - 'cinder:juju-info'
+- - 'telegraf:juju-info'
+  - 'glance:juju-info'
+- - 'telegraf:juju-info'
+  - 'keystone:juju-info'
+- - 'telegraf:juju-info'
+  - 'mysql-innodb-cluster:juju-info'
+- - 'telegraf:juju-info'
+  - 'neutron-api:juju-info'
+- - 'telegraf:juju-info'
+  - 'nova-cloud-controller:juju-info'
+- - 'telegraf:juju-info'
+  - 'nova-compute:juju-info'
+- - 'telegraf:juju-info'
+  - 'openstack-dashboard:juju-info'
+- - 'telegraf:juju-info'
+  - 'ovn-central:juju-info'
+- - 'telegraf:juju-info'
+  - 'placement:juju-info'
+- - 'telegraf:juju-info'
+  - 'rabbitmq-server:juju-info'
+- - 'telegraf:amqp'
+  - 'rabbitmq-server:amqp'
+- - 'telegraf:prometheus-client'
+  - 'prometheus:target'
+- - 'telegraf:juju-info'
+  - 'vault:juju-info'
+- - 'prometheus-openstack-exporter:identity-credentials'
+  - 'keystone:identity-credentials'
+- - 'prometheus-openstack-exporter:prometheus-openstack-exporter-service'
+  - 'prometheus:target'

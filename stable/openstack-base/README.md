@@ -12,7 +12,7 @@ For example, a section similar to this exists in the bundle.yaml file.  The thir
 
 ```
 variables:
-  openstack-origin:    &openstack-origin     distro-proposed
+  openstack-origin:    &openstack-origin     distro
   data-port:           &data-port            br-ex:eno2
   worker-multiplier:   &worker-multiplier    0.25
   osd-devices:         &osd-devices          /dev/sdb /dev/vdb
@@ -49,6 +49,22 @@ usage:
 
     juju deploy bundle.yaml --overlay openstack-base-spaces-overlay.yaml
 
+### Issue certificates
+
+This release uses Vault to provide certificates to supported services. This
+allows secure communications between the end user and the cloud services, as
+well as securing communication between the services in the cloud. Vault needs
+to be unsealed and equipped with a CA certificate before the configuration can
+be finalised and the cloud used. Failure to do so will leave the deployment
+with the following message (in `juju status`):
+
+    'ovsdb-*' incomplete, 'certificates' awaiting server certificate data
+
+Refer to the [Vault][cdg-vault] and [Certificate lifecycle
+management][cdg-certs] sections of the [OpenStack Charms Deployment Guide][cdg]
+for details. Example steps are provided in the [OpenStack high
+availability][cdg-ha-ovn] guide.
+
 ## Scaling
 
 Nova Compute and Ceph services are designed to be horizontally scalable.
@@ -84,13 +100,16 @@ In order to configure and use your cloud, you'll need to install the appropriate
 
     sudo snap install openstackclients
 
-### Unseal Vault
+### Issue certificates to deployment
 
 This release uses vault to provide certificates to supported services. This
 allows secure communications between the end user and the cloud services, as
 well as securing communication between the services in the cloud. Vault needs
-to be unsealed before the configuration can be finalised and the cloud used.
-Please refer to the  [Vault Appendix][vault-cdg] in the
+to be unsealed and equipped with a CA certificate before the configuration can
+be finalised and the cloud used.
+
+Please refer to the  [Vault][vault-cdg] and
+[Certificate Lifecycle Management][cert-cdg] appendices in the
 [OpenStack Charms Deployment Guide][cdg] for details.
 
 ### Accessing the cloud
@@ -250,4 +269,6 @@ Configuring and managing services on an OpenStack cloud is complex; take a look 
 [OpenStack Admin Guide]: http://docs.openstack.org/user-guide-admin/content
 [Ubuntu Cloud Images]: http://cloud-images.ubuntu.com/focal/current/
 [cdg]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/ussuri/
-[vault-cdg]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/ussuri/app-vault.html
+[cdg-certs]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/ussuri/app-certificate-management.html
+[cdg-vault]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/ussuri/app-vault.html
+[cdg-ha-ovn]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/ussuri/app-ha.html#deployment
