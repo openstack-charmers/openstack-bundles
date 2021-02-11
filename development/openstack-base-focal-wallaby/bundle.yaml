@@ -5,7 +5,7 @@ series: focal
 # *** information.
 # *** https://docs.openstack.org/project-deploy-guide/charm-deployment-guide **
 variables:
-  openstack-origin: &openstack-origin cloud:focal-victoria
+  openstack-origin: &openstack-origin cloud:focal-wallaby
   data-port: &data-port br-ex:eno2
   worker-multiplier: &worker-multiplier 0.25
   osd-devices: &osd-devices /dev/sdb /dev/vdb
@@ -137,69 +137,7 @@ relations:
   - ceph-radosgw:certificates
 - - vault:certificates
   - mysql-innodb-cluster:certificates
-- - ceilometer-agent:ceilometer-service
-  - ceilometer:ceilometer-service
-- - ceilometer:identity-notifications
-  - keystone:identity-notifications
-- - ceilometer:identity-credentials
-  - keystone:identity-credentials
-- - ceilometer-agent:nova-ceilometer
-  - nova-compute:nova-ceilometer
-- - ceilometer-agent:amqp
-  - rabbitmq-server:amqp
-- - ceilometer:amqp
-  - rabbitmq-server:amqp
-- - aodh-mysql-router:db-router
-  - mysql-innodb-cluster:db-router
-- - aodh:shared-db
-  - aodh-mysql-router:shared-db
-- - aodh:identity-service
-  - keystone:identity-service
-- - aodh:amqp
-  - rabbitmq-server:amqp
-- - gnocchi:storage-ceph
-  - ceph-mon:client
-- - gnocchi-mysql-router:db-router
-  - mysql-innodb-cluster:db-router
-- - gnocchi:shared-db
-  - gnocchi-mysql-router:shared-db
-- - gnocchi:amqp
-  - rabbitmq-server:amqp
-- - gnocchi:coordinator-memcached
-  - memcached:cache
-- - gnocchi:metric-service
-  - ceilometer:metric-service
-- - gnocchi:identity-service
-  - keystone:identity-service
 applications:
-  aodh:
-    annotations:
-      gui-x: '1500'
-      gui-y: '0'
-    charm: cs:~openstack-charmers-next/aodh
-    num_units: 1
-    options:
-      openstack-origin: *openstack-origin
-    to:
-    - lxd:0
-  aodh-mysql-router:
-    charm: cs:~openstack-charmers-next/mysql-router
-  ceilometer:
-    annotations:
-      gui-x: '1250'
-      gui-y: '0'
-    charm: cs:~openstack-charmers-next/ceilometer
-    num_units: 1
-    options:
-      openstack-origin: *openstack-origin
-    to:
-    - lxd:2
-  ceilometer-agent:
-    annotations:
-      gui-x: '1250'
-      gui-y: '500'
-    charm: cs:~openstack-charmers-next/ceilometer-agent
-    num_units: 0
   ceph-mon:
     annotations:
       gui-x: '790'
@@ -440,24 +378,3 @@ applications:
     num_units: 1
     to:
     - lxd:0
-  gnocchi:
-    annotations:
-      gui-x: '1500'
-      gui-y: '250'
-    num_units: 1
-    charm: cs:~openstack-charmers-next/gnocchi
-    options:
-      openstack-origin: *openstack-origin
-    to:
-    - lxd:1
-  gnocchi-mysql-router:
-    charm: cs:~openstack-charmers-next/mysql-router
-  memcached:
-    series: bionic
-    annotations:
-      gui-x: '1500'
-      gui-y: '500'
-    num_units: 1
-    charm: cs:memcached
-    to:
-    - lxd:2
