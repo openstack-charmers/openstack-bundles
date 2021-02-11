@@ -100,18 +100,6 @@ In order to configure and use your cloud, you'll need to install the appropriate
 
     sudo snap install openstackclients
 
-### Issue certificates to deployment
-
-This release uses vault to provide certificates to supported services. This
-allows secure communications between the end user and the cloud services, as
-well as securing communication between the services in the cloud. Vault needs
-to be unsealed and equipped with a CA certificate before the configuration can
-be finalised and the cloud used.
-
-Please refer to the  [Vault][vault-cdg] and
-[Certificate Lifecycle Management][cert-cdg] appendices in the
-[OpenStack Charms Deployment Guide][cdg] for details.
-
 ### Accessing the cloud
 
 Check that you can access your cloud from the command line:
@@ -261,14 +249,15 @@ To print your credentials:
 
 ## What next?
 
-Configuring and managing services on an OpenStack cloud is complex; take a look a the [OpenStack Admin Guide][] for a complete reference on how to configure an OpenStack cloud for your requirements.
+Configuring and managing services on an OpenStack cloud is complex; take a look
+at the [OpenStack Admin Guide][] for a complete reference on how to configure an OpenStack cloud for your requirements.
 
 [MAAS]: http://maas.ubuntu.com/docs
 [Simplestreams]: https://launchpad.net/simplestreams
 [OpenStack Neutron]: http://docs.openstack.org/admin-guide-cloud/content/ch_networking.html
 [OpenStack Admin Guide]: http://docs.openstack.org/user-guide-admin/content
 [Ubuntu Cloud Images]: http://cloud-images.ubuntu.com/focal/current/
-[cdg]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/ussuri/
-[cdg-certs]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/ussuri/app-certificate-management.html
-[cdg-vault]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/ussuri/app-vault.html
-[cdg-ha-ovn]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/ussuri/app-ha.html#deployment
+[cdg]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/victoria/
+[cdg-certs]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/victoria/app-certificate-management.html
+[cdg-vault]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/victoria/app-vault.html
+[cdg-ha-ovn]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/victoria/app-ha.html#deployment

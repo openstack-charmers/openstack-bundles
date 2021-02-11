@@ -249,7 +249,8 @@ To print your credentials:
 
 ## What next?
 
-Configuring and managing services on an OpenStack cloud is complex; take a look a the [OpenStack Admin Guide][] for a complete reference on how to configure an OpenStack cloud for your requirements.
+Configuring and managing services on an OpenStack cloud is complex; take a look
+at the [OpenStack Admin Guide][] for a complete reference on how to configure an OpenStack cloud for your requirements.
 
 [MAAS]: http://maas.ubuntu.com/docs
 [Simplestreams]: https://launchpad.net/simplestreams
@@ -259,4 +260,4 @@ Configuring and managing services on an OpenStack cloud is complex; take a look 
 [cdg]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/ussuri/
 [cdg-certs]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/ussuri/app-certificate-management.html
 [cdg-vault]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/ussuri/app-vault.html
-[cdg-ha-ovn]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/app-ha.html#deployment
+[cdg-ha-ovn]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/ussuri/app-ha.html#deployment
