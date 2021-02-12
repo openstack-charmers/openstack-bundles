@@ -1,20 +1,20 @@
 machines:
   '0':
-    series: focal
+    series: groovy
   '1':
-    series: focal
+    series: groovy
   '2':
-    series: focal
+    series: groovy
 relations:
 - - ceph-osd:mon
   - ceph-mon:osd
-series: focal
+series: groovy
 services:
   ceph-mon:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: cs:ceph-mon-53
+    charm: cs:~openstack-charmers-next/ceph-mon
     num_units: 3
     options:
       expected-osd-count: 3
@@ -27,7 +27,7 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '500'
-    charm: cs:ceph-osd-308
+    charm: cs:~openstack-charmers-next/ceph-osd
     num_units: 3
     options:
       osd-devices: /dev/sdb

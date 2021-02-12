@@ -5,7 +5,7 @@ series: focal
 # *** information.
 # *** https://docs.openstack.org/project-deploy-guide/charm-deployment-guide **
 variables:
-  openstack-origin: &openstack-origin cloud:focal-victoria
+  openstack-origin: &openstack-origin cloud:focal-wallaby
   data-port: &data-port br-ex:eno2
   worker-multiplier: &worker-multiplier 0.25
   osd-devices: &osd-devices /dev/sdb /dev/vdb

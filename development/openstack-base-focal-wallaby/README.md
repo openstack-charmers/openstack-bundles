@@ -1,6 +1,6 @@
 # Basic OpenStack Cloud
 
-*DEV/TEST ONLY*: This unstable, development example bundle deploys a basic OpenStack Cloud (Ussuri with Ceph Octopus) on Ubuntu 20.04 LTS (Focal), providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.  See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
+*DEV/TEST ONLY*: This unstable, development example bundle deploys a basic OpenStack Cloud (Wallaby with Ceph Octopus) on Ubuntu 20.04 LTS (Focal), providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.  See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
 
 ## Requirements
 
@@ -249,15 +249,14 @@ To print your credentials:
 
 ## What next?
 
-Configuring and managing services on an OpenStack cloud is complex; take a look
-at the [OpenStack Admin Guide][] for a complete reference on how to configure an OpenStack cloud for your requirements.
+Configuring and managing services on an OpenStack cloud is complex; take a look a the [OpenStack Admin Guide][] for a complete reference on how to configure an OpenStack cloud for your requirements.
 
 [MAAS]: http://maas.ubuntu.com/docs
 [Simplestreams]: https://launchpad.net/simplestreams
 [OpenStack Neutron]: http://docs.openstack.org/admin-guide-cloud/content/ch_networking.html
 [OpenStack Admin Guide]: http://docs.openstack.org/user-guide-admin/content
 [Ubuntu Cloud Images]: http://cloud-images.ubuntu.com/focal/current/
-[cdg]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/ussuri/
-[cdg-certs]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/ussuri/app-certificate-management.html
-[cdg-vault]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/ussuri/app-vault.html
-[cdg-ha-ovn]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/ussuri/app-ha.html#deployment
+[cdg]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/wallaby/
+[cdg-certs]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/wallaby/app-certificate-management.html
+[cdg-vault]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/wallaby/app-vault.html
+[cdg-ha-ovn]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/app-ha.html#deployment
