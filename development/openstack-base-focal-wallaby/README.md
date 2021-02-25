@@ -247,6 +247,11 @@ To print your credentials:
     source openrc
     env | grep OS_
 
+Enable a remote access protocol such as `novnc` (or `spice`) if you want to
+connect to VM consoles from within the dashboard:
+
+    juju config nova-cloud-controller console-access-protocol=novnc
+
 ## What next?
 
 Configuring and managing services on an OpenStack cloud is complex; take a look a the [OpenStack Admin Guide][] for a complete reference on how to configure an OpenStack cloud for your requirements.
