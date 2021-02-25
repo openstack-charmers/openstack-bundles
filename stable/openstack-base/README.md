@@ -1,6 +1,6 @@
 # Basic OpenStack Cloud
 
-This bundle deploys a basic OpenStack Cloud (Ussuri with Ceph Octopus) on Ubuntu 20.04 LTS (Focal), providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.  See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
+This bundle deploys a basic OpenStack Cloud (Victoria with Ceph Octopus) on Ubuntu 20.04 LTS (Focal), providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.  See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
 
 ## Requirements
 
@@ -246,6 +246,11 @@ To print your credentials:
 
     source openrc
     env | grep OS_
+
+Enable a remote access protocol such as `novnc` (or `spice`) if you want to
+connect to VM consoles from within the dashboard:
+
+    juju config nova-cloud-controller console-access-protocol=novnc
 
 ## What next?
 
