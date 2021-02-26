@@ -15,7 +15,7 @@ if [ -d ~/snap/openstackclients/common/ ]; then
 else
   _root_ca=/tmp/root-ca.crt
 fi
-juju run $_juju_model_arg --unit vault/leader 'leader-get root-ca' > $_root_ca 2>/dev/null
+juju run $_juju_model_arg --unit vault/leader 'leader-get root-ca' | tee $_root_ca >/dev/null 2>&1
 
 if [ $_keystone_major_version -ge 13 -o \
      "$_keystone_preferred_api_version" = '3' ]; then
