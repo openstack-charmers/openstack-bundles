@@ -1,9 +1,7 @@
----
-local_overlay_enabled: true
+# Please refer to the OpenStack Charms Deployment Guide for more information.
+# https://docs.openstack.org/project-deploy-guide/charm-deployment-guide
+
 series: focal
-# *** Please refer to the OpenStack Charms Deployment Guide for more        ***
-# *** information.
-# *** https://docs.openstack.org/project-deploy-guide/charm-deployment-guide **
 variables:
   openstack-origin: &openstack-origin cloud:focal-wallaby
   data-port: &data-port br-ex:eno2
@@ -13,11 +11,8 @@ variables:
   expected-mon-count: &expected-mon-count 3
 machines:
   '0':
-    series: focal
   '1':
-    series: focal
   '2':
-    series: focal
 relations:
 - - nova-compute:amqp
   - rabbitmq-server:amqp
@@ -69,10 +64,10 @@ relations:
   - ceph-mon:radosgw
 - - ceph-radosgw:identity-service
   - keystone:identity-service
-- - placement
-  - keystone
-- - placement
-  - nova-cloud-controller
+- - placement:identity-service
+  - keystone:identity-service
+- - placement:placement
+  - nova-cloud-controller:placement
 - - keystone:shared-db
   - keystone-mysql-router:shared-db
 - - cinder:shared-db
@@ -359,9 +354,9 @@ applications:
       gui-x: '120'
       gui-y: '1030'
     charm: cs:~openstack-charmers-next/ovn-chassis
-    # *** Please update the `bridge-interface-mappings` to values suitable ***
-    # *** for thehardware used in your deployment.  See the referenced     ***
-    # *** documentation at the top of this file.                           ***
+    # Please update the `bridge-interface-mappings` to values suitable for the
+    # hardware used in your deployment. See the referenced documentation at the
+    # top of this file.
     options:
       ovn-bridge-mappings: physnet1:br-ex
       bridge-interface-mappings: *data-port

@@ -254,7 +254,9 @@ connect to VM consoles from within the dashboard:
 
 ## What next?
 
-Configuring and managing services on an OpenStack cloud is complex; take a look a the [OpenStack Admin Guide][] for a complete reference on how to configure an OpenStack cloud for your requirements.
+Configuring and managing services for an OpenStack cloud is complex. See the
+[OpenStack Admin Guide][] for a complete reference on how to configure an
+OpenStack cloud for your requirements.
 
 [MAAS]: http://maas.ubuntu.com/docs
 [Simplestreams]: https://launchpad.net/simplestreams
