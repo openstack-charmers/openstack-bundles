@@ -1,6 +1,6 @@
 # Basic Ceph Cluster
 
-*DEV/TEST ONLY*: This unstable, development example bundle deploys a Ceph (Octopus) cluster on Ubuntu 20.10. See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
+*DEV/TEST ONLY*: This unstable, development example bundle deploys a Ceph (Pacific) cluster on Ubuntu 21.04. See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
 
 ## Requirements
 
