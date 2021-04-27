@@ -1,0 +1,130 @@
+variables:
+  public-space:        &public-space         public
+  internal-space:        &internal-space         internal
+  admin-space:        &admin-space         admin
+applications:
+  ceph-mon:
+    bindings:
+      "": *public-space
+  ceph-osd:
+    bindings:
+      "": *public-space
+  ceph-radosgw:
+    bindings:
+      "": *public-space
+  cinder:
+    bindings:
+      "": *public-space
+      public: public
+      internal: internal
+      admin: admin
+      shared-db: internal
+  glance:
+    bindings:
+      "": *public-space
+      public: public
+      internal: internal
+      admin: admin
+      shared-db: internal
+  keystone:
+    bindings:
+      "": *public-space
+      public: public
+      internal: internal
+      admin: admin
+      shared-db: internal
+  mysql-innodb-cluster:
+    bindings:
+      "": *public-space
+      db-router: internal
+      cluster: internal
+  neutron-api:
+    bindings:
+      "": *public-space
+      public: public
+      internal: internal
+      admin: admin
+      shared-db: internal
+  placement:
+    bindings:
+      "": *public-space
+      public: public
+      internal: internal
+      admin: admin
+      shared-db: internal
+  nova-cloud-controller:
+    bindings:
+      "": *public-space
+      public: public
+      internal: internal
+      admin: admin
+      shared-db: internal
+  nova-compute:
+    bindings:
+      "": *public-space
+      internal: internal
+      migration: admin
+  openstack-dashboard:
+    bindings:
+      "": *public-space
+      shared-db: internal
+  rabbitmq-server:
+    bindings:
+      "": *public-space
+  ovn-central:
+    bindings:
+      "": *public-space
+      ovsdb: internal
+      ovsdb-peer: admin
+  ovn-chassis:
+    bindings:
+      "": *public-space
+      data: internal
+  vault:
+    bindings:
+      "": *public-space
+      shared-db: internal
+  ntp:
+    bindings:
+      "": *public-space
+
+
+  cinder-mysql-router:
+    bindings:
+      "": *public-space
+      db-router: internal
+
+  glance-mysql-router:
+    bindings:
+      "": *public-space
+      db-router: internal
+
+  keystone-mysql-router:
+    bindings:
+      "": *public-space
+      db-router: internal
+
+  neutron-mysql-router:
+    bindings:
+      "": *public-space
+      db-router: internal
+
+  placement-mysql-router:
+    bindings:
+      "": *public-space
+      db-router: internal
+
+  nova-mysql-router:
+    bindings:
+      "": *public-space
+      db-router: internal
+
+  dashboard-mysql-router:
+    bindings:
+      "": *public-space
+      db-router: internal
+
+  vault-mysql-router:
+    bindings:
+      "": *public-space
+      db-router: internal
