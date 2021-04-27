@@ -1,18 +1,18 @@
 # OpenStack Converged Networking
 
-*DEV/TEST ONLY*: This unstable, development example bundle extends the basic OpenStack Cloud bundle with Telemetry collection via Ceilometer. See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
+*DEV/TEST ONLY*: This unstable, development example bundle is used to test and demonstrate a baremetal deployment of OpenStack on [MAAS][] using a single network card for the host.
 
-Certain configuration options within the bundle may need to be adjusted prior to deployment to fit your particular set of hardware. For example, network device names and block device names can vary, and passwords should be yours.
-
-For full details on the base cloud deployment please refer to the [Basic OpenStack Cloud][] bundle.
+The converged networking "superbond" concept is a single interface on a physical host that is used for the host's communication, OpenVSwitch's communication and bridges for LXD container communication. Previously it was necessary to dedicate an entire physical interface to OpenVSwitch therefore requiring multiple interfaces on the physical host. OVS would completely own the physical interface thus eliminating it for use in any other purpose. The converged networking solution uses a single physical interface for all communication traffic managed by OpenVSwitch.
 
 ## Requirements
 
-This example bundle is designed to run on bare metal using Juju 2.x with [MAAS][] (Metal-as-a-Service); you will need to have setup a [MAAS][] deployment with a minimum of 3 physical servers prior to using this bundle.
+This example bundle is designed to run on bare metal using Juju >=2.9 with [MAAS][] (Metal-as-a-Service) >=2.9; you will need to have setup a [MAAS][] deployment with a minimum of 3 physical servers prior to using this bundle.
 
-Certain configuration options within the bundle may need to be adjusted prior to deployment to fit your particular set of hardware. For example, network device names and block device names can vary, and passwords should be yours.
+Converged networking is accomplished by configuring the networking for the physical host in [MAAS][] to use Openvswitch for its bridge set up [MAAS Docs](https://maas.io/docs/deb/2.9/ui/networking). The physical interface for the bridge may be a bond. Any number of VLANs may be added to the bridge to accommodate network spaces.
 
-For example, a section similar to this exists in the bundle.yaml file.  The third "column" are the values to set.  Some servers may not have bond0, they may have something like eth2 or some other network device name.  This needs to be adjusted prior to deployment.  The same principle holds for osd-devices.  The third column is a whitelist of devices to use for Ceph OSDs.  Adjust accordingly by editing bundle.yaml before deployment.
+The key configuration item in the bundle is `data-port`. This must match what has been configured in [MAAS][] for the physical host. Both the bridge name (using the OpenVSwitch type), br-ex, and the bond name, bond0.
+
+Spaces configuration is also significant. The names of spaces must match what is configured in [MAAS][]
 
 ```
 variables:
@@ -30,12 +30,6 @@ variables:
   internal-space:        &internal-space         internal
   admin-space:        &admin-space         admin
 ```
-
-# Configuration
-
-The key configuration item is data-port. This must match what has been configured in MAAS for the physical host. Both the bridge name (using the OpenVSwitch type), br-ex, and the bond name, bond0.
-
-The spaces configuration is also significant if the spaces defined have different names in the deployed MAAS.
 
 # Usage
 
