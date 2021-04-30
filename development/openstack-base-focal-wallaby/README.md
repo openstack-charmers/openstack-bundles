@@ -288,7 +288,7 @@ You only need to perform this step once.
 
 Create a Focal amd64 instance called 'focal-1':
 
-    openstack server create --image focal-amd64 --flavor m1.tiny \
+    openstack server create --image focal-amd64 --flavor m1.small \
        --key-name mykey --network int_net \
         focal-1
 
