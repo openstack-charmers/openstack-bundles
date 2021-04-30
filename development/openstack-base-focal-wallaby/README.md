@@ -19,27 +19,29 @@ Identity, Image, and Dashboard.
 ## Requirements
 
 The bundle is primarily designed to work with [MAAS][maas] as a backing cloud
-for Juju. The MAAS cluster must already be deployed with at least three
-(ideally identical) physical servers as nodes, where each has the following
-minimum resources:
+for Juju.
 
-* 8 GiB memory
-* Enough CPU cores to support your workload
-* Two disks
-* Two cabled network interfaces
+The MAAS cluster must have a minimum of four nodes:
 
-The first disk is used for the node's operating system, and the second is for
-Ceph storage.
+* one for the Juju controller, with at least 1 CPU and 4 GiB memory
 
-The first network interface is used for communication between cloud services
-(East/West traffic), and the second is for network traffic between the cloud
-and all external networks (North/South traffic).
+* three (ideally identical) for the actual cloud, with minimum resources
+  being:
 
-> **Important**: The three MAAS nodes are needed for the actual OpenStack
-  cloud; they do not include the Juju controller. You actually need a minimum
-  of four nodes. The controller node however can be a smaller system (1 CPU and
-  4 GiB memory). Juju [constraints][juju-constraints-controller] can be used to
-  target this smaller system at controller-creation time.
+    * 8 GiB memory
+    * enough CPU cores to support your workload
+    * two disks
+    * two cabled network interfaces
+
+  The first disk is used for the node's operating system, and the second is for
+  Ceph storage.
+  
+  The first network interface is used for communication between cloud services
+  (East/West traffic), and the second is for network traffic between the cloud
+  and all external networks (North/South traffic).
+
+> **Note**: The smaller controller node can be targeted via Juju
+  [constraints][juju-constraints-controller] at controller-creation time.
 
 ## Topology
 
@@ -68,7 +70,7 @@ and all external networks (North/South traffic).
 If not already done, clone the [openstack-bundles][openstack-bundles]
 repository:
 
-    git clone https://github.com/openstack-charmers/openstack-bundles ~/openstack-bundles
+    git clone https://github.com/openstack-charmers/openstack-bundles
 
 The stable and development bundles are found under the `stable/openstack-base`
 and `development` directories respectively.
@@ -79,7 +81,7 @@ documentation on [overlay bundles][juju-overlays].
 ## Modify the bundle
 
 If using the stable openstack-base bundle, the file to modify is
-`~/openstack-bundles/stable/openstack-base/bundle.yaml`.
+`./stable/openstack-base/bundle.yaml`.
 
 > **Tip**: Keep the master branch of the repository pristine and create a
   working branch to contain your modifications.
@@ -250,9 +252,9 @@ See the [Neutron documentation][openstack-neutron] for more information.
 ## Create a flavor
 
 Create at least one flavor to define a hardware profile for new instances. Here
-we create one called 'm1.tiny':
+we create one called 'm1.small':
 
-    openstack flavor create --ram 1024 --disk 10 --ephemeral 10 m1.tiny
+    openstack flavor create --ram 2048 --disk 20 --ephemeral 20 m1.small
 
 Make sure that your MAAS nodes can accommodate the flavor's resources.
 
@@ -314,29 +316,23 @@ To access the dashboard (Horizon) first obtain its IP address:
 
     juju status --format=yaml openstack-dashboard | grep public-address | awk '{print $2}' | head -1
 
+In this example, the address is '10.0.0.30'.
+
 The password can be queried from Keystone:
 
     juju run --unit keystone/leader leader-get admin_passwd
 
-In this example, the address is '10.5.0.30' and the password is
-'eifah8Ixie3Aegee'.
-
 The dashboard URL then becomes:
 
-**http://10.5.0.30/horizon**
+**http://10.0.0.30/horizon**
 
 The final credentials needed to log in are:
 
 <!-- There are two spaces at the end of the next two lines -->
 
 User Name: **admin**  
-Password: **eifah8Ixie3Aegee**  
+Password: ********************  
 Domain: **admin_domain**
-
-> **Tip**: To access the dashboard from your desktop you may need SSH local
-  port forwarding. Example: ``sudo ssh -L 8001:10.5.0.30:80 <user>@<host>``,
-  where &lt;host&gt; can contact 10.5.0.30 on port 80 (probably where the Juju
-  client is installed). Then go to http://localhost:8001/horizon.
 
 ### VM consoles
 
