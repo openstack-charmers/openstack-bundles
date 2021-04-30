@@ -1,269 +1,371 @@
-# Basic OpenStack Cloud
+# Basic OpenStack cloud
 
-*DEV/TEST ONLY*: This unstable, development example bundle deploys a basic OpenStack Cloud (Wallaby with Ceph Octopus) on Ubuntu 20.04 LTS (Focal), providing Dashboard, Compute, Network, Block Storage, Object Storage, Identity and Image services.  See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
+**TESTING ONLY - This is a development bundle.** See the `stable` directory for
+the stable bundles.
+
+This `openstack-base` bundle deploys a base OpenStack cloud. Its major elements
+include:
+
+* Ubuntu 20.04 LTS (Focal)
+* OpenStack Wallaby
+* Ceph Octopus
+
+Cloud services consist of Compute, Network, Block Storage, Object Storage,
+Identity, Image, and Dashboard.
+
+> **Note**: Modifications will typically need to be made to this bundle for it
+  to work in your environment.
 
 ## Requirements
 
-This example bundle is designed to run on bare metal using Juju 2.x with [MAAS][] (Metal-as-a-Service); you will need to have setup a [MAAS][] deployment with a minimum of 3 physical servers prior to using this bundle.
+The bundle is primarily designed to work with [MAAS][maas] as a backing cloud
+for Juju. The MAAS cluster must already be deployed with at least three
+(ideally identical) physical servers as nodes, where each has the following
+minimum resources:
 
-Certain configuration options within the bundle may need to be adjusted prior to deployment to fit your particular set of hardware. For example, network device names and block device names can vary, and passwords should be yours.
+* 8 GiB memory
+* Enough CPU cores to support your workload
+* Two disks
+* Two cabled network interfaces
 
-For example, a section similar to this exists in the bundle.yaml file.  The third "column" are the values to set.  Some servers may not have eno2, they may have something like eth2 or some other network device name.  This needs to be adjusted prior to deployment.  The same principle holds for osd-devices.  The third column is a whitelist of devices to use for Ceph OSDs.  Adjust accordingly by editing bundle.yaml before deployment.
+The first disk is used for the node's operating system, and the second is for
+Ceph storage.
 
-```
-variables:
-  openstack-origin:    &openstack-origin     distro
-  data-port:           &data-port            br-ex:eno2
-  worker-multiplier:   &worker-multiplier    0.25
-  osd-devices:         &osd-devices          /dev/sdb /dev/vdb
-```
+The first network interface is used for communication between cloud services
+(East/West traffic), and the second is for network traffic between the cloud
+and all external networks (North/South traffic).
 
-Servers should have:
+> **Important**: The three MAAS nodes are needed for the actual OpenStack
+  cloud; they do not include the Juju controller. You actually need a minimum
+  of four nodes. The controller node however can be a smaller system (1 CPU and
+  4 GiB memory). Juju [constraints][juju-constraints-controller] can be used to
+  target this smaller system at controller-creation time.
 
- - A minimum of 8GB of physical RAM.
- - Enough CPU cores to support your capacity requirements.
- - Two disks (identified by /dev/sda and /dev/sdb); the first is used by MAAS for the OS install, the second for Ceph storage.
- - Two cabled network ports on eno1 and eno2 (see below).
+## Topology
 
-Servers should have two physical network ports cabled; the first is used for general communication between services in the Cloud, the second is used for 'public' network traffic to and from instances (North/South traffic) running within the Cloud.
+* 3 MAAS nodes, with each hosting one of the following:
+    * Ceph storage
+    * Nova Compute
+    * NTP
 
-## Components
+* LXD containers for the following (distributed among the 3 MAAS nodes):
+    * Ceph monitors (x3)
+    * Ceph RADOS Gateway
+    * Cinder
+    * Glance
+    * Horizon
+    * Keystone
+    * MySQL8 (x3)
+    * Neutron
+    * Nova Cloud Controller
+    * OVN (x3)
+    * Placement
+    * RabbitMQ
+    * Vault
 
- - 3 Nodes for Nova Compute and Ceph, with RabbitMQ, MySQL, Keystone, Glance, Neutron, OVN, Nova Cloud Controller, Ceph RADOS Gateway, Cinder and Horizon under LXC containers.
+## Download the bundle
 
-All physical servers (not LXC containers) will also have NTP installed and configured to keep time in sync.
+If not already done, clone the [openstack-bundles][openstack-bundles]
+repository:
 
-## Deployment
+    git clone https://github.com/openstack-charmers/openstack-bundles ~/openstack-bundles
 
-With a Juju controller bootstrapped on a MAAS cloud with no network spaces
-defined, a basic non-HA cloud can be deployed with the following command:
+The stable and development bundles are found under the `stable/openstack-base`
+and `development` directories respectively.
 
-    juju deploy bundle.yaml
+Overlay bundles are available under `stable/overlays`. See the Juju
+documentation on [overlay bundles][juju-overlays].
 
-When network spaces exist in the MAAS cluster, it is necessary to clarify
-and define the network space(s) to which the charm applications will deploy.
-This can be done with an overlay bundle.  An example overlay yaml file is
-provided, which most likely needs to be edited (before deployment) to
-represent the intended network spaces in the existing MAAS cluster.  Example
-usage:
+## Modify the bundle
 
-    juju deploy bundle.yaml --overlay openstack-base-spaces-overlay.yaml
+If using the stable openstack-base bundle, the file to modify is
+`~/openstack-bundles/stable/openstack-base/bundle.yaml`.
 
-### Issue certificates
+> **Tip**: Keep the master branch of the repository pristine and create a
+  working branch to contain your modifications.
 
-This release uses Vault to provide certificates to supported services. This
-allows secure communications between the end user and the cloud services, as
-well as securing communication between the services in the cloud. Vault needs
-to be unsealed and equipped with a CA certificate before the configuration can
-be finalised and the cloud used. Failure to do so will leave the deployment
-with the following message (in `juju status`):
+A `variables:` section is used for conveniently setting values in one place.
+The third column contains the actual values.
+
+    variables:
+      openstack-origin:    &openstack-origin     distro
+      data-port:           &data-port            br-ex:eno2
+      worker-multiplier:   &worker-multiplier    0.25
+      osd-devices:         &osd-devices          /dev/sdb /dev/vdb
+      expected-osd-count:  &expected-osd-count   3
+      expected-mon-count:  &expected-mon-count   3
+
+See the [Install OpenStack][cdg-install-openstack] page in the [OpenStack
+Charms Deployment Guide][cdg] for help on understanding the variables (the
+first column).
+
+### Network spaces
+
+If you're using MAAS and it contains network spaces you will need to bind them
+to the applications being deployed. One way of doing this is with the
+`openstack-base-spaces-overlay.yaml` overlay bundle. Like the main bundle file,
+it will likely require tailoring:
+
+    variables:
+      public-space:        &public-space         public-space
+
+See the Juju documentation on [network spaces][juju-spaces].
+
+### Containerless
+
+If you do not want to run containers you will need to undo the placement
+directives that point to containers. One way of doing this is with the
+`openstack-base-virt-overlay.yaml` overlay bundle.
+
+## MAAS cloud, Juju controller, and model
+
+Ensure that the MAAS cluster has been added to Juju as a cloud and that a Juju
+controller has been created for that cloud. See the Juju documentation for
+guidance: [Using MAAS with Juju][juju-and-maas].
+
+Assuming the controller is called 'maas-controller', create a model called,
+say, 'openstack' and give it the appropriate default series (e.g. focal):
+
+    juju add-model -c maas-controller --config default-series=focal openstack
+
+Now ensure that the new model is the current model:
+
+    juju switch maas-controller:openstack
+
+## Deploy the cloud
+
+To install OpenStack, if you're using the spaces overlay:
+
+    juju deploy ./bundle.yaml --overlay ./openstack-base-spaces-overlay.yaml
+
+Otherwise, simply do:
+
+    juju deploy ./bundle.yaml
+
+If you're using a custom overlay (to override elements in earlier bundles)
+simply append it to the command:
+
+    juju deploy ./bundle.yaml --overlay ./custom-overlay.yaml
+    juju deploy ./bundle.yaml --overlay ./openstack-base-spaces-overlay.yaml --overlay ./custom-overlay.yaml
+
+> **Note**: Here it is assumed, for the sake of brevity, that the YAML files
+  are in the current working directory.
+
+### Issue TLS certificates
+
+This bundle uses Vault to issue TLS certificates to services, and some
+post-deployment steps are needed in order for it to work. Failure to complete
+them, for example, will leave the OVN deployment with the following message (in
+`juju status`):
 
     'ovsdb-*' incomplete, 'certificates' awaiting server certificate data
 
-Refer to the [Vault][cdg-vault] and [Certificate lifecycle
-management][cdg-certs] sections of the [OpenStack Charms Deployment Guide][cdg]
-for details. Example steps are provided in the [OpenStack high
-availability][cdg-ha-ovn] guide.
+See to the [Vault charm README][vault-charm-post-deploy] for instructions.
 
-## Scaling
+## Install the OpenStack clients
 
-Nova Compute and Ceph services are designed to be horizontally scalable.
+You'll need the OpenStack clients in order to manage your cloud from the
+command line. Install them now:
 
-To horizontally scale Nova Compute:
+    sudo snap install openstackclients --classic
 
-    juju add-unit nova-compute # Add one more unit
-    juju add-unit -n5 nova-compute # Add 5 more units
+## Access the cloud
 
-To horizontally scale Ceph:
+Confirm that you can access the cloud from the command line:
 
-    juju add-unit ceph-osd # Add one more unit
-    juju add-unit -n50 ceph-osd # add 50 more units
+    source ~/openstack-bundles/stable/openstack-base/openrc
+    openstack service list
 
-> **Note**: Ceph can be scaled alongside Nova Compute by adding units using the
-  --to option:
+You should get a listing of all registered cloud services.
 
-    juju add-unit --to <machine-id-of-compute-service> ceph-osd
+## Import an image
 
-> **Note**: Other services in this bundle can be scaled in-conjunction with the
-  hacluster charm to produce scalable, highly available services - that will be
-  covered in a different bundle.
+You'll need to import an image into Glance in order to create instances.
 
-## Ensuring it's working
+First download a boot image, like Focal amd64:
 
-To ensure your cloud is functioning correctly, download this bundle and then run through the following sections.
+    curl http://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img
+       --output ~/cloud-images/focal-amd64.img
 
-All commands are executed from within the expanded bundle.
+Now import the image and call it 'focal-amd64':
 
-### Install OpenStack client tools
+    openstack image create --public --container-format bare \
+       --disk-format qcow2 --file ~/cloud-images/focal-amd64.img \
+       focal-amd64
 
-In order to configure and use your cloud, you'll need to install the appropriate client tools:
+Images for other Ubuntu releases and architectures can be obtained in a similar
+way.
 
-    sudo snap install openstackclients
+For the ARM 64-bit (arm64) architecture you will need to configure the image to
+boot in UEFI mode:
 
-### Accessing the cloud
+    curl http://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img
+       --output ~/cloud-images/focal-arm64.img
 
-Check that you can access your cloud from the command line:
+    openstack image create --public --container-format bare \
+       --disk-format qcow2 --property hw_firmware_type=uefi \
+       --file ~/cloud-images/focal-arm64.img \
+       focal-arm64
 
-    source openrc
-    openstack catalog list
+## Configure networking
 
-You should get a full listing of all services registered in the cloud which should include identity, compute, image and network.
+For the purposes of a quick test, we'll set up an external network and a
+shared router ('provider-router') that will be used by all tenants for public
+access to instances.
 
-### Configuring an image
+For an example private cloud, create a network ('ext_net'):
 
-In order to run instances on your cloud, you'll need to upload an image to boot instances:
+    openstack network create --external \
+       --provider-network-type flat --provider-physical-network physnet1 \
+       ext_net
 
-    curl https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img | \
-        openstack image create --public --container-format=bare \
-            --disk-format=qcow2 focal
+When creating the external subnet ('ext_subnet') the actual values used will
+depend on the environment that the second network interface (on all nodes) is
+connected to:
 
-Images for other architectures can be obtained from [Ubuntu Cloud Images][].  Be sure to use the appropriate image for the cpu architecture.
+    openstack subnet create --network ext_net --no-dhcp \
+       --gateway 10.0.0.1 --subnet-range 10.0.0.0/21 \
+       --allocation-pool start=10.0.0.10,end=10.0.0.200 \
+       ext_subnet
 
-> **Note**: for ARM 64-bit (arm64) guests, you will also need to configure the
-  image to boot in UEFI mode:
+> **Note**: For a public cloud the ports would be connected to a publicly
+  addressable part of the internet.
 
-    curl http://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-arm64.img | \
-        openstack image create --public --container-format=bare \
-            --disk-format=qcow2 --property hw_firmware_type=uefi focal
+We'll also need an internal network ('int_net'), subnet ('int_subnet'), and
+router ('provider-router'):
 
-### Configure networking
+    openstack network create int_net
 
-For the purposes of a quick test, we'll setup an 'external' network and shared
-router ('provider-router') which will be used by all tenants for public access
-to instances:
-
-for example (for a private cloud):
-
-    openstack network create --external --provider-network-type flat \
-        --provider-physical-network physnet1 ext_net
-
-    openstack subnet create --subnet-range 192.0.2.0/24 --no-dhcp \
-        --gateway 192.0.2.1 --network ext_net \
-        --allocation-pool start=192.0.2.10,end=192.0.2.254 ext
-
-You'll need to adapt the parameters for the network configuration that eno2 on
-all the servers is connected to; in a public cloud deployment these ports would
-be connected to a publicly addressable part of the Internet.
-
-We'll also need an 'internal' network for the admin user which instances are
-actually connected to:
-
-    openstack network create internal
-
-    openstack subnet create --network internal \
-        --subnet-range 198.51.100.0/24 \
-        --dns-nameserver 8.8.8.8 \
-        internal_subnet
+    openstack subnet create --network int_net --dns-nameserver 8.8.8.8 \
+       --gateway 192.168.0.1 --subnet-range 192.168.0/24 \
+       --allocation-pool start=192.168.0.10,end=192.168.0.200 \
+       int_subnet
 
     openstack router create provider-router
-
     openstack router set --external-gateway ext_net provider-router
+    openstack router add subnet provider-router int_subnet
 
-    openstack router add subnet provider-router internal_subnet
+See the [Neutron documentation][openstack-neutron] for more information.
 
-Neutron provides a wide range of configuration options; see the [OpenStack Neutron][] documentation for more details.
+## Create a flavor
 
-### Configuring a flavor
+Create at least one flavor to define a hardware profile for new instances. Here
+we create one called 'm1.tiny':
 
-Starting with the OpenStack Newton release, default flavors are no longer created at install time. You therefore need to create at least one machine type before you can boot an instance:
+    openstack flavor create --ram 1024 --disk 10 --ephemeral 10 m1.tiny
 
-    openstack flavor create --ram 2048 --disk 20 --ephemeral 20 m1.small
+Make sure that your MAAS nodes can accommodate the flavor's resources.
 
-### Booting an instance
+## Import an SSH keypair
 
-First generate an SSH keypair so that you can access your instances once you've
-booted them:
+An SSH keypair needs to be imported into the cloud in order to access your
+instances.
 
-    mkdir -p ~/.ssh
-    touch ~/.ssh/id_rsa_cloud
-    chmod 600 ~/.ssh/id_rsa_cloud
-    openstack keypair create mykey > ~/.ssh/id_rsa_cloud
+Generate one first if you do not yet have one. This command creates a
+passphraseless keypair (remove the `-N` option to avoid that):
 
-> **Note**: you can also upload an existing public key to the cloud rather than
-  generating a new one:
+    ssh-keygen -q -N '' -f ~/cloud-keys/id_mykey
 
-    openstack keypair create --public-key ~/.ssh/id_rsa.pub mykey
+To import a keypair:
 
-You can now boot an instance on your cloud:
+    openstack keypair create --public-key ~/cloud-keys/id_mykey.pub mykey
 
-    openstack server create --image focal --flavor m1.small --key-name mykey \
-        --network internal focal-test
+## Configure security groups
 
-### Attaching a volume
+To allow ICMP (ping) and SSH traffic to flow to cloud instances create
+corresponding rules for each existing security group:
 
-First, create a 10G volume in cinder:
+    for i in $(openstack security group list | awk '/default/{ print $2 }'); do
+       openstack security group rule create $i --protocol icmp --remote-ip 0.0.0.0/0;
+       openstack security group rule create $i --protocol tcp --remote-ip 0.0.0.0/0 --dst-port 22;
+    done
 
-    openstack volume create --size=10 <name-of-volume>
+You only need to perform this step once.
 
-then attach it to the instance we just booted:
+## Create an instance
 
-    openstack server add volume focal-test <name-of-volume>
+Create a Focal amd64 instance called 'focal-1':
 
-The attached volume will be accessible once you login to the instance (see below).  It will need to be formatted and mounted!
+    openstack server create --image focal-amd64 --flavor m1.tiny \
+       --key-name mykey --network int_net \
+        focal-1
 
-### Accessing your instance
+## Assign a floating IP address
 
-In order to access the instance you just booted on the cloud, you'll need to
-assign a floating IP address to the instance:
+Request and assign a floating IP address to the new instance:
 
-    FIP=$(openstack floating ip create -f value -c floating_ip_address ext_net)
-    openstack server add floating ip focal-test $FIP
+    FLOATING_IP=$(openstack floating ip create -f value -c floating_ip_address ext_net)
+    openstack server add floating ip focal-1 $FLOATING_IP
 
-and then allow access via SSH (and ping) - you only need to do these steps
-once:
+## Log in to an instance
 
-    PROJECT_ID=$(openstack project list -f value -c ID \
-	       --domain admin_domain)
+Log in to the new instance:
 
-    SECGRP_ID=$(openstack security group list --project $PROJECT_ID \
-        | awk '/default/{print$2}')
+    ssh -i ~/cloud-keys/id_mykey ubuntu@$FLOATING_IP
 
-    openstack security group rule create $SECGRP_ID \
-        --protocol icmp --ingress --ethertype IPv4
+The below commands are a good start to troubleshooting if something goes wrong:
 
-    openstack security group rule create $SECGRP_ID \
-        --protocol icmp --ingress --ethertype IPv6
+    openstack console log show focal-1
+    openstack server show focal-1
 
-    openstack security group rule create $SECGRP_ID \
-        --protocol tcp --ingress --ethertype IPv4 --dst-port 22
+## Access the cloud dashboard
 
-    openstack security group rule create $SECGRP_ID \
-        --protocol tcp --ingress --ethertype IPv6 --dst-port 22
+To access the dashboard (Horizon) first obtain its IP address:
 
-After running these commands you should be able to access the instance:
+    juju status --format=yaml openstack-dashboard | grep public-address | awk '{print $2}' | head -1
 
-    ssh ubuntu@$FIP
+The password can be queried from Keystone:
 
-### Logging in to the OpenStack Dashboard
+    juju run --unit keystone/leader leader-get admin_passwd
 
-First determine the IP address of the OpenStack Dashboard:
+In this example, the address is '10.5.0.30' and the password is
+'eifah8Ixie3Aegee'.
 
-    juju status openstack-dashboard
+The dashboard URL then becomes:
 
-Type in the following URL in your web browser: https://DASHBOARD-IP/horizon/
+**http://10.5.0.30/horizon**
 
-To print your credentials:
+The final credentials needed to log in are:
 
-    source openrc
-    env | grep OS_
+<!-- There are two spaces at the end of the next two lines -->
+
+User Name: **admin**  
+Password: **eifah8Ixie3Aegee**  
+Domain: **admin_domain**
+
+> **Tip**: To access the dashboard from your desktop you may need SSH local
+  port forwarding. Example: ``sudo ssh -L 8001:10.5.0.30:80 <user>@<host>``,
+  where &lt;host&gt; can contact 10.5.0.30 on port 80 (probably where the Juju
+  client is installed). Then go to http://localhost:8001/horizon.
+
+### VM consoles
 
 Enable a remote access protocol such as `novnc` (or `spice`) if you want to
 connect to VM consoles from within the dashboard:
 
     juju config nova-cloud-controller console-access-protocol=novnc
 
-## What next?
+## Further reading
 
-Configuring and managing services for an OpenStack cloud is complex. See the
-[OpenStack Admin Guide][] for a complete reference on how to configure an
-OpenStack cloud for your requirements.
+The below resources are recommended for further reading:
 
-[MAAS]: http://maas.ubuntu.com/docs
-[Simplestreams]: https://launchpad.net/simplestreams
+* [OpenStack Administrator Guides][openstack-admin-guides]: for upstream
+  OpenStack administrative help
+* [OpenStack Charms Deployment Guide][cdg]: for charm usage information
+
+<!-- LINKS -->
+
+[maas]: http://maas.io/docs
 [OpenStack Neutron]: http://docs.openstack.org/admin-guide-cloud/content/ch_networking.html
 [OpenStack Admin Guide]: http://docs.openstack.org/user-guide-admin/content
 [Ubuntu Cloud Images]: http://cloud-images.ubuntu.com/focal/current/
 [cdg]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/wallaby/
-[cdg-certs]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/wallaby/app-certificate-management.html
-[cdg-vault]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/wallaby/app-vault.html
-[cdg-ha-ovn]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/app-ha.html#deployment
+[cdg-install-openstack]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/wallaby/install-openstack.html
+[openstack-bundles]: https://github.com/openstack-charmers/openstack-bundles
+[juju-overlays]: https://jaas.ai/docs/charm-bundles#heading--overlay-bundles
+[juju-spaces]: https://jaas.ai/docs/spaces
+[juju-constraints-controller]: https://jaas.ai/docs/constraints#heading--setting-constraints-for-a-controller
+[juju-and-maas]: https://jaas.ai/docs/maas-cloud
+[vault-charm-post-deploy]: https://opendev.org/openstack/charm-vault/src/branch/master/src/README.md#post-deployment-tasks
+[openstack-neutron]: https://docs.openstack.org/neutron/
+[openstack-admin-guides]: http://docs.openstack.org/admin
