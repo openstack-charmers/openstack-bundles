@@ -8,7 +8,7 @@ include:
 
 * Ubuntu 20.04 LTS (Focal)
 * OpenStack Wallaby
-* Ceph Octopus
+* Ceph Pacific
 
 Cloud services consist of Compute, Network, Block Storage, Object Storage,
 Identity, Image, and Dashboard.
