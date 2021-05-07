@@ -11,7 +11,7 @@ local_overlay_enabled: true
 series: focal
 variables:
   openstack-origin: &openstack-origin cloud:focal-victoria
-  data-port: &data-port to-be-set
+  data-port: &data-port br-ex:eno2  # LA_TEMP
   worker-multiplier: &worker-multiplier 0.25
   osd-devices: &osd-devices /dev/sdb /dev/vdb
   expected-osd-count: &expected-osd-count 3
@@ -19,10 +19,13 @@ variables:
 machines:
   '0':
     series: focal
+    constraints: arch=amd64  # LA_TEMP
   '1':
     series: focal
+    constraints: arch=amd64  # LA_TEMP
   '2':
     series: focal
+    constraints: arch=amd64  # LA_TEMP
 relations:
 - - nova-compute:amqp
   - rabbitmq-server:amqp

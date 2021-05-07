@@ -1,12 +1,16 @@
 machines:
   '0':
     series: bionic
+    constraints: arch=amd64  # LA_TEMP
   '1':
     series: bionic
+    constraints: arch=amd64  # LA_TEMP
   '2':
     series: bionic
+    constraints: arch=amd64  # LA_TEMP
   '3':
     series: bionic
+    constraints: arch=amd64  # LA_TEMP
 relations:
 - - nova-compute:amqp
   - rabbitmq-server:amqp
