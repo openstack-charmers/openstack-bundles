@@ -11,8 +11,11 @@ variables:
   expected-mon-count: &expected-mon-count 3
 machines:
   '0':
+    constraints: arch=amd64  # LA_TEMP
   '1':
+    constraints: arch=amd64  # LA_TEMP
   '2':
+    constraints: arch=amd64  # LA_TEMP
 relations:
 - - nova-compute:amqp
   - rabbitmq-server:amqp

@@ -14,10 +14,13 @@ variables:
 machines:
   '0':
     series: focal
+    constraints: arch=amd64  # LA_TEMP
   '1':
     series: focal
+    constraints: arch=amd64  # LA_TEMP
   '2':
     series: focal
+    constraints: arch=amd64  # LA_TEMP
 relations:
 - - nova-compute:amqp
   - rabbitmq-server:amqp

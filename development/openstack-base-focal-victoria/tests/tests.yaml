@@ -4,9 +4,12 @@ configure:
  - zaza.openstack.charm_tests.nova.setup.create_flavors
  - zaza.openstack.charm_tests.nova.setup.manage_ssh_key
  - zaza.openstack.charm_tests.neutron.setup.basic_overcloud_network
- - zaza.openstack.charm_tests.glance.setup.add_lts_image
+# LA_TEMP: getting this error with LTS:
+# Build of instance d3ac1586-6d4a-4566-aa8f-cfc2a9d3ef33 aborted: Image 631e1a0e-1357-49b7-83cc-24866e0ee080 is unacceptable: Unable to convert image to raw: Image /var/lib/nova/instances/_base/cfacf8313fb18385fe95c47dfdf8c28fab0a38c2.part is unacceptable: Unable to convert image to raw: Unexpected error while running command.\nCommand: qemu-img convert -t none -O raw -f qcow2 /var/lib/nova/instances/_base/cfacf8313fb18385fe95c47dfdf8c28fab0a38c2.part /var/lib/nova/instances/_base/cfacf8313fb18385fe95c47dfdf8c28fab0a38c2.converted\nExit code: 1\nStdout: \'\'\nStderr: \'qemu-img: error while reading sector 1772544: Input/output error\\nqemu-img: error while reading sector 1772416: Input/output error
+# export TEST_HTTP_PROXY="http://squid.internal:3128"
+ - zaza.openstack.charm_tests.glance.setup.add_cirros_image
 tests:
-  - zaza.openstack.charm_tests.nova.tests.LTSGuestCreateTest
+  - zaza.openstack.charm_tests.nova.tests.CirrosGuestCreateTest  # LA_TEMP
 target_deploy_status:
   neutron-api-plugin-ovn:
     workload-status: waiting
