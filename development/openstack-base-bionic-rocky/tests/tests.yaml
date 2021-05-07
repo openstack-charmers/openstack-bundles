@@ -2,7 +2,8 @@ configure: []
 dev_bundles: []
 gate_bundles:
   - bundle
-smoke_bundles: []
+smoke_bundles:
+  - bundle-18.11
 configure:
   - zaza.openstack.charm_tests.glance.setup.add_lts_image
   - zaza.openstack.charm_tests.keystone.setup.add_demo_user
