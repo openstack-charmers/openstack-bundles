@@ -1,15 +1,15 @@
 configure:
- - zaza.openstack.charm_tests.vault.setup.auto_initialize_no_validation
- - zaza.openstack.charm_tests.keystone.setup.add_demo_user
- - zaza.openstack.charm_tests.nova.setup.create_flavors
- - zaza.openstack.charm_tests.nova.setup.manage_ssh_key
- - zaza.openstack.charm_tests.neutron.setup.basic_overcloud_network
+#LA_TODO - zaza.openstack.charm_tests.vault.setup.auto_initialize_no_validation
+#LA_TODO - zaza.openstack.charm_tests.keystone.setup.add_demo_user
+#LA_TODO - zaza.openstack.charm_tests.nova.setup.create_flavors
+#LA_TODO - zaza.openstack.charm_tests.nova.setup.manage_ssh_key
+#LA_TODO - zaza.openstack.charm_tests.neutron.setup.basic_overcloud_network
  # LA_TEMP will fail unless: export TEST_HTTP_PROXY="http://squid.internal:3128"
  # but don't set that env var earlier as it will lead to keystone erroring
- - zaza.openstack.charm_tests.glance.setup.add_cirros_image
+#LA_TODO - zaza.openstack.charm_tests.glance.setup.add_cirros_image
  - zaza.openstack.charm_tests.glance.setup.add_lts_image
 tests:
-  - zaza.openstack.charm_tests.nova.tests.CirrosGuestCreateTest  # LA_TEMP
+#LA_TODO  - zaza.openstack.charm_tests.nova.tests.CirrosGuestCreateTest  # LA_TEMP
   - zaza.openstack.charm_tests.nova.tests.LTSGuestCreateTest
 target_deploy_status:
   neutron-api-plugin-ovn:

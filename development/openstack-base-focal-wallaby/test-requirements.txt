@@ -1,3 +1,4 @@
 # zaza
 git+https://github.com/openstack-charmers/zaza.git#egg=zaza;python_version>='3.0'
-git+https://github.com/openstack-charmers/zaza-openstack-tests.git#egg=zaza.openstack
+#LA_TEMP:
+git+https://github.com/openstack-charmers/zaza-openstack-tests.git@lourot/release-validation#egg=zaza.openstack
