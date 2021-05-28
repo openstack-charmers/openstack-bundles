@@ -5,7 +5,7 @@ series: focal
 # *** information.
 # *** https://docs.openstack.org/project-deploy-guide/charm-deployment-guide **
 variables:
-  openstack-origin: &openstack-origin cloud:focal-victoria 
+  openstack-origin: &openstack-origin cloud:focal-victoria
   data-port: &data-port br-ex:eno2
   worker-multiplier: &worker-multiplier 0.25
   osd-devices: &osd-devices /dev/sdb /dev/vdb
@@ -134,14 +134,20 @@ relations:
 - - vault:certificates
   - placement:certificates
 - - vault:certificates
+  - ceph-radosgw:certificates
+- - vault:certificates
   - mysql-innodb-cluster:certificates
 - - ceilometer-agent:ceilometer-service
   - ceilometer:ceilometer-service
 - - ceilometer:identity-notifications
   - keystone:identity-notifications
+- - ceilometer:identity-credentials
+  - keystone:identity-credentials
 - - ceilometer-agent:nova-ceilometer
   - nova-compute:nova-ceilometer
 - - ceilometer-agent:amqp
+  - rabbitmq-server:amqp
+- - ceilometer:amqp
   - rabbitmq-server:amqp
 - - aodh-mysql-router:db-router
   - mysql-innodb-cluster:db-router

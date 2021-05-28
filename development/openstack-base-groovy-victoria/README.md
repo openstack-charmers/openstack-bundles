@@ -58,7 +58,7 @@ to be unsealed and equipped with a CA certificate before the configuration can
 be finalised and the cloud used. Failure to do so will leave the deployment
 with the following message (in `juju status`):
 
-    'certificates' missing, 'ovsdb' incomplete
+    'ovsdb-*' incomplete, 'certificates' awaiting server certificate data
 
 Refer to the [Vault][cdg-vault] and [Certificate lifecycle
 management][cdg-certs] sections of the [OpenStack Charms Deployment Guide][cdg]
@@ -247,9 +247,15 @@ To print your credentials:
     source openrc
     env | grep OS_
 
+Enable a remote access protocol such as `novnc` (or `spice`) if you want to
+connect to VM consoles from within the dashboard:
+
+    juju config nova-cloud-controller console-access-protocol=novnc
+
 ## What next?
 
-Configuring and managing services on an OpenStack cloud is complex; take a look a the [OpenStack Admin Guide][] for a complete reference on how to configure an OpenStack cloud for your requirements.
+Configuring and managing services on an OpenStack cloud is complex; take a look
+at the [OpenStack Admin Guide][] for a complete reference on how to configure an OpenStack cloud for your requirements.
 
 [MAAS]: http://maas.ubuntu.com/docs
 [Simplestreams]: https://launchpad.net/simplestreams
@@ -259,4 +265,4 @@ Configuring and managing services on an OpenStack cloud is complex; take a look 
 [cdg]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/victoria/
 [cdg-certs]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/victoria/app-certificate-management.html
 [cdg-vault]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/victoria/app-vault.html
-[cdg-ha-ovn]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/app-ha.html#deployment
+[cdg-ha-ovn]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/victoria/app-ha.html#deployment
