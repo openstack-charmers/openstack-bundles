@@ -14,10 +14,13 @@ variables:
 machines:
   '0':
     series: focal
+    constraints: arch=arm64
   '1':
     series: focal
+    constraints: arch=arm64
   '2':
     series: focal
+    constraints: arch=arm64
 relations:
 - - nova-compute:amqp
   - rabbitmq-server:amqp
