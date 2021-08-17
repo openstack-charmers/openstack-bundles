@@ -1,12 +1,17 @@
----
+# Please refer to the OpenStack Charms Deployment Guide for more information.
+# https://docs.openstack.org/project-deploy-guide/charm-deployment-guide
+#
+# NOTE: Please review the value for the configuration option
+#       `bridge-interface-mappings` for the `ovn-chassis` charm (see `data-port` variable).
+#       Refer to the [Open Virtual Network (OVN)](https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/app-ovn.html)
+#       section of the [OpenStack Charms Deployment Guide](https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/)
+#       for more information.
+
 local_overlay_enabled: true
 series: groovy
-# *** Please refer to the OpenStack Charms Deployment Guide for more        ***
-# *** information.
-# *** https://docs.openstack.org/project-deploy-guide/charm-deployment-guide **
 variables:
   openstack-origin: &openstack-origin distro
-  data-port: &data-port br-ex:eno2
+  data-port: &data-port null
   worker-multiplier: &worker-multiplier 0.25
   osd-devices: &osd-devices /dev/sdb /dev/vdb
   expected-osd-count: &expected-osd-count 3
@@ -417,9 +422,9 @@ applications:
       gui-x: '120'
       gui-y: '1030'
     charm: cs:~openstack-charmers-next/ovn-chassis
-    # *** Please update the `bridge-interface-mappings` to values suitable ***
-    # *** for thehardware used in your deployment.  See the referenced     ***
-    # *** documentation at the top of this file.                           ***
+    # Please update the `bridge-interface-mappings` to values suitable for the
+    # hardware used in your deployment. See the referenced documentation at the
+    # top of this file.
     options:
       ovn-bridge-mappings: physnet1:br-ex
       bridge-interface-mappings: *data-port

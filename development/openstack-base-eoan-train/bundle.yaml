@@ -1,6 +1,12 @@
+# Please refer to the OpenStack Charms Deployment Guide for more information.
+# https://docs.openstack.org/project-deploy-guide/charm-deployment-guide
+#
+# NOTE: Please review the value for the configuration option
+#       `bridge-interface-mappings` for the `ovn-chassis` charm (see `data-port` variable).
+
 variables:
   openstack-origin:    &openstack-origin     distro
-  data-port:           &data-port            br-ex:eno2
+  data-port:           &data-port            null
   worker-multiplier:   &worker-multiplier    0.25
   osd-devices:         &osd-devices          /dev/sdb /dev/vdb
   expected-osd-count:  &expected-osd-count   3
