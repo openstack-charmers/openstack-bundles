@@ -91,7 +91,7 @@ applications:
       the top of this file.
     options:
       ovn-bridge-mappings: physnet1:br-provider
-      bridge-interface-mappings: br-provider:00:00:5e:00:00:42 br-provider:00:00:5e:00:00:51
+      bridge-interface-mappings: *data-port
   vault:
     charm: cs:~openstack-charmers-next/vault
     num_units: 1

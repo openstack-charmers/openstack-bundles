@@ -1,6 +1,12 @@
+# Please refer to the OpenStack Charms Deployment Guide for more information.
+# https://docs.openstack.org/project-deploy-guide/charm-deployment-guide
+#
+# NOTE: Please review the value for the configuration option
+#       `bridge-interface-mappings` for the `neutron-gateway` charm (see `data-port` variable).
+
 variables:
   openstack-origin:    &openstack-origin     cloud:bionic-ussuri
-  data-port:           &data-port            br-ex:eno2
+  data-port:           &data-port            null
   worker-multiplier:   &worker-multiplier    0.25
   osd-devices:         &osd-devices          /dev/sdb /dev/vdb
   expected-osd-count:  &expected-osd-count   3
@@ -266,6 +272,9 @@ services:
       gui-x: '0'
       gui-y: '0'
     charm: cs:~openstack-charmers-next/neutron-gateway
+    # Please update the `bridge-interface-mappings` to values suitable for the
+    # hardware used in your deployment. See the referenced documentation at the
+    # top of this file.
     num_units: 1
     options:
       openstack-origin: *openstack-origin
