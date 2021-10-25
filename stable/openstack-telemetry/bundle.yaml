@@ -10,7 +10,7 @@
 local_overlay_enabled: true
 series: focal
 variables:
-  openstack-origin: &openstack-origin cloud:focal-victoria
+  openstack-origin: &openstack-origin cloud:focal-xena
   data-port: &data-port null
   worker-multiplier: &worker-multiplier 0.25
   osd-devices: &osd-devices /dev/sdb /dev/vdb
@@ -148,6 +148,8 @@ relations:
   - keystone:identity-notifications
 - - ceilometer:identity-credentials
   - keystone:identity-credentials
+- - vault:certificates
+  - ceilometer:certificates
 - - ceilometer-agent:nova-ceilometer
   - nova-compute:nova-ceilometer
 - - ceilometer-agent:amqp
@@ -181,19 +183,19 @@ applications:
     annotations:
       gui-x: '1500'
       gui-y: '0'
-    charm: cs:aodh-48
+    charm: cs:aodh-56
     num_units: 1
     options:
       openstack-origin: *openstack-origin
     to:
     - lxd:0
   aodh-mysql-router:
-    charm: cs:mysql-router-8
+    charm: cs:mysql-router-15
   ceilometer:
     annotations:
       gui-x: '1250'
       gui-y: '0'
-    charm: cs:ceilometer-282
+    charm: cs:ceilometer-288
     num_units: 1
     options:
       openstack-origin: *openstack-origin
@@ -203,13 +205,13 @@ applications:
     annotations:
       gui-x: '1250'
       gui-y: '500'
-    charm: cs:ceilometer-agent-271
+    charm: cs:ceilometer-agent-277
     num_units: 0
   ceph-mon:
     annotations:
       gui-x: '790'
       gui-y: '1540'
-    charm: cs:ceph-mon-55
+    charm: cs:ceph-mon-61
     num_units: 3
     options:
       expected-osd-count: *expected-osd-count
@@ -223,7 +225,7 @@ applications:
     annotations:
       gui-x: '1065'
       gui-y: '1540'
-    charm: cs:ceph-osd-310
+    charm: cs:ceph-osd-315
     num_units: 3
     options:
       osd-devices: *osd-devices
@@ -236,7 +238,7 @@ applications:
     annotations:
       gui-x: '850'
       gui-y: '900'
-    charm: cs:ceph-radosgw-296
+    charm: cs:ceph-radosgw-300
     num_units: 1
     options:
       source: *openstack-origin
@@ -246,12 +248,12 @@ applications:
     annotations:
       gui-x: '900'
       gui-y: '1400'
-    charm: cs:mysql-router-8
+    charm: cs:mysql-router-15
   cinder:
     annotations:
       gui-x: '980'
       gui-y: '1270'
-    charm: cs:cinder-310
+    charm: cs:cinder-317
     num_units: 1
     options:
       block-device: None
@@ -264,18 +266,18 @@ applications:
     annotations:
       gui-x: '1120'
       gui-y: '1400'
-    charm: cs:cinder-ceph-262
+    charm: cs:cinder-ceph-268
     num_units: 0
   glance-mysql-router:
     annotations:
       gui-x: '-290'
       gui-y: '1400'
-    charm: cs:mysql-router-8
+    charm: cs:mysql-router-15
   glance:
     annotations:
       gui-x: '-230'
       gui-y: '1270'
-    charm: cs:glance-305
+    charm: cs:glance-312
     num_units: 1
     options:
       worker-multiplier: *worker-multiplier
@@ -286,12 +288,12 @@ applications:
     annotations:
       gui-x: '230'
       gui-y: '1400'
-    charm: cs:mysql-router-8
+    charm: cs:mysql-router-15
   keystone:
     annotations:
       gui-x: '300'
       gui-y: '1270'
-    charm: cs:keystone-323
+    charm: cs:keystone-329
     num_units: 1
     options:
       worker-multiplier: *worker-multiplier
@@ -302,17 +304,17 @@ applications:
     annotations:
       gui-x: '505'
       gui-y: '1385'
-    charm: cs:mysql-router-8
+    charm: cs:mysql-router-15
   neutron-api-plugin-ovn:
     annotations:
       gui-x: '690'
       gui-y: '1385'
-    charm: cs:neutron-api-plugin-ovn-6
+    charm: cs:neutron-api-plugin-ovn-10
   neutron-api:
     annotations:
       gui-x: '580'
       gui-y: '1270'
-    charm: cs:neutron-api-294
+    charm: cs:neutron-api-302
     num_units: 1
     options:
       neutron-security-groups: true
@@ -325,12 +327,12 @@ applications:
     annotations:
       gui-x: '1320'
       gui-y: '1385'
-    charm: cs:mysql-router-8
+    charm: cs:mysql-router-15
   placement:
     annotations:
       gui-x: '1320'
       gui-y: '1270'
-    charm: cs:placement-19
+    charm: cs:placement-31
     num_units: 1
     options:
       worker-multiplier: *worker-multiplier
@@ -341,12 +343,12 @@ applications:
     annotations:
       gui-x: '-30'
       gui-y: '1385'
-    charm: cs:mysql-router-8
+    charm: cs:mysql-router-15
   nova-cloud-controller:
     annotations:
       gui-x: '35'
       gui-y: '1270'
-    charm: cs:nova-cloud-controller-355
+    charm: cs:nova-cloud-controller-361
     num_units: 1
     options:
       network-manager: Neutron
@@ -358,7 +360,7 @@ applications:
     annotations:
       gui-x: '190'
       gui-y: '890'
-    charm: cs:nova-compute-327
+    charm: cs:nova-compute-337
     num_units: 3
     options:
       config-flags: default_ephemeral_format=ext4
@@ -374,18 +376,18 @@ applications:
     annotations:
       gui-x: '315'
       gui-y: '1030'
-    charm: cs:ntp-45
+    charm: cs:ntp-47
     num_units: 0
   dashboard-mysql-router:
     annotations:
       gui-x: '510'
       gui-y: '1030'
-    charm: cs:mysql-router-8
+    charm: cs:mysql-router-15
   openstack-dashboard:
     annotations:
       gui-x: '585'
       gui-y: '900'
-    charm: cs:openstack-dashboard-313
+    charm: cs:openstack-dashboard-318
     num_units: 1
     options:
       openstack-origin: *openstack-origin
@@ -395,7 +397,7 @@ applications:
     annotations:
       gui-x: '300'
       gui-y: '1550'
-    charm: cs:rabbitmq-server-110
+    charm: cs:rabbitmq-server-117
     num_units: 1
     to:
     - lxd:2
@@ -403,7 +405,7 @@ applications:
     annotations:
       gui-x: '535'
       gui-y: '1550'
-    charm: cs:mysql-innodb-cluster-7
+    charm: cs:mysql-innodb-cluster-15
     num_units: 3
     to:
     - lxd:0
@@ -413,7 +415,7 @@ applications:
     annotations:
       gui-x: '70'
       gui-y: '1550'
-    charm: cs:ovn-central-7
+    charm: cs:ovn-central-10
     num_units: 3
     options:
       source: *openstack-origin
@@ -425,23 +427,23 @@ applications:
     annotations:
       gui-x: '120'
       gui-y: '1030'
-    charm: cs:ovn-chassis-14
+    charm: cs:ovn-chassis-17
     # Please update the `bridge-interface-mappings` to values suitable for the
     # hardware used in your deployment. See the referenced documentation at the
     # top of this file.
     options:
       ovn-bridge-mappings: physnet1:br-ex
-      bridge-interface-mappings: *data-port
+      bridge-interface-mappings:
   vault-mysql-router:
     annotations:
       gui-x: '1535'
       gui-y: '1560'
-    charm: cs:mysql-router-8
+    charm: cs:mysql-router-15
   vault:
     annotations:
       gui-x: '1610'
       gui-y: '1430'
-    charm: cs:vault-46
+    charm: cs:vault-54
     num_units: 1
     to:
     - lxd:0
@@ -450,19 +452,19 @@ applications:
       gui-x: '1500'
       gui-y: '250'
     num_units: 1
-    charm: cs:gnocchi-46
+    charm: cs:gnocchi-51
     options:
       openstack-origin: *openstack-origin
     to:
     - lxd:1
   gnocchi-mysql-router:
-    charm: cs:mysql-router-8
+    charm: cs:mysql-router-15
   memcached:
     series: bionic
     annotations:
       gui-x: '1500'
       gui-y: '500'
     num_units: 1
-    charm: cs:memcached-32
+    charm: cs:memcached-34
     to:
     - lxd:2
