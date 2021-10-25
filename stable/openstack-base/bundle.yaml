@@ -365,7 +365,7 @@ applications:
     # top of this file.
     options:
       ovn-bridge-mappings: physnet1:br-ex
-      bridge-interface-mappings:
+      bridge-interface-mappings: *data-port
   vault-mysql-router:
     annotations:
       gui-x: '1535'
