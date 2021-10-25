@@ -2,45 +2,107 @@ machines: {}
 applications:
   ceph-osd:
     to: []
+    bindings:
+      "": ""
     storage:
       osd-devices: 20GB
   ceph-mon:
     to: []
+    bindings:
+      "": ""
   ceph-radosgw:
     to: []
+    bindings:
+      "": ""
   cinder:
     expose: True
     to: []
+    bindings:
+      "": ""
+  cinder-ceph:
+    bindings:
+      "": ""
+  cinder-mysql-router:
+    bindings:
+      "": ""
   glance:
     expose: True
     to: []
+    bindings:
+      "": ""
+  glance-mysql-router:
+    bindings:
+      "": ""
   keystone:
     expose: True
     to: []
+    bindings:
+      "": ""
+  keystone-mysql-router:
+    bindings:
+      "": ""
   mysql-innodb-cluster:
     to: []
+    bindings:
+      "": ""
   neutron-api:
     expose: True
     to: []
+    bindings:
+      "": ""
+  neutron-api-plugin-ovn:
+    bindings:
+      "": ""
+  neutron-mysql-router:
+    bindings:
+      "": ""
   nova-cloud-controller:
     expose: True
     to: []
+    bindings:
+      "": ""
   nova-compute:
-    constraints: mem=4G
     annotations:
     to: []
-  ntp:
+    constraints: mem=4G
+    bindings:
+      "": ""
+  nova-mysql-router:
+    bindings:
+      "": ""
   openstack-dashboard:
     expose: True
     to: []
-  placement:
-    expose: True
-    to: []
+    bindings:
+      "": ""
+  dashboard-mysql-router:
+    bindings:
+      "": ""
   ovn-central:
     to: []
+    bindings:
+      "": ""
   ovn-chassis:
+    bindings:
+      "": ""
+  placement:
     to: []
+    bindings:
+      "": ""
+  placement-mysql-router:
+    bindings:
+      "": ""
   rabbitmq-server:
     to: []
+    bindings:
+      "": ""
+  ntp:
+    bindings:
+      "": ""
   vault:
     to: []
+    bindings:
+      "": ""
+  vault-mysql-router:
+    bindings:
+      "": ""
