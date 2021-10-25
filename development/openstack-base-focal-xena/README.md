@@ -35,7 +35,7 @@ The MAAS cluster must have a minimum of four nodes:
 
   The first disk is used for the node's operating system, and the second is for
   Ceph storage.
-  
+
   The first network interface is used for communication between cloud services
   (East/West traffic), and the second is for network traffic between the cloud
   and all external networks (North/South traffic).
@@ -90,7 +90,7 @@ A `variables:` section is used for conveniently setting values in one place.
 The third column contains the actual values.
 
     variables:
-      openstack-origin:    &openstack-origin     distro
+      openstack-origin:    &openstack-origin     cloud:focal-xena
       data-port:           &data-port            br-ex:eno2
       worker-multiplier:   &worker-multiplier    0.25
       osd-devices:         &osd-devices          /dev/sdb /dev/vdb
@@ -186,7 +186,7 @@ You'll need to import an image into Glance in order to create instances.
 
 First download a boot image, like Focal amd64:
 
-    curl http://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img
+    curl http://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img \
        --output ~/cloud-images/focal-amd64.img
 
 Now import the image and call it 'focal-amd64':
@@ -201,7 +201,7 @@ way.
 For the ARM 64-bit (arm64) architecture you will need to configure the image to
 boot in UEFI mode:
 
-    curl http://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img
+    curl http://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img \
        --output ~/cloud-images/focal-arm64.img
 
     openstack image create --public --container-format bare \
@@ -239,7 +239,7 @@ router ('provider-router'):
     openstack network create int_net
 
     openstack subnet create --network int_net --dns-nameserver 8.8.8.8 \
-       --gateway 192.168.0.1 --subnet-range 192.168.0/24 \
+       --gateway 192.168.0.1 --subnet-range 192.168.0.0/24 \
        --allocation-pool start=192.168.0.10,end=192.168.0.200 \
        int_subnet
 
