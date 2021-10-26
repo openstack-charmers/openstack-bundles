@@ -11,7 +11,7 @@ local_overlay_enabled: true
 series: focal
 variables:
   openstack-origin: &openstack-origin cloud:focal-xena
-  data-port: &data-port null
+  data-port:
   worker-multiplier: &worker-multiplier 0.25
   osd-devices: &osd-devices /dev/sdb /dev/vdb
   expected-osd-count: &expected-osd-count 3
@@ -415,7 +415,7 @@ applications:
     annotations:
       gui-x: '70'
       gui-y: '1550'
-    charm: cs:ovn-central-10
+    charm: cs:ovn-central-15
     num_units: 3
     options:
       source: *openstack-origin
@@ -427,13 +427,13 @@ applications:
     annotations:
       gui-x: '120'
       gui-y: '1030'
-    charm: cs:ovn-chassis-17
+    charm: cs:ovn-chassis-21
     # Please update the `bridge-interface-mappings` to values suitable for the
     # hardware used in your deployment. See the referenced documentation at the
     # top of this file.
     options:
       ovn-bridge-mappings: physnet1:br-ex
-      bridge-interface-mappings: *data-port
+      bridge-interface-mappings:
   vault-mysql-router:
     annotations:
       gui-x: '1535'
