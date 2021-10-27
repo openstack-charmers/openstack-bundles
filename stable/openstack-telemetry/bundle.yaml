@@ -11,7 +11,7 @@ local_overlay_enabled: true
 series: focal
 variables:
   openstack-origin: &openstack-origin cloud:focal-xena
-  data-port:
+  data-port: &data-port to-be-set
   worker-multiplier: &worker-multiplier 0.25
   osd-devices: &osd-devices /dev/sdb /dev/vdb
   expected-osd-count: &expected-osd-count 3
@@ -433,7 +433,7 @@ applications:
     # top of this file.
     options:
       ovn-bridge-mappings: physnet1:br-ex
-      bridge-interface-mappings:
+      bridge-interface-mappings: *data-port
   vault-mysql-router:
     annotations:
       gui-x: '1535'

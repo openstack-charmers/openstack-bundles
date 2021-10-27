@@ -11,7 +11,7 @@ local_overlay_enabled: true
 series: groovy
 variables:
   openstack-origin: &openstack-origin distro
-  data-port: &data-port null
+  data-port: &data-port to-be-set
   worker-multiplier: &worker-multiplier 0.25
   osd-devices: &osd-devices /dev/sdb /dev/vdb
   expected-osd-count: &expected-osd-count 3
