@@ -1,0 +1,38 @@
+machines:
+  '0':
+    series: jammy
+  '1':
+    series: jammy
+  '2':
+    series: jammy
+relations:
+- - ceph-osd:mon
+  - ceph-mon:osd
+series: jammy
+services:
+  ceph-mon:
+    annotations:
+      gui-x: '750'
+      gui-y: '500'
+    charm: cs:~openstack-charmers-next/ceph-mon
+    num_units: 3
+    options:
+      expected-osd-count: 3
+      source: distro
+    to:
+    - lxd:0
+    - lxd:1
+    - lxd:2
+  ceph-osd:
+    annotations:
+      gui-x: '1000'
+      gui-y: '500'
+    charm: cs:~openstack-charmers-next/ceph-osd
+    num_units: 3
+    options:
+      osd-devices: /dev/sdb
+      source: distro
+    to:
+    - '0'
+    - '1'
+    - '2'
