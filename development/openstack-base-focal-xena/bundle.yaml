@@ -116,6 +116,8 @@ relations:
   - vault:certificates
 - - ovn-chassis:nova-compute
   - nova-compute:neutron-plugin
+- - logrotated  # LA_TEMP
+  - nova-compute
 - - ovn-chassis:certificates
   - vault:certificates
 - - ovn-chassis:ovsdb
@@ -366,6 +368,8 @@ applications:
     options:
       ovn-bridge-mappings: physnet1:br-ex
       bridge-interface-mappings: *data-port
+  logrotated:  # LA_TEMP
+    charm: cs:logrotated
   vault-mysql-router:
     annotations:
       gui-x: '1535'
