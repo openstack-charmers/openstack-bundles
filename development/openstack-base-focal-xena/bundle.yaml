@@ -361,13 +361,14 @@ applications:
     annotations:
       gui-x: '120'
       gui-y: '1030'
-    charm: cs:~openstack-charmers-next/ovn-chassis
+    charm: /home/ubuntu/Documents/git/ovn-chassis/build/builds/ovn-chassis  # LA_TEMP
     # Please update the `bridge-interface-mappings` to values suitable for the
     # hardware used in your deployment. See the referenced documentation at the
     # top of this file.
     options:
       ovn-bridge-mappings: physnet1:br-ex
       bridge-interface-mappings: *data-port
+      debug: true  # LA_TEMP
   logrotated:  # LA_TEMP
     charm: cs:logrotated
   vault-mysql-router:
