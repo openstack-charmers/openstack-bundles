@@ -1,16 +1,13 @@
 machines:
   '0':
     series: bionic
-    constraints: arch=amd64  # LA_TEMP
+    constraints: tags=metal arch=amd64  # LA_TEMP
   '1':
     series: bionic
-    constraints: arch=amd64  # LA_TEMP
+    constraints: tags=metal arch=amd64  # LA_TEMP
   '2':
     series: bionic
-    constraints: arch=amd64  # LA_TEMP
-  '3':
-    series: bionic
-    constraints: arch=amd64  # LA_TEMP
+    constraints: tags=metal arch=amd64  # LA_TEMP
 relations:
 - - nova-compute:amqp
   - rabbitmq-server:amqp
@@ -99,10 +96,12 @@ services:
     options:
       expected-osd-count: 3
       source: cloud:bionic-rocky
+    bindings:
+      "": public-space
     to:
+    - 'lxd:0'
     - 'lxd:1'
     - 'lxd:2'
-    - 'lxd:3'
   ceph-osd:
     annotations:
       gui-x: '1000'
@@ -110,12 +109,12 @@ services:
     charm: cs:~openstack-charmers-next/bionic/ceph-osd
     num_units: 3
     options:
-      osd-devices: /dev/sdb
+      osd-devices: /dev/bcache0  # LA_TEMP
       source: cloud:bionic-rocky
     to:
+    - '0'
     - '1'
     - '2'
-    - '3'
   ceph-radosgw:
     annotations:
       gui-x: '1000'
@@ -124,6 +123,8 @@ services:
     num_units: 1
     options:
       source: cloud:bionic-rocky
+    bindings:
+      "": public-space
     to:
     - lxd:0
   cinder:
@@ -137,6 +138,8 @@ services:
       glance-api-version: 2
       worker-multiplier: 0.25
       openstack-origin: cloud:bionic-rocky
+    bindings:
+      "": public-space
     to:
     - lxd:1
   cinder-ceph:
@@ -154,6 +157,8 @@ services:
     options:
       worker-multiplier: 0.25
       openstack-origin: cloud:bionic-rocky
+    bindings:
+      "": public-space
     to:
     - lxd:2
   keystone:
@@ -165,8 +170,10 @@ services:
     options:
       worker-multiplier: 0.25
       openstack-origin: cloud:bionic-rocky
+    bindings:
+      "": public-space
     to:
-    - lxd:3
+    - lxd:0
   mysql:
     annotations:
       gui-x: '0'
@@ -176,6 +183,8 @@ services:
     options:
       max-connections: 1000
       innodb-buffer-pool-size: 256M
+    bindings:
+      "": public-space
     to:
     - lxd:0
   neutron-api:
@@ -189,6 +198,8 @@ services:
       flat-network-providers: physnet1
       worker-multiplier: 0.25
       openstack-origin: cloud:bionic-rocky
+    bindings:
+      "": public-space
     to:
     - lxd:1
   neutron-gateway:
@@ -199,7 +210,7 @@ services:
     num_units: 1
     options:
       bridge-mappings: physnet1:br-ex
-      data-port: br-ex:eno2
+      data-port: br-ex:bond1  # LA_TEMP
       worker-multiplier: 0.25
       openstack-origin: cloud:bionic-rocky
     to:
@@ -220,6 +231,8 @@ services:
       network-manager: Neutron
       worker-multiplier: 0.25
       openstack-origin: cloud:bionic-rocky
+    bindings:
+      "": public-space
     to:
     - lxd:2
   nova-compute:
@@ -227,7 +240,7 @@ services:
       gui-x: '250'
       gui-y: '250'
     charm: cs:~openstack-charmers-next/bionic/nova-compute
-    num_units: 3
+    num_units: 2
     options:
       config-flags: default_ephemeral_format=ext4
       enable-live-migration: true
@@ -237,7 +250,6 @@ services:
     to:
     - '1'
     - '2'
-    - '3'
   ntp:
     annotations:
       gui-x: '1000'
@@ -252,13 +264,17 @@ services:
     num_units: 1
     options:
       openstack-origin: cloud:bionic-rocky
+    bindings:
+      "": public-space
     to:
-    - lxd:3
+    - lxd:0
   rabbitmq-server:
     annotations:
       gui-x: '500'
       gui-y: '250'
     charm: cs:~openstack-charmers-next/bionic/rabbitmq-server
     num_units: 1
+    bindings:
+      "": public-space
     to:
     - lxd:0

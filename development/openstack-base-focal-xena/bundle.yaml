@@ -10,18 +10,18 @@
 series: focal
 variables:
   openstack-origin: &openstack-origin cloud:focal-xena
-  data-port: &data-port br-ex:eno2  # LA_TEMP
+  data-port: &data-port br-ex:bond1  # LA_TEMP
   worker-multiplier: &worker-multiplier 0.25
-  osd-devices: &osd-devices /dev/sdb /dev/vdb
+  osd-devices: &osd-devices /dev/bcache0  # LA_TEMP
   expected-osd-count: &expected-osd-count 3
   expected-mon-count: &expected-mon-count 3
 machines:
   '0':
-    constraints: arch=amd64  # LA_TEMP
+    constraints: tags=metal arch=amd64  # LA_TEMP
   '1':
-    constraints: arch=amd64  # LA_TEMP
+    constraints: tags=metal arch=amd64  # LA_TEMP
   '2':
-    constraints: arch=amd64  # LA_TEMP
+    constraints: tags=metal arch=amd64  # LA_TEMP
 relations:
 - - nova-compute:amqp
   - rabbitmq-server:amqp
@@ -152,6 +152,8 @@ applications:
       expected-osd-count: *expected-osd-count
       monitor-count: *expected-mon-count
       source: *openstack-origin
+    bindings:
+      "": public-space
     to:
     - lxd:0
     - lxd:1
@@ -177,6 +179,8 @@ applications:
     num_units: 1
     options:
       source: *openstack-origin
+    bindings:
+      "": public-space
     to:
     - lxd:0
   cinder-mysql-router:
@@ -195,6 +199,8 @@ applications:
       glance-api-version: 2
       worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
+    bindings:
+      "": public-space
     to:
     - lxd:1
   cinder-ceph:
@@ -217,6 +223,8 @@ applications:
     options:
       worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
+    bindings:
+      "": public-space
     to:
     - lxd:2
   keystone-mysql-router:
@@ -233,6 +241,8 @@ applications:
     options:
       worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
+    bindings:
+      "": public-space
     to:
     - lxd:0
   neutron-mysql-router:
@@ -256,6 +266,8 @@ applications:
       flat-network-providers: physnet1
       worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
+    bindings:
+      "": public-space
     to:
     - lxd:1
   placement-mysql-router:
@@ -272,6 +284,8 @@ applications:
     options:
       worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
+    bindings:
+      "": public-space
     to:
     - lxd:2
   nova-mysql-router:
@@ -289,6 +303,8 @@ applications:
       network-manager: Neutron
       worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
+    bindings:
+      "": public-space
     to:
     - lxd:0
   nova-compute:
@@ -326,6 +342,8 @@ applications:
     num_units: 1
     options:
       openstack-origin: *openstack-origin
+    bindings:
+      "": public-space
     to:
     - lxd:1
   rabbitmq-server:
@@ -334,6 +352,8 @@ applications:
       gui-y: '1550'
     charm: cs:~openstack-charmers-next/rabbitmq-server
     num_units: 1
+    bindings:
+      "": public-space
     to:
     - lxd:2
   mysql-innodb-cluster:
@@ -342,6 +362,8 @@ applications:
       gui-y: '1550'
     charm: cs:~openstack-charmers-next/mysql-innodb-cluster
     num_units: 3
+    bindings:
+      "": public-space
     to:
     - lxd:0
     - lxd:1
@@ -354,6 +376,8 @@ applications:
     num_units: 3
     options:
       source: *openstack-origin
+    bindings:
+      "": public-space
     to:
     - lxd:0
     - lxd:1
@@ -380,5 +404,7 @@ applications:
       gui-y: '1430'
     charm: cs:vault
     num_units: 1
+    bindings:
+      "": public-space
     to:
     - lxd:0
