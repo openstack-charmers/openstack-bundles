@@ -11,7 +11,6 @@ series: focal
 variables:
   openstack-origin: &openstack-origin cloud:focal-yoga
   data-port: &data-port to-be-set
-  worker-multiplier: &worker-multiplier 0.25
   osd-devices: &osd-devices /dev/sdb /dev/vdb
   expected-osd-count: &expected-osd-count 3
   expected-mon-count: &expected-mon-count 3
@@ -194,7 +193,6 @@ applications:
     options:
       block-device: None
       glance-api-version: 2
-      worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
     - lxd:1
@@ -219,7 +217,6 @@ applications:
     charm: ch:glance
     num_units: 1
     options:
-      worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
     - lxd:2
@@ -237,7 +234,6 @@ applications:
     charm: ch:keystone
     num_units: 1
     options:
-      worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
     - lxd:0
@@ -263,7 +259,6 @@ applications:
     options:
       neutron-security-groups: true
       flat-network-providers: physnet1
-      worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
     - lxd:1
@@ -281,7 +276,6 @@ applications:
     charm: ch:placement
     num_units: 1
     options:
-      worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
     - lxd:2
@@ -300,7 +294,6 @@ applications:
     num_units: 1
     options:
       network-manager: Neutron
-      worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
     - lxd:0
