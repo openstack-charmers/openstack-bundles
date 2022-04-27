@@ -345,6 +345,7 @@ connect to VM consoles from within the dashboard:
 
 The below resources are recommended for further reading:
 
+* [What is OpenStack?]: for an overview of the OpenStack project
 * [OpenStack Administrator Guides][openstack-admin-guides]: for upstream
   OpenStack administrative help
 * [OpenStack Charms Deployment Guide][cdg]: for charm usage information
@@ -365,3 +366,4 @@ The below resources are recommended for further reading:
 [vault-charm-post-deploy]: https://opendev.org/openstack/charm-vault/src/branch/master/src/README.md#post-deployment-tasks
 [openstack-neutron]: https://docs.openstack.org/neutron/
 [openstack-admin-guides]: http://docs.openstack.org/admin
+[What is OpenStack?]: https://ubuntu.com/openstack/what-is-openstack

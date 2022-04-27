@@ -2,6 +2,8 @@
 
 *DEV/TEST ONLY*: This unstable, development example bundle deploys a Ceph (Quincy) cluster on Ubuntu 22.04 LTS. See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
 
+Ceph is often used with [OpenStack].
+
 ## Requirements
 
 This example bundle is designed to run on bare metal using Juju with [MAAS][] (Metal-as-a-Service); you will need to have setup a [MAAS][] deployment with a minimum of 3 physical servers prior to using this bundle.
@@ -37,4 +39,7 @@ Check that the cluster is healthy:
 
     sudo ceph -s
 
+<!-- LINKS -->
+
 [MAAS]: https://maas.io/
+[OpenStack]: https://ubuntu.com/openstack/what-is-openstack
