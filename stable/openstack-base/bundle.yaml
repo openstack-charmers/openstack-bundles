@@ -180,7 +180,7 @@ applications:
     annotations:
       gui-x: '900'
       gui-y: '1400'
-    charm: cs:mysql-router-15
+    charm: cs:mysql-router-26
   cinder:
     annotations:
       gui-x: '980'
@@ -204,7 +204,7 @@ applications:
     annotations:
       gui-x: '-290'
       gui-y: '1400'
-    charm: cs:mysql-router-15
+    charm: cs:mysql-router-26
   glance:
     annotations:
       gui-x: '-230'
@@ -220,7 +220,7 @@ applications:
     annotations:
       gui-x: '230'
       gui-y: '1400'
-    charm: cs:mysql-router-15
+    charm: cs:mysql-router-26
   keystone:
     annotations:
       gui-x: '300'
@@ -236,7 +236,7 @@ applications:
     annotations:
       gui-x: '505'
       gui-y: '1385'
-    charm: cs:mysql-router-15
+    charm: cs:mysql-router-26
   neutron-api-plugin-ovn:
     annotations:
       gui-x: '690'
@@ -259,7 +259,7 @@ applications:
     annotations:
       gui-x: '1320'
       gui-y: '1385'
-    charm: cs:mysql-router-15
+    charm: cs:mysql-router-26
   placement:
     annotations:
       gui-x: '1320'
@@ -275,7 +275,7 @@ applications:
     annotations:
       gui-x: '-30'
       gui-y: '1385'
-    charm: cs:mysql-router-15
+    charm: cs:mysql-router-26
   nova-cloud-controller:
     annotations:
       gui-x: '35'
@@ -314,7 +314,7 @@ applications:
     annotations:
       gui-x: '510'
       gui-y: '1030'
-    charm: cs:mysql-router-15
+    charm: cs:mysql-router-26
   openstack-dashboard:
     annotations:
       gui-x: '585'
@@ -370,7 +370,7 @@ applications:
     annotations:
       gui-x: '1535'
       gui-y: '1560'
-    charm: cs:mysql-router-15
+    charm: cs:mysql-router-26
   vault:
     annotations:
       gui-x: '1610'
