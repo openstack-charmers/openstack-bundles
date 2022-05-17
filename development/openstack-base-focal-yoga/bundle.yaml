@@ -335,7 +335,7 @@ applications:
       gui-x: '300'
       gui-y: '1550'
     charm: ch:rabbitmq-server
-    channel: 3.9/stable
+    channel: 3.8/stable
     num_units: 1
     to:
     - lxd:2
@@ -390,3 +390,10 @@ applications:
     num_units: 1
     to:
     - lxd:0
+  ntp:
+    annotations:
+      gui-x: '315'
+      gui-y: '1030'
+    charm: ch:ntp
+    channel: latest/stable
+    num_units: 0
