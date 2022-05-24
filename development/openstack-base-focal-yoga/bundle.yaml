@@ -181,7 +181,7 @@ applications:
       gui-x: '900'
       gui-y: '1400'
     charm: ch:mysql-router
-    channel: 8.0.19/stable
+    channel: 8.0/stable
   cinder:
     annotations:
       gui-x: '980'
@@ -207,7 +207,7 @@ applications:
       gui-x: '-290'
       gui-y: '1400'
     charm: ch:mysql-router
-    channel: 8.0.19/stable
+    channel: 8.0/stable
   glance:
     annotations:
       gui-x: '-230'
@@ -224,7 +224,7 @@ applications:
       gui-x: '230'
       gui-y: '1400'
     charm: ch:mysql-router
-    channel: 8.0.19/stable
+    channel: 8.0/stable
   keystone:
     annotations:
       gui-x: '300'
@@ -241,7 +241,7 @@ applications:
       gui-x: '505'
       gui-y: '1385'
     charm: ch:mysql-router
-    channel: 8.0.19/stable
+    channel: 8.0/stable
   neutron-api-plugin-ovn:
     annotations:
       gui-x: '690'
@@ -266,7 +266,7 @@ applications:
       gui-x: '1320'
       gui-y: '1385'
     charm: ch:mysql-router
-    channel: 8.0.19/stable
+    channel: 8.0/stable
   placement:
     annotations:
       gui-x: '1320'
@@ -283,7 +283,7 @@ applications:
       gui-x: '-30'
       gui-y: '1385'
     charm: ch:mysql-router
-    channel: 8.0.19/stable
+    channel: 8.0/stable
   nova-cloud-controller:
     annotations:
       gui-x: '35'
@@ -318,7 +318,7 @@ applications:
       gui-x: '510'
       gui-y: '1030'
     charm: ch:mysql-router
-    channel: 8.0.19/stable
+    channel: 8.0/stable
   openstack-dashboard:
     annotations:
       gui-x: '585'
@@ -344,7 +344,7 @@ applications:
       gui-x: '535'
       gui-y: '1550'
     charm: ch:mysql-innodb-cluster
-    channel: 8.0.19/stable
+    channel: 8.0/stable
     num_units: 3
     to:
     - lxd:0
@@ -380,7 +380,7 @@ applications:
       gui-x: '1535'
       gui-y: '1560'
     charm: ch:mysql-router
-    channel: 8.0.19/stable
+    channel: 8.0/stable
   vault:
     annotations:
       gui-x: '1610'
