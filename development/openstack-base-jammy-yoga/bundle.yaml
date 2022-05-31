@@ -1,5 +1,3 @@
-local_overlay_enabled: False
-
 # Please refer to the OpenStack Charms Deployment Guide for more information.
 # https://docs.openstack.org/project-deploy-guide/charm-deployment-guide
 #
@@ -13,7 +11,6 @@ series: jammy
 variables:
   openstack-origin: &openstack-origin distro
   data-port: &data-port to-be-set
-  worker-multiplier: &worker-multiplier 0.25
   osd-devices: &osd-devices /dev/sdb /dev/vdb
   expected-osd-count: &expected-osd-count 3
   expected-mon-count: &expected-mon-count 3
@@ -196,7 +193,6 @@ applications:
     options:
       block-device: None
       glance-api-version: 2
-      worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
     - lxd:1
@@ -221,7 +217,6 @@ applications:
     charm: ch:glance
     num_units: 1
     options:
-      worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
     - lxd:2
@@ -239,7 +234,6 @@ applications:
     charm: ch:keystone
     num_units: 1
     options:
-      worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
     - lxd:0
@@ -265,7 +259,6 @@ applications:
     options:
       neutron-security-groups: true
       flat-network-providers: physnet1
-      worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
     - lxd:1
@@ -283,7 +276,6 @@ applications:
     charm: ch:placement
     num_units: 1
     options:
-      worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
     - lxd:2
@@ -302,7 +294,6 @@ applications:
     num_units: 1
     options:
       network-manager: Neutron
-      worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
     - lxd:0
@@ -379,7 +370,7 @@ applications:
     - lxd:0
     - lxd:1
     - lxd:2
-    channel: yoga/edge
+    channel: 22.03/edge
   ovn-chassis:
     annotations:
       gui-x: '120'
@@ -391,7 +382,7 @@ applications:
     options:
       ovn-bridge-mappings: physnet1:br-ex
       bridge-interface-mappings: *data-port
-    channel: yoga/edge
+    channel: 22.03/edge
   vault-mysql-router:
     annotations:
       gui-x: '1535'
