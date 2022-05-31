@@ -11,7 +11,6 @@ series: focal
 variables:
   openstack-origin: &openstack-origin cloud:focal-yoga
   data-port: &data-port to-be-set
-  worker-multiplier: &worker-multiplier 0.25
   osd-devices: &osd-devices /dev/sdb /dev/vdb
   expected-osd-count: &expected-osd-count 3
   expected-mon-count: &expected-mon-count 3
@@ -64,8 +63,6 @@ relations:
   - glance:ceph
 - - ceph-osd:mon
   - ceph-mon:osd
-- - ntp:juju-info
-  - nova-compute:juju-info
 - - ceph-radosgw:mon
   - ceph-mon:radosgw
 - - ceph-radosgw:identity-service
@@ -144,6 +141,7 @@ applications:
       gui-x: '790'
       gui-y: '1540'
     charm: ch:ceph-mon
+    channel: quincy/stable
     num_units: 3
     options:
       expected-osd-count: *expected-osd-count
@@ -153,12 +151,12 @@ applications:
     - lxd:0
     - lxd:1
     - lxd:2
-    channel: quincy/edge
   ceph-osd:
     annotations:
       gui-x: '1065'
       gui-y: '1540'
     charm: ch:ceph-osd
+    channel: quincy/stable
     num_units: 3
     options:
       osd-devices: *osd-devices
@@ -167,149 +165,143 @@ applications:
     - '0'
     - '1'
     - '2'
-    channel: quincy/edge
   ceph-radosgw:
     annotations:
       gui-x: '850'
       gui-y: '900'
     charm: ch:ceph-radosgw
+    channel: quincy/stable
     num_units: 1
     options:
       source: *openstack-origin
     to:
     - lxd:0
-    channel: quincy/edge
   cinder-mysql-router:
     annotations:
       gui-x: '900'
       gui-y: '1400'
     charm: ch:mysql-router
-    channel: 8.0.19/edge
+    channel: 8.0/stable
   cinder:
     annotations:
       gui-x: '980'
       gui-y: '1270'
     charm: ch:cinder
+    channel: yoga/stable
     num_units: 1
     options:
       block-device: None
       glance-api-version: 2
-      worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
     - lxd:1
-    channel: yoga/edge
   cinder-ceph:
     annotations:
       gui-x: '1120'
       gui-y: '1400'
     charm: ch:cinder-ceph
+    channel: yoga/stable
     num_units: 0
-    channel: yoga/edge
   glance-mysql-router:
     annotations:
       gui-x: '-290'
       gui-y: '1400'
     charm: ch:mysql-router
-    channel: 8.0.19/edge
+    channel: 8.0/stable
   glance:
     annotations:
       gui-x: '-230'
       gui-y: '1270'
     charm: ch:glance
+    channel: yoga/stable
     num_units: 1
     options:
-      worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
     - lxd:2
-    channel: yoga/edge
   keystone-mysql-router:
     annotations:
       gui-x: '230'
       gui-y: '1400'
     charm: ch:mysql-router
-    channel: 8.0.19/edge
+    channel: 8.0/stable
   keystone:
     annotations:
       gui-x: '300'
       gui-y: '1270'
     charm: ch:keystone
+    channel: yoga/stable
     num_units: 1
     options:
-      worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
     - lxd:0
-    channel: yoga/edge
   neutron-mysql-router:
     annotations:
       gui-x: '505'
       gui-y: '1385'
     charm: ch:mysql-router
-    channel: 8.0.19/edge
+    channel: 8.0/stable
   neutron-api-plugin-ovn:
     annotations:
       gui-x: '690'
       gui-y: '1385'
     charm: ch:neutron-api-plugin-ovn
-    channel: yoga/edge
+    channel: yoga/stable
   neutron-api:
     annotations:
       gui-x: '580'
       gui-y: '1270'
     charm: ch:neutron-api
+    channel: yoga/stable
     num_units: 1
     options:
       neutron-security-groups: true
       flat-network-providers: physnet1
-      worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
     - lxd:1
-    channel: yoga/edge
   placement-mysql-router:
     annotations:
       gui-x: '1320'
       gui-y: '1385'
     charm: ch:mysql-router
-    channel: 8.0.19/edge
+    channel: 8.0/stable
   placement:
     annotations:
       gui-x: '1320'
       gui-y: '1270'
     charm: ch:placement
+    channel: yoga/stable
     num_units: 1
     options:
-      worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
     - lxd:2
-    channel: yoga/edge
   nova-mysql-router:
     annotations:
       gui-x: '-30'
       gui-y: '1385'
     charm: ch:mysql-router
-    channel: 8.0.19/edge
+    channel: 8.0/stable
   nova-cloud-controller:
     annotations:
       gui-x: '35'
       gui-y: '1270'
     charm: ch:nova-cloud-controller
+    channel: yoga/stable
     num_units: 1
     options:
       network-manager: Neutron
-      worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
     - lxd:0
-    channel: yoga/edge
   nova-compute:
     annotations:
       gui-x: '190'
       gui-y: '890'
     charm: ch:nova-compute
+    channel: yoga/stable
     num_units: 3
     options:
       config-flags: default_ephemeral_format=ext4
@@ -321,55 +313,49 @@ applications:
     - '0'
     - '1'
     - '2'
-    channel: yoga/edge
-  ntp:
-    annotations:
-      gui-x: '315'
-      gui-y: '1030'
-    charm: ch:ntp
-    num_units: 0
   dashboard-mysql-router:
     annotations:
       gui-x: '510'
       gui-y: '1030'
     charm: ch:mysql-router
-    channel: 8.0.19/edge
+    channel: 8.0/stable
   openstack-dashboard:
     annotations:
       gui-x: '585'
       gui-y: '900'
     charm: ch:openstack-dashboard
+    channel: yoga/stable
     num_units: 1
     options:
       openstack-origin: *openstack-origin
     to:
     - lxd:1
-    channel: yoga/edge
   rabbitmq-server:
     annotations:
       gui-x: '300'
       gui-y: '1550'
     charm: ch:rabbitmq-server
+    channel: 3.8/stable
     num_units: 1
     to:
     - lxd:2
-    channel: 3.9/edge
   mysql-innodb-cluster:
     annotations:
       gui-x: '535'
       gui-y: '1550'
     charm: ch:mysql-innodb-cluster
+    channel: 8.0/stable
     num_units: 3
     to:
     - lxd:0
     - lxd:1
     - lxd:2
-    channel: 8.0.19/edge
   ovn-central:
     annotations:
       gui-x: '70'
       gui-y: '1550'
     charm: ch:ovn-central
+    channel: 22.03/stable
     num_units: 3
     options:
       source: *openstack-origin
@@ -377,31 +363,37 @@ applications:
     - lxd:0
     - lxd:1
     - lxd:2
-    channel: 22.03/edge
   ovn-chassis:
     annotations:
       gui-x: '120'
       gui-y: '1030'
     charm: ch:ovn-chassis
+    channel: 22.03/stable
     # Please update the `bridge-interface-mappings` to values suitable for the
     # hardware used in your deployment. See the referenced documentation at the
     # top of this file.
     options:
       ovn-bridge-mappings: physnet1:br-ex
       bridge-interface-mappings: *data-port
-    channel: 22.03/edge
   vault-mysql-router:
     annotations:
       gui-x: '1535'
       gui-y: '1560'
     charm: ch:mysql-router
-    channel: 8.0.19/edge
+    channel: 8.0/stable
   vault:
     annotations:
       gui-x: '1610'
       gui-y: '1430'
     charm: ch:vault
-    channel: 1.7/edge
+    channel: 1.7/stable
     num_units: 1
     to:
     - lxd:0
+  ntp:
+    annotations:
+      gui-x: '315'
+      gui-y: '1030'
+    charm: ch:ntp
+    channel: latest/stable
+    num_units: 0
