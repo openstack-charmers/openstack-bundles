@@ -88,7 +88,7 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: cs:~openstack-charmers-next/xenial/ceph-mon
+    charm: cs:~openstack-charmers-next/ceph-mon
     num_units: 3
     options:
       expected-osd-count: 3
@@ -100,7 +100,7 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '500'
-    charm: cs:~openstack-charmers-next/xenial/ceph-osd
+    charm: cs:~openstack-charmers-next/ceph-osd
     num_units: 3
     options:
       osd-devices: /dev/sdb
@@ -112,7 +112,7 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '250'
-    charm: cs:~openstack-charmers-next/xenial/ceph-radosgw
+    charm: cs:~openstack-charmers-next/ceph-radosgw
     num_units: 1
     to:
     - lxd:0
@@ -120,7 +120,7 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '0'
-    charm: cs:~openstack-charmers-next/xenial/cinder
+    charm: cs:~openstack-charmers-next/cinder
     num_units: 1
     options:
       openstack-origin: cloud:xenial-newton
@@ -133,13 +133,13 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '250'
-    charm: cs:~openstack-charmers-next/xenial/cinder-ceph
+    charm: cs:~openstack-charmers-next/cinder-ceph
     num_units: 0
   glance:
     annotations:
       gui-x: '250'
       gui-y: '0'
-    charm: cs:~openstack-charmers-next/xenial/glance
+    charm: cs:~openstack-charmers-next/glance
     num_units: 1
     options:
       openstack-origin: cloud:xenial-newton
@@ -150,7 +150,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '0'
-    charm: cs:~openstack-charmers-next/xenial/keystone
+    charm: cs:~openstack-charmers-next/keystone
     num_units: 1
     options:
       openstack-origin: cloud:xenial-newton
@@ -161,7 +161,7 @@ services:
     annotations:
       gui-x: '0'
       gui-y: '250'
-    charm: cs:~openstack-charmers-next/xenial/percona-cluster
+    charm: cs:~openstack-charmers-next/percona-cluster
     num_units: 1
     options:
       max-connections: 1000
@@ -172,7 +172,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '500'
-    charm: cs:~openstack-charmers-next/xenial/neutron-api
+    charm: cs:~openstack-charmers-next/neutron-api
     num_units: 1
     options:
       openstack-origin: cloud:xenial-newton
@@ -185,7 +185,7 @@ services:
     annotations:
       gui-x: '0'
       gui-y: '0'
-    charm: cs:~openstack-charmers-next/xenial/neutron-gateway
+    charm: cs:~openstack-charmers-next/neutron-gateway
     num_units: 1
     options:
       openstack-origin: cloud:xenial-newton
@@ -198,13 +198,13 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '500'
-    charm: cs:~openstack-charmers-next/xenial/neutron-openvswitch
+    charm: cs:~openstack-charmers-next/neutron-openvswitch
     num_units: 0
   nova-cloud-controller:
     annotations:
       gui-x: '0'
       gui-y: '500'
-    charm: cs:~openstack-charmers-next/xenial/nova-cloud-controller
+    charm: cs:~openstack-charmers-next/nova-cloud-controller
     num_units: 1
     options:
       openstack-origin: cloud:xenial-newton
@@ -216,7 +216,7 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '250'
-    charm: cs:~openstack-charmers-next/xenial/nova-compute
+    charm: cs:~openstack-charmers-next/nova-compute
     num_units: 3
     options:
       config-flags: default_ephemeral_format=ext4
@@ -238,7 +238,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '-250'
-    charm: cs:~openstack-charmers-next/xenial/openstack-dashboard
+    charm: cs:~openstack-charmers-next/openstack-dashboard
     num_units: 1
     options:
       openstack-origin: cloud:xenial-newton
@@ -248,7 +248,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '250'
-    charm: cs:~openstack-charmers-next/xenial/rabbitmq-server
+    charm: cs:~openstack-charmers-next/rabbitmq-server
     num_units: 1
     to:
     - lxd:0
