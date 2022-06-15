@@ -1,108 +1,110 @@
+variables:
+  default-space:        &default-space        alpha
 machines: {}
 applications:
   ceph-osd:
     to: []
     bindings:
-      "": ""
+      "": *default-space
     storage:
       osd-devices: 20GB
   ceph-mon:
     to: []
     bindings:
-      "": ""
+      "": *default-space
   ceph-radosgw:
     to: []
     bindings:
-      "": ""
+      "": *default-space
   cinder:
     expose: True
     to: []
     bindings:
-      "": ""
+      "": *default-space
   cinder-ceph:
     bindings:
-      "": ""
+      "": *default-space
   cinder-mysql-router:
     bindings:
-      "": ""
+      "": *default-space
   glance:
     expose: True
     to: []
     bindings:
-      "": ""
+      "": *default-space
   glance-mysql-router:
     bindings:
-      "": ""
+      "": *default-space
   keystone:
     expose: True
     to: []
     bindings:
-      "": ""
+      "": *default-space
   keystone-mysql-router:
     bindings:
-      "": ""
+      "": *default-space
   mysql-innodb-cluster:
     to: []
     bindings:
-      "": ""
+      "": *default-space
   neutron-api:
     expose: True
     to: []
     bindings:
-      "": ""
+      "": *default-space
   neutron-api-plugin-ovn:
     bindings:
-      "": ""
+      "": *default-space
   neutron-mysql-router:
     bindings:
-      "": ""
+      "": *default-space
   nova-cloud-controller:
     expose: True
     to: []
     bindings:
-      "": ""
+      "": *default-space
   nova-compute:
     annotations:
     to: []
     constraints: mem=4G
     bindings:
-      "": ""
+      "": *default-space
   nova-mysql-router:
     bindings:
-      "": ""
+      "": *default-space
   openstack-dashboard:
     expose: True
     to: []
     bindings:
-      "": ""
+      "": *default-space
   dashboard-mysql-router:
     bindings:
-      "": ""
+      "": *default-space
   ovn-central:
     to: []
     bindings:
-      "": ""
+      "": *default-space
   ovn-chassis:
     bindings:
-      "": ""
+      "": *default-space
   placement:
     to: []
     bindings:
-      "": ""
+      "": *default-space
   placement-mysql-router:
     bindings:
-      "": ""
+      "": *default-space
   rabbitmq-server:
     to: []
     bindings:
-      "": ""
+      "": *default-space
   ntp:
     bindings:
-      "": ""
+      "": *default-space
   vault:
     to: []
     bindings:
-      "": ""
+      "": *default-space
   vault-mysql-router:
     bindings:
-      "": ""
+      "": *default-space
