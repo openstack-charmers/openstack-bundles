@@ -192,7 +192,7 @@ applications:
     channel: yoga/edge
   aodh-mysql-router:
     charm: ch:mysql-router
-    channel: 8.0.19/edge
+    channel: 8.0/edge
   ceilometer:
     annotations:
       gui-x: '1250'
@@ -256,7 +256,7 @@ applications:
       gui-x: '900'
       gui-y: '1400'
     charm: ch:mysql-router
-    channel: 8.0.19/edge
+    channel: 8.0/edge
   cinder:
     annotations:
       gui-x: '980'
@@ -283,7 +283,7 @@ applications:
       gui-x: '-290'
       gui-y: '1400'
     charm: ch:mysql-router
-    channel: 8.0.19/edge
+    channel: 8.0/edge
   glance:
     annotations:
       gui-x: '-230'
@@ -301,7 +301,7 @@ applications:
       gui-x: '230'
       gui-y: '1400'
     charm: ch:mysql-router
-    channel: 8.0.19/edge
+    channel: 8.0/edge
   keystone:
     annotations:
       gui-x: '300'
@@ -319,7 +319,7 @@ applications:
       gui-x: '505'
       gui-y: '1385'
     charm: ch:mysql-router
-    channel: 8.0.19/edge
+    channel: 8.0/edge
   neutron-api-plugin-ovn:
     annotations:
       gui-x: '690'
@@ -345,7 +345,7 @@ applications:
       gui-x: '1320'
       gui-y: '1385'
     charm: ch:mysql-router
-    channel: 8.0.19/edge
+    channel: 8.0/edge
   placement:
     annotations:
       gui-x: '1320'
@@ -363,7 +363,7 @@ applications:
       gui-x: '-30'
       gui-y: '1385'
     charm: ch:mysql-router
-    channel: 8.0.19/edge
+    channel: 8.0/edge
   nova-cloud-controller:
     annotations:
       gui-x: '35'
@@ -405,7 +405,7 @@ applications:
       gui-x: '510'
       gui-y: '1030'
     charm: ch:mysql-router
-    channel: 8.0.19/edge
+    channel: 8.0/edge
   openstack-dashboard:
     annotations:
       gui-x: '585'
@@ -436,7 +436,7 @@ applications:
     - lxd:0
     - lxd:1
     - lxd:2
-    channel: 8.0.19/edge
+    channel: 8.0/edge
   ovn-central:
     annotations:
       gui-x: '70'
@@ -467,7 +467,7 @@ applications:
       gui-x: '1535'
       gui-y: '1560'
     charm: ch:mysql-router
-    channel: 8.0.19/edge
+    channel: 8.0/edge
   vault:
     annotations:
       gui-x: '1610'
@@ -490,7 +490,7 @@ applications:
     channel: yoga/edge
   gnocchi-mysql-router:
     charm: ch:mysql-router
-    channel: 8.0.19/edge
+    channel: 8.0/edge
   memcached:
     series: bionic
     annotations:

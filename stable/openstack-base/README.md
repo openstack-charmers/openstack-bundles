@@ -4,8 +4,8 @@ This `openstack-base` bundle deploys a base OpenStack cloud. Its major elements
 include:
 
 * Ubuntu 20.04 LTS (Focal)
-* OpenStack Xena
-* Ceph Pacific
+* OpenStack Yoga
+* Ceph Quincy
 
 Cloud services consist of Compute, Network, Block Storage, Object Storage,
 Identity, Image, and Dashboard.
@@ -36,6 +36,9 @@ The MAAS cluster must have a minimum of four nodes:
   The first network interface is used for communication between cloud services
   (East/West traffic), and the second is for network traffic between the cloud
   and all external networks (North/South traffic).
+
+> **Pro tip**: A single network interface will suffice if an Open vSwitch
+  bridge is used on each of the nodes (MAAS v.2.9.2 required).
 
 > **Note**: The smaller controller node can be targeted via Juju
   [constraints][juju-constraints-controller] at controller-creation time.
@@ -78,7 +81,7 @@ documentation on [overlay bundles][juju-overlays].
 ## Modify the bundle
 
 If using the stable openstack-base bundle, the file to modify is
-`./stable/openstack-base/bundle.yaml`.
+`stable/openstack-base/bundle.yaml`.
 
 > **Tip**: Keep the master branch of the repository pristine and create a
   working branch to contain your modifications.
@@ -87,7 +90,7 @@ A `variables:` section is used for conveniently setting values in one place.
 The third column contains the actual values.
 
     variables:
-      openstack-origin:    &openstack-origin     cloud:focal-xena
+      openstack-origin:    &openstack-origin     cloud:focal-yoga
       data-port:           &data-port            br-ex:eno2
       worker-multiplier:   &worker-multiplier    0.25
       osd-devices:         &osd-devices          /dev/sdb /dev/vdb
@@ -166,7 +169,7 @@ See to the [Vault charm README][vault-charm-post-deploy] for instructions.
 You'll need the OpenStack clients in order to manage your cloud from the
 command line. Install them now:
 
-    sudo snap install openstackclients --classic
+    sudo snap install openstackclients
 
 ## Access the cloud
 
@@ -327,9 +330,9 @@ The final credentials needed to log in are:
 
 <!-- There are two spaces at the end of the next two lines -->
 
-User Name: **admin**  
-Password: ********************  
-Domain: **admin_domain**
+User Name: `admin`  
+Password: `***************`  
+Domain: `admin_domain`
 
 ### VM consoles
 
@@ -342,6 +345,7 @@ connect to VM consoles from within the dashboard:
 
 The below resources are recommended for further reading:
 
+* [What is OpenStack?]: for an overview of the OpenStack project
 * [OpenStack Administrator Guides][openstack-admin-guides]: for upstream
   OpenStack administrative help
 * [OpenStack Charms Deployment Guide][cdg]: for charm usage information
@@ -352,8 +356,8 @@ The below resources are recommended for further reading:
 [OpenStack Neutron]: http://docs.openstack.org/admin-guide-cloud/content/ch_networking.html
 [OpenStack Admin Guide]: http://docs.openstack.org/user-guide-admin/content
 [Ubuntu Cloud Images]: http://cloud-images.ubuntu.com/focal/current/
-[cdg]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/xena/
-[cdg-install-openstack]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/xena/install-openstack.html
+[cdg]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/yoga/
+[cdg-install-openstack]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/yoga/install-openstack.html
 [openstack-bundles]: https://github.com/openstack-charmers/openstack-bundles
 [juju-overlays]: https://jaas.ai/docs/charm-bundles#heading--overlay-bundles
 [juju-spaces]: https://jaas.ai/docs/spaces
