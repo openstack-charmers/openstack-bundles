@@ -1,3 +1,4 @@
+name: ceph-base
 machines:
   '0':
     series: jammy

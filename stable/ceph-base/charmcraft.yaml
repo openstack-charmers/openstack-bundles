@@ -1,0 +1,14 @@
+type: bundle
+
+parts:
+  bundle:
+    prime:
+      - bundle.yaml
+      - README.md
+      - repo-info
+      - test-requirements.txt
+      - tests/bundles/bundle.yaml
+      - tests/bundles/overlays/bundle.yaml.j2
+      - tests/tests.yaml
+      - tox.ini
+      - validate-ceph.sh
