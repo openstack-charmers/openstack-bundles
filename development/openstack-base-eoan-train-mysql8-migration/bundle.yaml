@@ -131,7 +131,7 @@ applications:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: cs:~openstack-charmers-next/eoan/ceph-mon
+    charm: cs:~openstack-charmers-next/ceph-mon
     num_units: 3
     options:
       expected-osd-count: *expected-osd-count
@@ -145,7 +145,7 @@ applications:
     annotations:
       gui-x: '1000'
       gui-y: '500'
-    charm: cs:~openstack-charmers-next/eoan/ceph-osd
+    charm: cs:~openstack-charmers-next/ceph-osd
     num_units: 3
     options:
       osd-devices: *osd-devices
@@ -158,7 +158,7 @@ applications:
     annotations:
       gui-x: '1000'
       gui-y: '250'
-    charm: cs:~openstack-charmers-next/eoan/ceph-radosgw
+    charm: cs:~openstack-charmers-next/ceph-radosgw
     num_units: 1
     options:
       source: *openstack-origin
@@ -168,7 +168,7 @@ applications:
     annotations:
       gui-x: '750'
       gui-y: '0'
-    charm: cs:~openstack-charmers-next/eoan/cinder
+    charm: cs:~openstack-charmers-next/cinder
     num_units: 1
     options:
       block-device: None
@@ -181,13 +181,13 @@ applications:
     annotations:
       gui-x: '750'
       gui-y: '250'
-    charm: cs:~openstack-charmers-next/eoan/cinder-ceph
+    charm: cs:~openstack-charmers-next/cinder-ceph
     num_units: 0
   glance:
     annotations:
       gui-x: '250'
       gui-y: '0'
-    charm: cs:~openstack-charmers-next/eoan/glance
+    charm: cs:~openstack-charmers-next/glance
     num_units: 1
     options:
       worker-multiplier: *worker-multiplier
@@ -198,7 +198,7 @@ applications:
     annotations:
       gui-x: '500'
       gui-y: '0'
-    charm: cs:~openstack-charmers-next/eoan/keystone
+    charm: cs:~openstack-charmers-next/keystone
     num_units: 1
     options:
       worker-multiplier: *worker-multiplier
@@ -209,7 +209,7 @@ applications:
     annotations:
       gui-x: '500'
       gui-y: '500'
-    charm: cs:~openstack-charmers-next/eoan/neutron-api
+    charm: cs:~openstack-charmers-next/neutron-api
     num_units: 1
     options:
       neutron-security-groups: true
@@ -223,7 +223,7 @@ applications:
     annotations:
       gui-x: '0'
       gui-y: '500'
-    charm: cs:~openstack-charmers-next/eoan/placement
+    charm: cs:~openstack-charmers-next/placement
     num_units: 1
     options:
       worker-multiplier: *worker-multiplier
@@ -234,7 +234,7 @@ applications:
     annotations:
       gui-x: '0'
       gui-y: '500'
-    charm: cs:~openstack-charmers-next/eoan/nova-cloud-controller
+    charm: cs:~openstack-charmers-next/nova-cloud-controller
     num_units: 1
     options:
       network-manager: Neutron
@@ -246,7 +246,7 @@ applications:
     annotations:
       gui-x: '250'
       gui-y: '250'
-    charm: cs:~openstack-charmers-next/eoan/nova-compute
+    charm: cs:~openstack-charmers-next/nova-compute
     num_units: 3
     options:
       config-flags: default_ephemeral_format=ext4
@@ -269,7 +269,7 @@ applications:
     annotations:
       gui-x: '500'
       gui-y: '-250'
-    charm: cs:~openstack-charmers-next/eoan/openstack-dashboard
+    charm: cs:~openstack-charmers-next/openstack-dashboard
     num_units: 1
     options:
       openstack-origin: *openstack-origin
@@ -279,7 +279,7 @@ applications:
     annotations:
       gui-x: '500'
       gui-y: '250'
-    charm: cs:~openstack-charmers-next/eoan/rabbitmq-server
+    charm: cs:~openstack-charmers-next/rabbitmq-server
     num_units: 1
     to:
     - 'lxd:0'
@@ -307,16 +307,16 @@ applications:
     - 'lxd:1'
     - 'lxd:2'
   neutron-api-plugin-ovn:
-    charm: cs:~openstack-charmers/neutron-api-plugin-ovn
+    charm: cs:~openstack-charmers-next/neutron-api-plugin-ovn
   ovn-central:
-    charm: cs:~openstack-charmers/ovn-central
+    charm: cs:~openstack-charmers-next/ovn-central
     num_units: 3
     to:
     - 'lxd:0'
     - 'lxd:1'
     - 'lxd:2'
   ovn-chassis:
-    charm: cs:~openstack-charmers/ovn-chassis
+    charm: cs:~openstack-charmers-next/ovn-chassis
     # Please update the `bridge-interface-mappings` to values suitable for the
     # hardware used in your deployment. See the referenced documentation at the
     # top of this file.
@@ -329,7 +329,7 @@ applications:
     to:
     - 'lxd:0'
   percona-cluster:
-    charm: cs:~openstack-charmers/percona-cluster
+    charm: cs:~openstack-charmers-next/percona-cluster
     num_units: 1
     to:
     - 'lxd:1'

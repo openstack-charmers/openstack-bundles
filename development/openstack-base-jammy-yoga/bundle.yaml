@@ -379,7 +379,7 @@ applications:
     - lxd:0
     - lxd:1
     - lxd:2
-    channel: yoga/edge
+    channel: 22.03/edge
   ovn-chassis:
     annotations:
       gui-x: '120'
@@ -391,7 +391,7 @@ applications:
     options:
       ovn-bridge-mappings: physnet1:br-ex
       bridge-interface-mappings: *data-port
-    channel: yoga/edge
+    channel: 22.03/edge
   vault-mysql-router:
     annotations:
       gui-x: '1535'

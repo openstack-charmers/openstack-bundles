@@ -90,7 +90,7 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: cs:~openstack-charmers-next/bionic/ceph-mon
+    charm: cs:~openstack-charmers-next/ceph-mon
     num_units: 3
     options:
       expected-osd-count: 3
@@ -103,7 +103,7 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '500'
-    charm: cs:~openstack-charmers-next/bionic/ceph-osd
+    charm: cs:~openstack-charmers-next/ceph-osd
     num_units: 3
     options:
       osd-devices: /dev/sdb
@@ -116,7 +116,7 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '250'
-    charm: cs:~openstack-charmers-next/bionic/ceph-radosgw
+    charm: cs:~openstack-charmers-next/ceph-radosgw
     num_units: 1
     options:
       source: cloud:bionic-rocky
@@ -126,7 +126,7 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '0'
-    charm: cs:~openstack-charmers-next/bionic/cinder
+    charm: cs:~openstack-charmers-next/cinder
     num_units: 1
     options:
       block-device: None
@@ -139,13 +139,13 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '250'
-    charm: cs:~openstack-charmers-next/bionic/cinder-ceph
+    charm: cs:~openstack-charmers-next/cinder-ceph
     num_units: 0
   glance:
     annotations:
       gui-x: '250'
       gui-y: '0'
-    charm: cs:~openstack-charmers-next/bionic/glance
+    charm: cs:~openstack-charmers-next/glance
     num_units: 1
     options:
       worker-multiplier: 0.25
@@ -156,7 +156,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '0'
-    charm: cs:~openstack-charmers-next/bionic/keystone
+    charm: cs:~openstack-charmers-next/keystone
     num_units: 1
     options:
       worker-multiplier: 0.25
@@ -167,7 +167,7 @@ services:
     annotations:
       gui-x: '0'
       gui-y: '250'
-    charm: cs:~openstack-charmers-next/bionic/percona-cluster
+    charm: cs:~openstack-charmers-next/percona-cluster
     num_units: 1
     options:
       max-connections: 1000
@@ -178,7 +178,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '500'
-    charm: cs:~openstack-charmers-next/bionic/neutron-api
+    charm: cs:~openstack-charmers-next/neutron-api
     num_units: 1
     options:
       neutron-security-groups: true
@@ -191,7 +191,7 @@ services:
     annotations:
       gui-x: '0'
       gui-y: '0'
-    charm: cs:~openstack-charmers-next/bionic/neutron-gateway
+    charm: cs:~openstack-charmers-next/neutron-gateway
     num_units: 1
     options:
       bridge-mappings: physnet1:br-ex
@@ -204,13 +204,13 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '500'
-    charm: cs:~openstack-charmers-next/bionic/neutron-openvswitch
+    charm: cs:~openstack-charmers-next/neutron-openvswitch
     num_units: 0
   nova-cloud-controller:
     annotations:
       gui-x: '0'
       gui-y: '500'
-    charm: cs:~openstack-charmers-next/bionic/nova-cloud-controller
+    charm: cs:~openstack-charmers-next/nova-cloud-controller
     num_units: 1
     options:
       network-manager: Neutron
@@ -222,7 +222,7 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '250'
-    charm: cs:~openstack-charmers-next/bionic/nova-compute
+    charm: cs:~openstack-charmers-next/nova-compute
     num_units: 3
     options:
       config-flags: default_ephemeral_format=ext4
@@ -244,7 +244,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '-250'
-    charm: cs:~openstack-charmers-next/bionic/openstack-dashboard
+    charm: cs:~openstack-charmers-next/openstack-dashboard
     num_units: 1
     options:
       openstack-origin: cloud:bionic-rocky
@@ -254,7 +254,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '250'
-    charm: cs:~openstack-charmers-next/bionic/rabbitmq-server
+    charm: cs:~openstack-charmers-next/rabbitmq-server
     num_units: 1
     to:
     - lxd:0

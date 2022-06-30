@@ -253,7 +253,7 @@ services:
     annotations:
       gui-x: '0'
       gui-y: '500'
-    charm: cs:~openstack-charmers-next/bionic/placement
+    charm: cs:~openstack-charmers-next/placement
     num_units: 1
     options:
       worker-multiplier: *worker-multiplier
