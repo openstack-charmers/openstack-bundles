@@ -333,6 +333,7 @@ applications:
     charm: ch:neutron-api
     num_units: 1
     options:
+      enable-ml2-port-security: true
       neutron-security-groups: true
       flat-network-providers: physnet1
       worker-multiplier: *worker-multiplier
