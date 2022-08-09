@@ -20,7 +20,7 @@ applications:
     num_units: 3
     options:
       expected-osd-count: 3
-      source: distro
+      source: cloud:focal-yoga
     to:
     - lxd:0
     - lxd:1
@@ -34,7 +34,7 @@ applications:
     num_units: 3
     options:
       osd-devices: /dev/sdb
-      source: distro
+      source: cloud:focal-yoga
     to:
     - '0'
     - '1'

@@ -343,7 +343,7 @@ applications:
       gui-x: '300'
       gui-y: '1550'
     charm: ch:rabbitmq-server
-    channel: 3.8/stable
+    channel: 3.9/stable
     num_units: 1
     to:
     - lxd:2

@@ -16,11 +16,11 @@ applications:
       gui-x: '750'
       gui-y: '500'
     charm: ch:ceph-mon
-    channel: quincy/edge
+    channel: quincy/stable
     num_units: 3
     options:
       expected-osd-count: 3
-      source: distro
+      source: cloud:focal-yoga
     to:
     - lxd:0
     - lxd:1
@@ -30,11 +30,11 @@ applications:
       gui-x: '1000'
       gui-y: '500'
     charm: ch:ceph-osd
-    channel: quincy/edge
+    channel: quincy/stable
     num_units: 3
     options:
       osd-devices: /dev/sdb
-      source: distro
+      source: cloud:focal-yoga
     to:
     - '0'
     - '1'
