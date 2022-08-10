@@ -1,6 +1,8 @@
 # Basic Ceph Cluster
 
-This example bundle deploys a Ceph (Quincy) cluster on Ubuntu 20.04 LTS.
+*DEV/TEST ONLY*: This unstable, development example bundle deploys a Ceph (Quincy) cluster on Ubuntu 20.04 LTS. See also: [Stable Bundles](https://jujucharms.com/u/openstack-charmers).
+
+Ceph is often used with [OpenStack].
 
 ## Requirements
 
@@ -37,4 +39,7 @@ Check that the cluster is healthy:
 
     sudo ceph -s
 
+<!-- LINKS -->
+
 [MAAS]: https://maas.io/
+[OpenStack]: https://ubuntu.com/openstack/what-is-openstack

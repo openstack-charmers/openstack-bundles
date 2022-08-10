@@ -6,12 +6,11 @@
 #       Refer to the [Open Virtual Network (OVN)](https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/app-ovn.html)
 #       section of the [OpenStack Charms Deployment Guide](https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/)
 #       for more information.
-
+name: openstack-base
 series: focal
 variables:
-  openstack-origin: &openstack-origin cloud:focal-xena
+  openstack-origin: &openstack-origin cloud:focal-yoga
   data-port: &data-port to-be-set
-  worker-multiplier: &worker-multiplier 0.25
   osd-devices: &osd-devices /dev/sdb /dev/vdb
   expected-osd-count: &expected-osd-count 3
   expected-mon-count: &expected-mon-count 3
@@ -143,7 +142,8 @@ applications:
     annotations:
       gui-x: '790'
       gui-y: '1540'
-    charm: cs:ceph-mon-61
+    charm: ch:ceph-mon
+    channel: quincy/stable
     num_units: 3
     options:
       expected-osd-count: *expected-osd-count
@@ -157,7 +157,8 @@ applications:
     annotations:
       gui-x: '1065'
       gui-y: '1540'
-    charm: cs:ceph-osd-315
+    charm: ch:ceph-osd
+    channel: quincy/stable
     num_units: 3
     options:
       osd-devices: *osd-devices
@@ -170,7 +171,8 @@ applications:
     annotations:
       gui-x: '850'
       gui-y: '900'
-    charm: cs:ceph-radosgw-300
+    charm: ch:ceph-radosgw
+    channel: quincy/stable
     num_units: 1
     options:
       source: *openstack-origin
@@ -180,17 +182,18 @@ applications:
     annotations:
       gui-x: '900'
       gui-y: '1400'
-    charm: cs:mysql-router-15
+    charm: ch:mysql-router
+    channel: 8.0/stable
   cinder:
     annotations:
       gui-x: '980'
       gui-y: '1270'
-    charm: cs:cinder-317
+    charm: ch:cinder
+    channel: yoga/stable
     num_units: 1
     options:
       block-device: None
       glance-api-version: 2
-      worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
     - lxd:1
@@ -198,21 +201,23 @@ applications:
     annotations:
       gui-x: '1120'
       gui-y: '1400'
-    charm: cs:cinder-ceph-268
+    charm: ch:cinder-ceph
+    channel: yoga/stable
     num_units: 0
   glance-mysql-router:
     annotations:
       gui-x: '-290'
       gui-y: '1400'
-    charm: cs:mysql-router-15
+    charm: ch:mysql-router
+    channel: 8.0/stable
   glance:
     annotations:
       gui-x: '-230'
       gui-y: '1270'
-    charm: cs:glance-312
+    charm: ch:glance
+    channel: yoga/stable
     num_units: 1
     options:
-      worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
     - lxd:2
@@ -220,15 +225,16 @@ applications:
     annotations:
       gui-x: '230'
       gui-y: '1400'
-    charm: cs:mysql-router-15
+    charm: ch:mysql-router
+    channel: 8.0/stable
   keystone:
     annotations:
       gui-x: '300'
       gui-y: '1270'
-    charm: cs:keystone-329
+    charm: ch:keystone
+    channel: yoga/stable
     num_units: 1
     options:
-      worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
     - lxd:0
@@ -236,22 +242,24 @@ applications:
     annotations:
       gui-x: '505'
       gui-y: '1385'
-    charm: cs:mysql-router-15
+    charm: ch:mysql-router
+    channel: 8.0/stable
   neutron-api-plugin-ovn:
     annotations:
       gui-x: '690'
       gui-y: '1385'
-    charm: cs:neutron-api-plugin-ovn-10
+    charm: ch:neutron-api-plugin-ovn
+    channel: yoga/stable
   neutron-api:
     annotations:
       gui-x: '580'
       gui-y: '1270'
-    charm: cs:neutron-api-302
+    charm: ch:neutron-api
+    channel: yoga/stable
     num_units: 1
     options:
       neutron-security-groups: true
       flat-network-providers: physnet1
-      worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
     - lxd:1
@@ -259,15 +267,16 @@ applications:
     annotations:
       gui-x: '1320'
       gui-y: '1385'
-    charm: cs:mysql-router-15
+    charm: ch:mysql-router
+    channel: 8.0/stable
   placement:
     annotations:
       gui-x: '1320'
       gui-y: '1270'
-    charm: cs:placement-31
+    charm: ch:placement
+    channel: yoga/stable
     num_units: 1
     options:
-      worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
     - lxd:2
@@ -275,16 +284,17 @@ applications:
     annotations:
       gui-x: '-30'
       gui-y: '1385'
-    charm: cs:mysql-router-15
+    charm: ch:mysql-router
+    channel: 8.0/stable
   nova-cloud-controller:
     annotations:
       gui-x: '35'
       gui-y: '1270'
-    charm: cs:nova-cloud-controller-361
+    charm: ch:nova-cloud-controller
+    channel: yoga/stable
     num_units: 1
     options:
       network-manager: Neutron
-      worker-multiplier: *worker-multiplier
       openstack-origin: *openstack-origin
     to:
     - lxd:0
@@ -292,7 +302,8 @@ applications:
     annotations:
       gui-x: '190'
       gui-y: '890'
-    charm: cs:nova-compute-337
+    charm: ch:nova-compute
+    channel: yoga/stable
     num_units: 3
     options:
       config-flags: default_ephemeral_format=ext4
@@ -314,12 +325,14 @@ applications:
     annotations:
       gui-x: '510'
       gui-y: '1030'
-    charm: cs:mysql-router-15
+    charm: ch:mysql-router
+    channel: 8.0/stable
   openstack-dashboard:
     annotations:
       gui-x: '585'
       gui-y: '900'
-    charm: cs:openstack-dashboard-318
+    charm: ch:openstack-dashboard
+    channel: yoga/stable
     num_units: 1
     options:
       openstack-origin: *openstack-origin
@@ -329,7 +342,8 @@ applications:
     annotations:
       gui-x: '300'
       gui-y: '1550'
-    charm: cs:rabbitmq-server-117
+    charm: ch:rabbitmq-server
+    channel: 3.9/stable
     num_units: 1
     to:
     - lxd:2
@@ -337,7 +351,8 @@ applications:
     annotations:
       gui-x: '535'
       gui-y: '1550'
-    charm: cs:mysql-innodb-cluster-15
+    charm: ch:mysql-innodb-cluster
+    channel: 8.0/stable
     num_units: 3
     to:
     - lxd:0
@@ -347,7 +362,8 @@ applications:
     annotations:
       gui-x: '70'
       gui-y: '1550'
-    charm: cs:ovn-central-15
+    charm: ch:ovn-central
+    channel: 22.03/stable
     num_units: 3
     options:
       source: *openstack-origin
@@ -359,7 +375,8 @@ applications:
     annotations:
       gui-x: '120'
       gui-y: '1030'
-    charm: cs:ovn-chassis-21
+    charm: ch:ovn-chassis
+    channel: 22.03/stable
     # Please update the `bridge-interface-mappings` to values suitable for the
     # hardware used in your deployment. See the referenced documentation at the
     # top of this file.
@@ -370,12 +387,14 @@ applications:
     annotations:
       gui-x: '1535'
       gui-y: '1560'
-    charm: cs:mysql-router-15
+    charm: ch:mysql-router
+    channel: 8.0/stable
   vault:
     annotations:
       gui-x: '1610'
       gui-y: '1430'
-    charm: cs:vault-54
+    charm: ch:vault
+    channel: 1.7/stable
     num_units: 1
     to:
     - lxd:0

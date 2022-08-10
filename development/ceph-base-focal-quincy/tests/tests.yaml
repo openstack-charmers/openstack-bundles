@@ -1,0 +1,11 @@
+configure: []
+dev_bundles: []
+gate_bundles:
+  - bundle
+smoke_bundles: []
+tests:
+  - zaza.openstack.charm_tests.ceph.osd.tests.SecurityTest
+  - zaza.openstack.charm_tests.ceph.osd.tests.ServiceTest
+tests_options:
+  force_deploy:
+    - bundle

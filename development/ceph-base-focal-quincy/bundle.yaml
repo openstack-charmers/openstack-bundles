@@ -1,15 +1,15 @@
 name: ceph-base
 machines:
   '0':
-    series: jammy
+    series: focal
   '1':
-    series: jammy
+    series: focal
   '2':
-    series: jammy
+    series: focal
 relations:
 - - ceph-osd:mon
   - ceph-mon:osd
-series: jammy
+series: focal
 applications:
   ceph-mon:
     annotations:
@@ -20,7 +20,7 @@ applications:
     num_units: 3
     options:
       expected-osd-count: 3
-      source: distro
+      source: cloud:focal-yoga
     to:
     - lxd:0
     - lxd:1
@@ -34,7 +34,7 @@ applications:
     num_units: 3
     options:
       osd-devices: /dev/sdb
-      source: distro
+      source: cloud:focal-yoga
     to:
     - '0'
     - '1'

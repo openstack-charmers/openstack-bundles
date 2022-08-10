@@ -1,0 +1,17 @@
+type: bundle
+
+parts:
+  bundle:
+    prime:
+      - bundle.yaml
+      - openrc
+      - openrcv3_domain
+      - openrcv3_project
+      - openstack-base-spaces-overlay.yaml
+      - README.md
+      - repo-info
+      - test-requirements.txt
+      - tests/bundles/bundle.yaml
+      - tests/bundles/overlays/bundle.yaml.j2
+      - tests/tests.yaml
+      - tox.ini

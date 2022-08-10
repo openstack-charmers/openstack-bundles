@@ -1,6 +1,7 @@
 #!/bin/bash -ex
 
 bundle="$1"
+channel="${2:-latest/edge}"
 
 if [ -z "$bundle" ]; then
     echo "Please provide bundle directory name as the only parameter"
@@ -19,22 +20,33 @@ mkdir -p $HOME/temp
 home_tmp="$(mktemp -d -p $HOME/temp)"
 cp -Lrfv $bundle $home_tmp
 
-echo "Pushing bundle to charm store"
+echo "Packing bundle $bundle for charmhub..."
 ./generate-repo-info.sh . > $home_tmp/$bundle/repo-info
-bundle_id=$(charm push $home_tmp/$bundle cs:~openstack-charmers/$bundle | grep url | awk '{ print $2 }')
+pushd $home_tmp/$bundle
+charmcraft pack --verbose
+rc=$?
+popd
 
-if [ -z "$bundle_id" ]; then
-    echo "Publishing failed"
-    exit 1
+if [ $rc != 0 ]; then
+    echo "Failed to pack bundle. Review log files."
+    exit 2
 fi
 
-echo "Setting bugs-url and homepage"
-charm set $bundle_id \
-    bugs-url=https://bugs.launchpad.net/openstack-bundles/+filebug \
-    homepage=https://github.com/openstack-charmers/openstack-bundles/
+archive="$home_tmp/$bundle/$bundle.zip"
+echo "Printing contents of artifact to upload: $archive"
+zip -sf $archive
 
-echo "Publishing new bundle version to stable"
-charm release $bundle_id
-echo "Ensuring global read permissions"
-charm grant cs:~openstack-charmers/$bundle --acl read everyone
+echo "Uploading artifact $archive to charmhub in channel $channel..."
+charmcraft upload --channel $channel $archive
+rc=$?
+
+if [ $rc != 0 ]; then
+    echo "Failed to upload and/or release bundle. Review log files."
+    exit 3
+fi
+
+echo "Cleaning up temp dir..."
 rm -rfv $home_tmp
+
+echo "Done"
+exit 0

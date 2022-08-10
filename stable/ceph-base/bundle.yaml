@@ -1,3 +1,4 @@
+name: ceph-base
 machines:
   '0':
     series: focal
@@ -9,16 +10,17 @@ relations:
 - - ceph-osd:mon
   - ceph-mon:osd
 series: focal
-services:
+applications:
   ceph-mon:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: cs:ceph-mon-61
+    charm: ch:ceph-mon
+    channel: quincy/stable
     num_units: 3
     options:
       expected-osd-count: 3
-      source: distro
+      source: cloud:focal-yoga
     to:
     - lxd:0
     - lxd:1
@@ -27,11 +29,12 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '500'
-    charm: cs:ceph-osd-315
+    charm: ch:ceph-osd
+    channel: quincy/stable
     num_units: 3
     options:
       osd-devices: /dev/sdb
-      source: distro
+      source: cloud:focal-yoga
     to:
     - '0'
     - '1'
