@@ -6,8 +6,7 @@
 #       Refer to the [Open Virtual Network (OVN)](https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/app-ovn.html)
 #       section of the [OpenStack Charms Deployment Guide](https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/)
 #       for more information.
-
-local_overlay_enabled: true
+name: openstack-telemetry
 series: focal
 variables:
   openstack-origin: &openstack-origin cloud:focal-yoga
@@ -17,11 +16,8 @@ variables:
   expected-mon-count: &expected-mon-count 3
 machines:
   '0':
-    series: focal
   '1':
-    series: focal
   '2':
-    series: focal
 relations:
 - - nova-compute:amqp
   - rabbitmq-server:amqp
