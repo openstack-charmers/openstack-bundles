@@ -1,0 +1,32 @@
+configure:
+  - zaza.openstack.charm_tests.vault.setup.auto_initialize_no_validation
+  - zaza.openstack.charm_tests.keystone.setup.add_demo_user
+  - zaza.openstack.charm_tests.nova.setup.create_flavors
+  - zaza.openstack.charm_tests.nova.setup.manage_ssh_key
+  - zaza.openstack.charm_tests.neutron.setup.basic_overcloud_network
+  - zaza.openstack.charm_tests.glance.setup.add_lts_image
+tests:
+  - zaza.openstack.charm_tests.nova.tests.LTSGuestCreateTest
+target_deploy_status:
+  neutron-api-plugin-ovn:
+    workload-status: waiting
+    workload-status-message-prefix: "'certificates' awaiting server certificate data, 'ovsdb-cms' incomplete"
+  ovn-central:
+    workload-status: waiting
+    workload-status-message-prefix: "'ovsdb-peer' incomplete, 'certificates' awaiting server certificate data"
+  ovn-chassis:
+    workload-status: waiting
+    workload-status-message-prefix: "'certificates' awaiting server certificate data"
+  vault:
+    workload-status: blocked
+    workload-status-message-prefix: Vault needs to be initialized
+  ntp:
+    workload-status: active
+    workload-status-message-prefix: "chrony: Ready"
+  ceilometer:
+    workload-status: blocked
+    workload-status-message-prefix: "Run the ceilometer-upgrade action on the leader to initialize ceilometer and gnocchi"
+gate_bundles:
+  - bundle
+smoke_bundles:
+  - bundle
