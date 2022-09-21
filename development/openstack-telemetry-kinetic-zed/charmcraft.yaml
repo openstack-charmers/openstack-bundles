@@ -1,0 +1,12 @@
+type: bundle
+
+parts:
+  bundle:
+    prime:
+      - bundle.yaml
+      - openrc
+      - openrcv3_domain
+      - openrcv3_project
+      - openstack-telemetry-spaces-overlay.yaml
+      - README.md
+      - repo-info

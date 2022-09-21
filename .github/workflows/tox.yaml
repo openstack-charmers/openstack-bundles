@@ -39,6 +39,6 @@ jobs:
         sudo chmod 666 /var/snap/lxd/common/lxd/unix.socket
         # until Juju provides stable IPv6-support we unfortunately need this
         lxc network set lxdbr0 ipv6.address none
-        juju bootstrap --no-gui localhost
+        juju bootstrap --debug --show-log --no-gui localhost
     - name: Bundle validation with tox using dry-run juju deploy
       run: tox -e lint
