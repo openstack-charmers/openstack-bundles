@@ -1,13 +1,31 @@
+# Checks to see if the juju model has been predefined
 if [ ! -z $JUJU_MODEL ]; then
   _juju_model_arg="-m $JUJU_MODEL"
 fi
-_keystone_major_version=$(juju status $_juju_model_arg keystone --format yaml| \
-    awk '/^    version:/ {print $2; exit}' | cut -f1 -d\.)
+
+# Make sure jq is installed
+if ! command -v jq >/dev/null 2>&1; then
+    echo "jq is required to run this script. Please install it and try again."
+    exit 1
+fi
+
+# Make sure openstack client is installed
+if ! command -v openstack >/dev/null 2>&1; then
+    echo "openstack client is required to run this script. Please install it and try again."
+    exit 1
+fi
+
+# Check juju major version
+_juju_version=$(juju version | cut -f1 -d\. )
+
+# Checks for keystone version.
+_keystone_major_version=$(juju status $_juju_model_arg keystone --format json | jq -r '.applications.keystone.version' | cut -f1 -d\.)
 _keystone_preferred_api_version=$(juju config $_juju_model_arg keystone preferred-api-version)
 
 # The per user snap data directory is not created until first execution of snap
 openstack --version 2>&1 > /dev/null || true
 
+# Checks for a place to store the root CA and gets the CA from Vault
 if [ -d ~/snap/openstackclients/common/ ]; then
   # When using the openstackclients confined snap the certificate has to be
   # placed in a location reachable by the clients in the snap.
@@ -15,13 +33,38 @@ if [ -d ~/snap/openstackclients/common/ ]; then
 else
   _root_ca=/tmp/${JUJU_MODEL-""}root-ca.crt
 fi
-juju run $_juju_model_arg --unit vault/leader 'leader-get root-ca' | tee $_root_ca >/dev/null 2>&1
-
-if [ $_keystone_major_version -ge 13 -o \
-     "$_keystone_preferred_api_version" = '3' ]; then
-    echo Using Keystone v3 API
-    . $(dirname ${BASH_SOURCE[0]})/openrcv3_project
+if [ "$_juju_version" -ge "3" ]; then
+  # Juju 3.0 and above
+  juju run $_juju_model_arg --format=json --quiet vault/leader get-root-ca | jq -r '.[].results.output' | tee $_root_ca >/dev/null 2>&1
 else
-    echo Using Keystone v2.0 API
-    . $(dirname ${BASH_SOURCE[0]})/openrcv2
+  # Juju 2.9 and below
+  juju run $_juju_model_arg --unit vault/leader 'leader-get root-ca' | tee $_root_ca >/dev/null 2>&1
 fi
+
+# Check shell and run the appropriate openrc file
+_shell=$(ps -p $$ | tail -n 1 | awk '{print $4}')
+echo "Shell: $_shell"
+if [ "$_shell" = "bash" ]; then
+  if [ $_keystone_major_version -ge 13 -o \
+      "$_keystone_preferred_api_version" = '3' ]; then
+      echo Using Keystone v3 API
+      . $(dirname ${BASH_SOURCE[0]})/openrcv3_project
+  else
+      echo Using Keystone v2.0 API
+      . $(dirname ${BASH_SOURCE[0]})/openrcv2
+  fi
+  # shell is zsh or -zsh
+elif [ "$_shell" = "zsh" ] || [ "$_shell" = "-zsh" ]; then
+  if [ $_keystone_major_version -ge 13 -o \
+      "$_keystone_preferred_api_version" = '3' ]; then
+      echo Using Keystone v3 API
+      . $(dirname ${(%):-%x})/openrcv3_project
+  else
+      echo Using Keystone v2.0 API
+      . $(dirname ${(%):-%x})/openrcv2
+  fi
+else
+  echo "Unsupported shell: $_shell"
+  exit 1
+fi
+

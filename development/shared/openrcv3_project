@@ -1,16 +1,46 @@
-_OS_PARAMS=$(env | awk 'BEGIN {FS="="} /^OS_/ {print $1;}' | paste -sd ' ')
+# Get and clear all the environment variables beginning with OS_
+_OS_PARAMS=$(env | awk 'BEGIN {FS="="} /^OS_/ {print $1;}' | paste -sd ' ' '-')   # the manual for paste specifies that '-' should be used when piping from stdin
+# Fix _OS_PARAMS to be array in zsh
+if [ "$_shell" = "zsh" ] || [ "$_shell" = "-zsh" ]; then
+  _OS_PARAMS=(${(s/ /)_OS_PARAMS})
+fi
+# Inform the user of the environment variables that will be cleared
+if [ -n "$_OS_PARAMS" ]; then
+  echo "The following environment variables will be cleared: $_OS_PARAMS"
+fi
 for param in $_OS_PARAMS; do
+    # echo "Clearing $param"  # debug
     unset $param
 done
 unset _OS_PARAMS
 
+# Check juju version
+_juju_version=$(juju version | cut -f1 -d\. )
+
+# Get keystone ip address
 _keystone_vip=$(juju config $_juju_model_arg keystone vip)
 if [ -n "$_keystone_vip" ]; then
     _keystone_ip=$(echo $_keystone_vip | awk '{print $1}')
 else
-    _keystone_ip=$(juju run $_juju_model_arg --unit keystone/leader -- 'network-get --bind-address public')
+    if [ "$_juju_version" -ge "3" ]; then
+        # Juju 3.0 and above
+        # This method would probably work for Juju 2.9 and below, but it I will leave it as is for now.
+        _keystone_ip=$(juju status $_juju_model_arg keystone/leader --format json | jq -r '.applications.keystone.units[] | select(.leader == true) | ."public-address"')
+    else
+        # Juju 2.9 and below
+        _keystone_ip=$(juju run $_juju_model_arg --unit keystone/leader -- 'network-get --bind-address public')
+    fi
 fi
-_password=$(juju run $_juju_model_arg --unit keystone/leader 'leader-get admin_passwd')
+
+# Get admin password
+if [ "$_juju_version" -ge "3" ]; then
+    # Juju 3.0 and above
+    _password=$(juju run $_juju_model_arg keystone/leader get-admin-password --quiet | awk '{print $2; exit}')
+else
+    # Juju 2.9 and below
+    _password=$(juju run $_juju_model_arg --unit keystone/leader 'leader-get admin_passwd')
+fi
+
 
 if [ ! -z "$_root_ca" -a -s "$_root_ca" ]; then
     export OS_AUTH_PROTOCOL=https
@@ -28,3 +58,26 @@ export OS_IDENTITY_API_VERSION=3
 export OS_AUTH_VERSION=3
 # Gnocchi needs this
 export OS_AUTH_TYPE=password
+
+# # Debug
+# echo "Environment variables set:"
+# echo "env | grep OS_ result:"
+# env | grep OS_
+# echo
+# echo "If environment variables are not set, then run the following commands:"
+# if [ ! -z "$_root_ca" -a -s "$_root_ca" ]; then
+#     echo "export OS_AUTH_PROTOCOL=https"
+#     echo "export OS_CACERT=${_root_ca}"
+# fi
+# echo "export OS_AUTH_URL=${OS_AUTH_PROTOCOL:-http}://${_keystone_ip}:5000/v3"
+# echo "export OS_USERNAME=admin"
+# echo "export OS_PASSWORD=${_password}"
+# echo "export OS_USER_DOMAIN_NAME=admin_domain"
+# echo "export OS_PROJECT_DOMAIN_NAME=admin_domain"
+# echo "export OS_PROJECT_NAME=admin"
+# echo "export OS_REGION_NAME=RegionOne"
+# echo "export OS_IDENTITY_API_VERSION=3"
+# # Swift needs this:
+# echo "export OS_AUTH_VERSION=3"
+# # Gnocchi needs this
+# echo "export OS_AUTH_TYPE=password"
