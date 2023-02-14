@@ -11,6 +11,9 @@ applications:
     - lxd:1
   barbican-vault:
     charm: cs:barbican-vault
+  neutron-api:
+    options:
+      enable-ml2-port-security: true
   octavia-ovn-chassis:
     charm: cs:ovn-chassis
   octavia-mysql-router:
