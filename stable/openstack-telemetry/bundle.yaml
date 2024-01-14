@@ -7,10 +7,10 @@
 #       section of the [OpenStack Charms Deployment Guide](https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/)
 #       for more information.
 name: openstack-telemetry
-series: focal
+series: jammy
 variables:
-  openstack-origin: &openstack-origin cloud:focal-yoga
-  data-port: &data-port to-be-set
+  openstack-origin: &openstack-origin cloud:jammy-zed
+  data-port: &data-port <to-be-set>
   osd-devices: &osd-devices /dev/sdb /dev/vdb
   expected-osd-count: &expected-osd-count 3
   expected-mon-count: &expected-mon-count 3
@@ -179,7 +179,7 @@ applications:
       gui-x: '1500'
       gui-y: '0'
     charm: ch:aodh
-    channel: yoga/stable
+    channel: zed/stable
     num_units: 1
     options:
       openstack-origin: *openstack-origin
@@ -193,7 +193,7 @@ applications:
       gui-x: '1250'
       gui-y: '0'
     charm: ch:ceilometer
-    channel: yoga/stable
+    channel: zed/stable
     num_units: 1
     options:
       openstack-origin: *openstack-origin
@@ -204,7 +204,7 @@ applications:
       gui-x: '1250'
       gui-y: '500'
     charm: ch:ceilometer-agent
-    channel: yoga/stable
+    channel: zed/stable
     num_units: 0
   ceph-mon:
     annotations:
@@ -257,7 +257,7 @@ applications:
       gui-x: '980'
       gui-y: '1270'
     charm: ch:cinder
-    channel: yoga/stable
+    channel: zed/stable
     num_units: 1
     options:
       block-device: None
@@ -270,7 +270,7 @@ applications:
       gui-x: '1120'
       gui-y: '1400'
     charm: ch:cinder-ceph
-    channel: yoga/stable
+    channel: zed/stable
     num_units: 0
   glance-mysql-router:
     annotations:
@@ -283,7 +283,7 @@ applications:
       gui-x: '-230'
       gui-y: '1270'
     charm: ch:glance
-    channel: yoga/stable
+    channel: zed/stable
     num_units: 1
     options:
       openstack-origin: *openstack-origin
@@ -300,7 +300,7 @@ applications:
       gui-x: '300'
       gui-y: '1270'
     charm: ch:keystone
-    channel: yoga/stable
+    channel: zed/stable
     num_units: 1
     options:
       openstack-origin: *openstack-origin
@@ -323,7 +323,7 @@ applications:
       gui-x: '580'
       gui-y: '1270'
     charm: ch:neutron-api
-    channel: yoga/stable
+    channel: zed/stable
     num_units: 1
     options:
       neutron-security-groups: true
@@ -342,7 +342,7 @@ applications:
       gui-x: '1320'
       gui-y: '1270'
     charm: ch:placement
-    channel: yoga/stable
+    channel: zed/stable
     num_units: 1
     options:
       openstack-origin: *openstack-origin
@@ -371,7 +371,7 @@ applications:
       gui-x: '190'
       gui-y: '890'
     charm: ch:nova-compute
-    channel: yoga/stable
+    channel: zed/stable
     num_units: 3
     options:
       config-flags: default_ephemeral_format=ext4
@@ -388,6 +388,7 @@ applications:
       gui-x: '315'
       gui-y: '1030'
     charm: ch:ntp
+    channel: latest/stable
     num_units: 0
   dashboard-mysql-router:
     annotations:
@@ -400,7 +401,7 @@ applications:
       gui-x: '585'
       gui-y: '900'
     charm: ch:openstack-dashboard
-    channel: yoga/stable
+    channel: zed/stable
     num_units: 1
     options:
       openstack-origin: *openstack-origin
@@ -462,7 +463,7 @@ applications:
       gui-x: '1610'
       gui-y: '1430'
     charm: ch:vault
-    channel: 1.7/stable
+    channel: 1.8/stable
     num_units: 1
     to:
     - lxd:0
@@ -472,7 +473,7 @@ applications:
       gui-y: '250'
     num_units: 1
     charm: ch:gnocchi
-    channel: yoga/stable
+    channel: zed/stable
     options:
       openstack-origin: *openstack-origin
     to:
@@ -481,11 +482,12 @@ applications:
     charm: ch:mysql-router
     channel: 8.0/stable
   memcached:
-    series: bionic
+    series: jammy
     annotations:
       gui-x: '1500'
       gui-y: '500'
     num_units: 1
     charm: ch:memcached
+    channel: latest/stable
     to:
     - lxd:2
